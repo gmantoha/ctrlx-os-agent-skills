@@ -1,0 +1,1569 @@
+Common labels: {"component":"loki.source.syslog","protocol":"udp"}
+Line limit: "1000 (782 displayed)"
+Total bytes processed: "84.2  kB"
+
+
+2026-04-17 13:20:09.948	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:20:11.198	(DCPoller) Starting polling process: from 2026-04-17 11:19:51.029086+00:00 to 2026-04-17 11:20:10.760180+00:00
+
+2026-04-17 13:20:12.948	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:20:14.698	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:20:14.699	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:20:14.699	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:20:14.699	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14684), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (5395 bytes)
+
+2026-04-17 13:20:14.699	INFO:     127.0.0.1:42892 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:20:14.699	(Publisher) Logging event : Received PUBACK (Mid: 14684)
+
+2026-04-17 13:20:16.198	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:20:19.198	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:20:20.851	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:20:20.851	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:20:20.851	(API-Poller) Starting polling process: from 2026-04-17 11:20:00.527773 to 2026-04-17 11:20:20.537869
+
+2026-04-17 13:20:20.851	(API-Poller) Sending data to publisher...
+
+2026-04-17 13:20:21.199	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/electricalEnergy
+
+2026-04-17 13:20:21.199	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/electricalEnergy
+
+2026-04-17 13:20:21.199	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14685), 'b'/linck/asset/ALPHA-DE-001/electricalEnergy'', properties=None, ... (166 bytes)
+
+2026-04-17 13:20:21.199	INFO:     127.0.0.1:33002 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:20:21.199	(Publisher) Publishing data to topic v2/linck/asset/ALPHA-DE-001/logs
+
+2026-04-17 13:20:21.199	(Publisher) Send data to topic v2/linck/asset/ALPHA-DE-001/logs
+
+2026-04-17 13:20:21.199	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14686), 'b'v2/linck/asset/ALPHA-DE-001/logs'', properties=None, ... (34588 bytes)
+
+2026-04-17 13:20:21.199	INFO:     127.0.0.1:33004 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:20:21.199	(Publisher) Logging event : Received PUBACK (Mid: 14685)
+
+2026-04-17 13:20:21.199	(Publisher) Logging event : Received PUBACK (Mid: 14686)
+
+2026-04-17 13:20:22.198	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:20:25.448	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:20:28.698	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:20:30.698	(DCPoller) Starting polling process: from 2026-04-17 11:20:10.760180+00:00 to 2026-04-17 11:20:30.425879+00:00
+
+2026-04-17 13:20:30.698	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/energy HTTP/1.1" 200 OK
+
+2026-04-17 13:20:31.698	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:20:34.448	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:20:34.448	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:20:34.449	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:20:34.449	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14687), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (5302 bytes)
+
+2026-04-17 13:20:34.449	INFO:     127.0.0.1:37304 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:20:34.449	(Publisher) Logging event : Received PUBACK (Mid: 14687)
+
+2026-04-17 13:20:34.948	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:20:37.948	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:20:40.863	(API-Poller) Starting polling process: from 2026-04-17 11:20:20.537869 to 2026-04-17 11:20:40.543677
+
+2026-04-17 13:20:40.863	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:20:40.863	(API-Poller) Sending data to publisher...
+
+2026-04-17 13:20:41.199	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/electricalEnergy
+
+2026-04-17 13:20:41.199	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/electricalEnergy
+
+2026-04-17 13:20:41.199	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14688), 'b'/linck/asset/ALPHA-DE-001/electricalEnergy'', properties=None, ... (166 bytes)
+
+2026-04-17 13:20:41.199	INFO:     127.0.0.1:51878 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:20:41.199	(Publisher) Publishing data to topic v2/linck/asset/ALPHA-DE-001/logs
+
+2026-04-17 13:20:41.199	(Publisher) Send data to topic v2/linck/asset/ALPHA-DE-001/logs
+
+2026-04-17 13:20:41.199	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14689), 'b'v2/linck/asset/ALPHA-DE-001/logs'', properties=None, ... (34577 bytes)
+
+2026-04-17 13:20:41.199	INFO:     127.0.0.1:51886 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:20:41.199	(Publisher) Logging event : Received PUBACK (Mid: 14688)
+
+2026-04-17 13:20:41.199	(Publisher) Logging event : Received PUBACK (Mid: 14689)
+
+2026-04-17 13:20:44.198	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:20:47.198	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:20:50.448	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:20:50.448	(DCPoller) Starting polling process: from 2026-04-17 11:20:30.425879+00:00 to 2026-04-17 11:20:50.121767+00:00
+
+2026-04-17 13:20:51.448	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:20:51.448	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:20:52.198	error send Events: failed to send request: Post "http://localhost/bulk/v1/events": dial unix /var/snap/rexroth-deviceadmin/common/rda-proxy-service/rexroth-deviceadmin/proxy.sock: connect: connection refused
+
+2026-04-17 13:20:53.702	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:20:53.702	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:20:53.702	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:20:53.702	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:20:53.702	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14690), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (4924 bytes)
+
+2026-04-17 13:20:53.702	INFO:     127.0.0.1:32886 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:20:53.702	(Publisher) Logging event : Received PUBACK (Mid: 14690)
+
+2026-04-17 13:20:54.698	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN was successful released
+
+2026-04-17 13:20:54.698	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN in version 1.0 was successful acquired
+
+2026-04-17 13:20:54.698	logger=infra.usagestats t=2026-04-17T13:20:54.460753826+02:00 level=info msg="Usage stats are ready to report"
+
+2026-04-17 13:20:56.448	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/energy HTTP/1.1" 200 OK
+
+2026-04-17 13:20:56.948	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:20:59.698	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:21:00.948	(API-Poller) Starting polling process: from 2026-04-17 11:20:40.543677 to 2026-04-17 11:21:00.543942
+
+2026-04-17 13:21:01.449	(API-Poller) Sending data to publisher...
+
+2026-04-17 13:21:01.449	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/electricalEnergy
+
+2026-04-17 13:21:01.449	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/electricalEnergy
+
+2026-04-17 13:21:01.449	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14691), 'b'/linck/asset/ALPHA-DE-001/electricalEnergy'', properties=None, ... (165 bytes)
+
+2026-04-17 13:21:01.449	INFO:     127.0.0.1:35392 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:21:01.449	(Publisher) Publishing data to topic v2/linck/asset/ALPHA-DE-001/logs
+
+2026-04-17 13:21:01.449	(Publisher) Send data to topic v2/linck/asset/ALPHA-DE-001/logs
+
+2026-04-17 13:21:01.449	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14692), 'b'v2/linck/asset/ALPHA-DE-001/logs'', properties=None, ... (39869 bytes)
+
+2026-04-17 13:21:01.449	INFO:     127.0.0.1:35406 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:21:01.449	(Publisher) Logging event : Received PUBACK (Mid: 14691)
+
+2026-04-17 13:21:01.449	(Publisher) Logging event : Received PUBACK (Mid: 14692)
+
+2026-04-17 13:21:02.948	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:21:05.948	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:21:08.948	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:21:09.703	(DCPoller) Starting polling process: from 2026-04-17 11:20:50.121767+00:00 to 2026-04-17 11:21:09.435482+00:00
+
+2026-04-17 13:21:12.448	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:21:12.948	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:21:12.948	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:21:12.949	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:21:12.949	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14693), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (4719 bytes)
+
+2026-04-17 13:21:12.949	INFO:     127.0.0.1:49674 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:21:12.949	(Publisher) Logging event : Received PUBACK (Mid: 14693)
+
+2026-04-17 13:21:15.447	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:21:18.448	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:21:20.873	(API-Poller) Starting polling process: from 2026-04-17 11:21:00.543942 to 2026-04-17 11:21:20.559194
+
+2026-04-17 13:21:20.873	(API-Poller) Sending data to publisher...
+
+2026-04-17 13:21:21.199	(Publisher) Publishing data to topic v2/linck/asset/ALPHA-DE-001/logs
+
+2026-04-17 13:21:21.199	(Publisher) Send data to topic v2/linck/asset/ALPHA-DE-001/logs
+
+2026-04-17 13:21:21.199	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14694), 'b'v2/linck/asset/ALPHA-DE-001/logs'', properties=None, ... (34337 bytes)
+
+2026-04-17 13:21:21.199	INFO:     127.0.0.1:38102 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:21:21.199	(Publisher) Logging event : Received PUBACK (Mid: 14694)
+
+2026-04-17 13:21:21.199	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:21:21.199	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:21:21.199	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:21:21.948	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/energy HTTP/1.1" 200 OK
+
+2026-04-17 13:21:24.698	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:21:27.698	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:21:28.948	(DCPoller) Starting polling process: from 2026-04-17 11:21:09.435482+00:00 to 2026-04-17 11:21:28.667876+00:00
+
+2026-04-17 13:21:30.948	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:21:32.198	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:21:32.198	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:21:32.198	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:21:32.198	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14695), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (4659 bytes)
+
+2026-04-17 13:21:32.198	INFO:     127.0.0.1:49582 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:21:32.199	(Publisher) Logging event : Received PUBACK (Mid: 14695)
+
+2026-04-17 13:21:34.198	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:21:37.197	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:21:40.198	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:21:40.890	(API-Poller) Starting polling process: from 2026-04-17 11:21:20.559194 to 2026-04-17 11:21:40.578995
+
+2026-04-17 13:21:40.890	(API-Poller) Sending data to publisher...
+
+2026-04-17 13:21:41.199	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/electricalEnergy
+
+2026-04-17 13:21:41.199	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/electricalEnergy
+
+2026-04-17 13:21:41.199	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14696), 'b'/linck/asset/ALPHA-DE-001/electricalEnergy'', properties=None, ... (166 bytes)
+
+2026-04-17 13:21:41.199	INFO:     127.0.0.1:55160 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:21:41.199	(Publisher) Publishing data to topic v2/linck/asset/ALPHA-DE-001/logs
+
+2026-04-17 13:21:41.199	(Publisher) Send data to topic v2/linck/asset/ALPHA-DE-001/logs
+
+2026-04-17 13:21:41.199	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14697), 'b'v2/linck/asset/ALPHA-DE-001/logs'', properties=None, ... (40617 bytes)
+
+2026-04-17 13:21:41.199	INFO:     127.0.0.1:55172 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:21:41.199	(Publisher) Logging event : Received PUBACK (Mid: 14696)
+
+2026-04-17 13:21:41.199	(Publisher) Logging event : Received PUBACK (Mid: 14697)
+
+2026-04-17 13:21:43.448	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:21:46.448	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:21:47.448	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/energy HTTP/1.1" 200 OK
+
+2026-04-17 13:21:48.448	(DCPoller) Starting polling process: from 2026-04-17 11:21:28.667876+00:00 to 2026-04-17 11:21:47.973512+00:00
+
+2026-04-17 13:21:49.698	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:21:51.449	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:21:51.449	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:21:51.449	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:21:51.449	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:21:51.449	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:21:51.449	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14698), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (5049 bytes)
+
+2026-04-17 13:21:51.449	INFO:     127.0.0.1:36172 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:21:51.449	(Publisher) Logging event : Received PUBACK (Mid: 14698)
+
+2026-04-17 13:21:52.198	error send Events: failed to send request: Post "http://localhost/bulk/v1/events": dial unix /var/snap/rexroth-deviceadmin/common/rda-proxy-service/rexroth-deviceadmin/proxy.sock: connect: connection refused
+
+2026-04-17 13:21:53.197	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:21:54.698	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN was successful released
+
+2026-04-17 13:21:54.698	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN in version 1.0 was successful acquired
+
+2026-04-17 13:21:55.948	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:21:58.947	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:22:00.898	(API-Poller) Starting polling process: from 2026-04-17 11:21:40.578995 to 2026-04-17 11:22:00.584430
+
+2026-04-17 13:22:00.898	(API-Poller) Sending data to publisher...
+
+2026-04-17 13:22:01.199	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/electricalEnergy
+
+2026-04-17 13:22:01.199	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/electricalEnergy
+
+2026-04-17 13:22:01.199	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14699), 'b'/linck/asset/ALPHA-DE-001/electricalEnergy'', properties=None, ... (166 bytes)
+
+2026-04-17 13:22:01.199	INFO:     127.0.0.1:53428 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:22:01.199	(Publisher) Publishing data to topic v2/linck/asset/ALPHA-DE-001/logs
+
+2026-04-17 13:22:01.199	(Publisher) Send data to topic v2/linck/asset/ALPHA-DE-001/logs
+
+2026-04-17 13:22:01.199	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14700), 'b'v2/linck/asset/ALPHA-DE-001/logs'', properties=None, ... (34082 bytes)
+
+2026-04-17 13:22:01.199	INFO:     127.0.0.1:53436 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:22:01.199	(Publisher) Logging event : Received PUBACK (Mid: 14699)
+
+2026-04-17 13:22:01.199	(Publisher) Logging event : Received PUBACK (Mid: 14700)
+
+2026-04-17 13:22:02.198	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:22:05.198	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:22:07.698	(DCPoller) Starting polling process: from 2026-04-17 11:21:47.973512+00:00 to 2026-04-17 11:22:07.295189+00:00
+
+2026-04-17 13:22:08.448	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:22:10.664	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:22:10.949	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:22:10.949	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:22:10.949	INFO:     127.0.0.1:46488 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:22:10.949	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14701), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (5114 bytes)
+
+2026-04-17 13:22:10.949	(Publisher) Logging event : Received PUBACK (Mid: 14701)
+
+2026-04-17 13:22:11.448	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:22:13.451	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/energy HTTP/1.1" 200 OK
+
+2026-04-17 13:22:14.448	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:22:17.698	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:22:20.899	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:22:20.899	(API-Poller) Starting polling process: from 2026-04-17 11:22:00.584430 to 2026-04-17 11:22:20.584940
+
+2026-04-17 13:22:20.899	(API-Poller) Sending data to publisher...
+
+2026-04-17 13:22:21.199	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/electricalEnergy
+
+2026-04-17 13:22:21.199	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/electricalEnergy
+
+2026-04-17 13:22:21.199	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14702), 'b'/linck/asset/ALPHA-DE-001/electricalEnergy'', properties=None, ... (166 bytes)
+
+2026-04-17 13:22:21.199	INFO:     127.0.0.1:41624 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:22:21.199	(Publisher) Publishing data to topic v2/linck/asset/ALPHA-DE-001/logs
+
+2026-04-17 13:22:21.199	(Publisher) Send data to topic v2/linck/asset/ALPHA-DE-001/logs
+
+2026-04-17 13:22:21.199	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14703), 'b'v2/linck/asset/ALPHA-DE-001/logs'', properties=None, ... (39885 bytes)
+
+2026-04-17 13:22:21.199	INFO:     127.0.0.1:41640 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:22:21.199	(Publisher) Logging event : Received PUBACK (Mid: 14702)
+
+2026-04-17 13:22:21.199	(Publisher) Logging event : Received PUBACK (Mid: 14703)
+
+2026-04-17 13:22:22.448	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:22:22.448	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:22:23.948	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:22:26.948	(DCPoller) Starting polling process: from 2026-04-17 11:22:07.295189+00:00 to 2026-04-17 11:22:26.671840+00:00
+
+2026-04-17 13:22:26.948	INFO:      - "POST /ctrlx-linck-linckdc/linckapi/log HTTP/1.1" 200 OK
+
+2026-04-17 13:22:30.449	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:22:30.449	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:22:30.449	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:22:30.449	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14704), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (5046 bytes)
+
+2026-04-17 13:22:30.449	INFO:     127.0.0.1:43550 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:22:30.449	(Publisher) Logging event : Received PUBACK (Mid: 14704)
+
+2026-04-17 13:22:40.909	(API-Poller) Starting polling process: from 2026-04-17 11:22:20.584940 to 2026-04-17 11:22:40.604731
+
+2026-04-17 13:22:40.909	(API-Poller) Sending data to publisher...
+
+2026-04-17 13:22:41.198	(Publisher) Publishing data to topic v2/linck/asset/ALPHA-DE-001/logs
+
+2026-04-17 13:22:41.198	(Publisher) Send data to topic v2/linck/asset/ALPHA-DE-001/logs
+
+2026-04-17 13:22:41.198	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14705), 'b'v2/linck/asset/ALPHA-DE-001/logs'', properties=None, ... (11912 bytes)
+
+2026-04-17 13:22:41.198	INFO:     127.0.0.1:60104 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:22:41.198	(Publisher) Logging event : Received PUBACK (Mid: 14705)
+
+2026-04-17 13:22:46.448	(DCPoller) Starting polling process: from 2026-04-17 11:22:26.671840+00:00 to 2026-04-17 11:22:46.182398+00:00
+
+2026-04-17 13:22:50.948	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:22:50.948	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:22:50.948	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:22:50.948	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14706), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (5740 bytes)
+
+2026-04-17 13:22:50.948	INFO:     127.0.0.1:44388 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:22:50.948	(Publisher) Logging event : Received PUBACK (Mid: 14706)
+
+2026-04-17 13:22:52.198	error send Events: failed to send request: Post "http://localhost/bulk/v1/events": dial unix /var/snap/rexroth-deviceadmin/common/rda-proxy-service/rexroth-deviceadmin/proxy.sock: connect: connection refused
+
+2026-04-17 13:22:52.948	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:22:52.948	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:22:54.698	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN was successful released
+
+2026-04-17 13:22:54.698	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN in version 1.0 was successful acquired
+
+2026-04-17 13:23:00.948	(API-Poller) Starting polling process: from 2026-04-17 11:22:40.604731 to 2026-04-17 11:23:00.618211
+
+2026-04-17 13:23:05.948	(DCPoller) Starting polling process: from 2026-04-17 11:22:46.182398+00:00 to 2026-04-17 11:23:05.661675+00:00
+
+2026-04-17 13:23:08.949	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:23:08.949	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:23:08.949	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:23:08.949	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14707), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (4528 bytes)
+
+2026-04-17 13:23:08.949	INFO:     127.0.0.1:57980 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:23:08.949	(Publisher) Logging event : Received PUBACK (Mid: 14707)
+
+2026-04-17 13:23:20.948	(API-Poller) Starting polling process: from 2026-04-17 11:23:00.618211 to 2026-04-17 11:23:20.638050
+
+2026-04-17 13:23:23.948	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:23:23.948	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:23:25.948	(DCPoller) Starting polling process: from 2026-04-17 11:23:05.661675+00:00 to 2026-04-17 11:23:25.498318+00:00
+
+2026-04-17 13:23:29.199	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:23:29.199	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:23:29.199	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:23:29.199	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14708), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (5236 bytes)
+
+2026-04-17 13:23:29.199	INFO:     127.0.0.1:57320 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:23:29.199	(Publisher) Logging event : Received PUBACK (Mid: 14708)
+
+2026-04-17 13:23:40.948	(API-Poller) Starting polling process: from 2026-04-17 11:23:20.638050 to 2026-04-17 11:23:40.647041
+
+2026-04-17 13:23:45.198	(DCPoller) Starting polling process: from 2026-04-17 11:23:25.498318+00:00 to 2026-04-17 11:23:44.853090+00:00
+
+2026-04-17 13:23:48.698	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:23:48.698	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:23:48.698	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:23:48.698	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14709), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (5299 bytes)
+
+2026-04-17 13:23:48.698	INFO:     127.0.0.1:34126 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:23:48.698	(Publisher) Logging event : Received PUBACK (Mid: 14709)
+
+2026-04-17 13:23:52.198	error send Events: failed to send request: Post "http://localhost/bulk/v1/events": dial unix /var/snap/rexroth-deviceadmin/common/rda-proxy-service/rexroth-deviceadmin/proxy.sock: connect: connection refused
+
+2026-04-17 13:23:54.698	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:23:54.698	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:23:54.698	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN was successful released
+
+2026-04-17 13:23:54.698	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN in version 1.0 was successful acquired
+
+2026-04-17 13:24:00.948	(API-Poller) Starting polling process: from 2026-04-17 11:23:40.647041 to 2026-04-17 11:24:00.665969
+
+2026-04-17 13:24:04.698	(DCPoller) Starting polling process: from 2026-04-17 11:23:44.853090+00:00 to 2026-04-17 11:24:04.319127+00:00
+
+2026-04-17 13:24:08.448	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:24:08.448	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:24:08.449	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:24:08.449	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14710), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (5726 bytes)
+
+2026-04-17 13:24:08.449	INFO:     127.0.0.1:45904 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:24:08.449	(Publisher) Logging event : Received PUBACK (Mid: 14710)
+
+2026-04-17 13:24:20.948	(API-Poller) Starting polling process: from 2026-04-17 11:24:00.665969 to 2026-04-17 11:24:20.675858
+
+2026-04-17 13:24:24.448	(DCPoller) Starting polling process: from 2026-04-17 11:24:04.319127+00:00 to 2026-04-17 11:24:24.129013+00:00
+
+2026-04-17 13:24:25.448	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:24:25.448	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:24:28.448	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:24:28.448	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:24:28.448	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:24:28.448	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14711), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (5253 bytes)
+
+2026-04-17 13:24:28.448	INFO:     127.0.0.1:42892 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:24:28.449	(Publisher) Logging event : Received PUBACK (Mid: 14711)
+
+2026-04-17 13:24:40.949	(API-Poller) Starting polling process: from 2026-04-17 11:24:20.675858 to 2026-04-17 11:24:40.676786
+
+2026-04-17 13:24:44.448	(DCPoller) Starting polling process: from 2026-04-17 11:24:24.129013+00:00 to 2026-04-17 11:24:44.008018+00:00
+
+2026-04-17 13:24:47.949	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:24:47.949	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:24:47.949	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:24:47.949	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14712), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (5093 bytes)
+
+2026-04-17 13:24:47.949	INFO:     127.0.0.1:60136 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:24:47.949	(Publisher) Logging event : Received PUBACK (Mid: 14712)
+
+2026-04-17 13:24:52.197	error send Events: failed to send request: Post "http://localhost/bulk/v1/events": dial unix /var/snap/rexroth-deviceadmin/common/rda-proxy-service/rexroth-deviceadmin/proxy.sock: connect: connection refused
+
+2026-04-17 13:24:54.698	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN was successful released
+
+2026-04-17 13:24:54.698	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN in version 1.0 was successful acquired
+
+2026-04-17 13:24:55.948	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:24:55.948	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:25:01.198	(API-Poller) Starting polling process: from 2026-04-17 11:24:40.676786 to 2026-04-17 11:25:00.696654
+
+2026-04-17 13:25:03.948	(DCPoller) Starting polling process: from 2026-04-17 11:24:44.008018+00:00 to 2026-04-17 11:25:03.583587+00:00
+
+2026-04-17 13:25:07.449	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:25:07.449	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:25:07.449	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:25:07.449	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14713), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (4971 bytes)
+
+2026-04-17 13:25:07.449	INFO:     127.0.0.1:41740 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:25:07.449	(Publisher) Logging event : Received PUBACK (Mid: 14713)
+
+2026-04-17 13:25:21.198	(API-Poller) Starting polling process: from 2026-04-17 11:25:00.696654 to 2026-04-17 11:25:20.699797
+
+2026-04-17 13:25:23.448	(DCPoller) Starting polling process: from 2026-04-17 11:25:03.583587+00:00 to 2026-04-17 11:25:23.059570+00:00
+
+2026-04-17 13:25:26.448	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:25:26.448	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:25:27.698	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:25:27.698	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:25:27.698	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:25:27.698	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14714), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (5633 bytes)
+
+2026-04-17 13:25:27.698	INFO:     127.0.0.1:48470 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:25:27.698	(Publisher) Logging event : Received PUBACK (Mid: 14714)
+
+2026-04-17 13:25:41.198	(API-Poller) Starting polling process: from 2026-04-17 11:25:20.699797 to 2026-04-17 11:25:40.707866
+
+2026-04-17 13:25:42.698	(DCPoller) Starting polling process: from 2026-04-17 11:25:23.059570+00:00 to 2026-04-17 11:25:42.292662+00:00
+
+2026-04-17 13:25:45.948	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:25:45.948	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:25:45.948	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:25:45.948	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14715), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (4694 bytes)
+
+2026-04-17 13:25:45.949	INFO:     127.0.0.1:56256 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:25:45.949	(Publisher) Logging event : Received PUBACK (Mid: 14715)
+
+2026-04-17 13:25:52.198	error send Events: failed to send request: Post "http://localhost/bulk/v1/events": dial unix /var/snap/rexroth-deviceadmin/common/rda-proxy-service/rexroth-deviceadmin/proxy.sock: connect: connection refused
+
+2026-04-17 13:25:54.698	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN was successful released
+
+2026-04-17 13:25:54.698	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN in version 1.0 was successful acquired
+
+2026-04-17 13:25:56.948	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:25:56.948	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:26:01.198	(API-Poller) Starting polling process: from 2026-04-17 11:25:40.707866 to 2026-04-17 11:26:00.727051
+
+2026-04-17 13:26:01.948	(DCPoller) Starting polling process: from 2026-04-17 11:25:42.292662+00:00 to 2026-04-17 11:26:01.633851+00:00
+
+2026-04-17 13:26:05.198	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:26:05.198	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:26:05.198	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:26:05.198	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14716), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (4835 bytes)
+
+2026-04-17 13:26:05.198	INFO:     127.0.0.1:48044 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:26:05.198	(Publisher) Logging event : Received PUBACK (Mid: 14716)
+
+2026-04-17 13:26:21.208	(API-Poller) Starting polling process: from 2026-04-17 11:26:00.727051 to 2026-04-17 11:26:20.746350
+
+2026-04-17 13:26:21.208	(DCPoller) Starting polling process: from 2026-04-17 11:26:01.633851+00:00 to 2026-04-17 11:26:20.943768+00:00
+
+2026-04-17 13:26:24.948	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:26:24.948	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:26:24.948	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:26:24.948	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14717), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (5016 bytes)
+
+2026-04-17 13:26:24.949	INFO:     127.0.0.1:34870 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:26:24.949	(Publisher) Logging event : Received PUBACK (Mid: 14717)
+
+2026-04-17 13:26:27.198	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:26:27.198	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:26:40.948	(DCPoller) Starting polling process: from 2026-04-17 11:26:20.943768+00:00 to 2026-04-17 11:26:40.661466+00:00
+
+2026-04-17 13:26:40.948	(API-Poller) Starting polling process: from 2026-04-17 11:26:20.746350 to 2026-04-17 11:26:40.762442
+
+2026-04-17 13:26:43.948	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:26:43.948	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:26:43.948	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:26:43.948	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14718), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (4824 bytes)
+
+2026-04-17 13:26:43.949	INFO:     127.0.0.1:54762 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:26:43.949	(Publisher) Logging event : Received PUBACK (Mid: 14718)
+
+2026-04-17 13:26:52.198	error send Events: failed to send request: Post "http://localhost/bulk/v1/events": dial unix /var/snap/rexroth-deviceadmin/common/rda-proxy-service/rexroth-deviceadmin/proxy.sock: connect: connection refused
+
+2026-04-17 13:26:54.698	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN was successful released
+
+2026-04-17 13:26:54.698	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN in version 1.0 was successful acquired
+
+2026-04-17 13:26:57.198	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:26:57.198	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:26:59.948	(DCPoller) Starting polling process: from 2026-04-17 11:26:40.661466+00:00 to 2026-04-17 11:26:59.691300+00:00
+
+2026-04-17 13:27:01.198	(API-Poller) Starting polling process: from 2026-04-17 11:26:40.762442 to 2026-04-17 11:27:00.781955
+
+2026-04-17 13:27:03.698	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:27:03.698	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:27:03.698	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:27:03.698	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14719), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (5210 bytes)
+
+2026-04-17 13:27:03.698	INFO:     127.0.0.1:40210 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:27:03.698	(Publisher) Logging event : Received PUBACK (Mid: 14719)
+
+2026-04-17 13:27:19.698	(DCPoller) Starting polling process: from 2026-04-17 11:26:59.691300+00:00 to 2026-04-17 11:27:19.269568+00:00
+
+2026-04-17 13:27:21.198	(API-Poller) Starting polling process: from 2026-04-17 11:27:00.781955 to 2026-04-17 11:27:20.791100
+
+2026-04-17 13:27:23.448	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:27:23.448	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:27:23.448	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:27:23.448	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14720), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (5392 bytes)
+
+2026-04-17 13:27:23.448	INFO:     127.0.0.1:47708 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:27:23.448	(Publisher) Logging event : Received PUBACK (Mid: 14720)
+
+2026-04-17 13:27:27.448	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:27:27.448	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:27:39.448	(DCPoller) Starting polling process: from 2026-04-17 11:27:19.269568+00:00 to 2026-04-17 11:27:38.989334+00:00
+
+2026-04-17 13:27:41.198	(API-Poller) Starting polling process: from 2026-04-17 11:27:20.791100 to 2026-04-17 11:27:40.797410
+
+2026-04-17 13:27:42.948	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:27:42.948	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:27:42.948	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:27:42.948	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14721), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (5316 bytes)
+
+2026-04-17 13:27:42.948	INFO:     127.0.0.1:54500 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:27:42.949	(Publisher) Logging event : Received PUBACK (Mid: 14721)
+
+2026-04-17 13:27:52.198	error send Events: failed to send request: Post "http://localhost/bulk/v1/events": dial unix /var/snap/rexroth-deviceadmin/common/rda-proxy-service/rexroth-deviceadmin/proxy.sock: connect: connection refused
+
+2026-04-17 13:27:54.698	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN was successful released
+
+2026-04-17 13:27:54.698	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN in version 1.0 was successful acquired
+
+2026-04-17 13:27:58.198	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:27:58.198	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:27:58.948	(DCPoller) Starting polling process: from 2026-04-17 11:27:38.989334+00:00 to 2026-04-17 11:27:58.667269+00:00
+
+2026-04-17 13:28:01.198	(API-Poller) Starting polling process: from 2026-04-17 11:27:40.797410 to 2026-04-17 11:28:00.816968
+
+2026-04-17 13:28:02.202	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:28:02.202	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:28:02.202	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:28:02.203	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14722), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (4724 bytes)
+
+2026-04-17 13:28:02.203	INFO:     127.0.0.1:35288 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:28:02.203	(Publisher) Logging event : Received PUBACK (Mid: 14722)
+
+2026-04-17 13:28:18.448	(DCPoller) Starting polling process: from 2026-04-17 11:27:58.667269+00:00 to 2026-04-17 11:28:17.948052+00:00
+
+2026-04-17 13:28:21.198	(API-Poller) Starting polling process: from 2026-04-17 11:28:00.816968 to 2026-04-17 11:28:20.836228
+
+2026-04-17 13:28:21.949	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:28:21.949	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:28:21.949	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:28:21.949	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14723), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (5366 bytes)
+
+2026-04-17 13:28:21.949	INFO:     127.0.0.1:55316 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:28:21.949	(Publisher) Logging event : Received PUBACK (Mid: 14723)
+
+2026-04-17 13:28:28.948	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:28:28.948	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:28:37.948	(DCPoller) Starting polling process: from 2026-04-17 11:28:17.948052+00:00 to 2026-04-17 11:28:37.557093+00:00
+
+2026-04-17 13:28:41.098	(API-Poller) Starting polling process: from 2026-04-17 11:28:20.836228 to 2026-04-17 11:28:40.842889
+
+2026-04-17 13:28:41.098	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:28:41.098	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:28:41.098	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:28:41.098	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14724), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (5143 bytes)
+
+2026-04-17 13:28:41.098	INFO:     127.0.0.1:38320 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:28:41.448	(Publisher) Logging event : Received PUBACK (Mid: 14724)
+
+2026-04-17 13:28:52.198	error send Events: failed to send request: Post "http://localhost/bulk/v1/events": dial unix /var/snap/rexroth-deviceadmin/common/rda-proxy-service/rexroth-deviceadmin/proxy.sock: connect: connection refused
+
+2026-04-17 13:28:54.698	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN was successful released
+
+2026-04-17 13:28:54.698	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN in version 1.0 was successful acquired
+
+2026-04-17 13:28:57.448	(DCPoller) Starting polling process: from 2026-04-17 11:28:37.557093+00:00 to 2026-04-17 11:28:57.116301+00:00
+
+2026-04-17 13:28:59.448	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:28:59.448	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:29:01.199	(API-Poller) Starting polling process: from 2026-04-17 11:28:40.842889 to 2026-04-17 11:29:00.862764
+
+2026-04-17 13:29:01.199	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:29:01.199	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:29:01.199	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:29:01.199	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14725), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (5638 bytes)
+
+2026-04-17 13:29:01.199	INFO:     127.0.0.1:60166 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:29:01.199	(Publisher) Logging event : Received PUBACK (Mid: 14725)
+
+2026-04-17 13:29:17.198	(DCPoller) Starting polling process: from 2026-04-17 11:28:57.116301+00:00 to 2026-04-17 11:29:16.924897+00:00
+
+2026-04-17 13:29:20.198	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:29:20.198	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:29:20.198	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:29:20.198	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14726), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (4778 bytes)
+
+2026-04-17 13:29:20.198	INFO:     127.0.0.1:36626 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:29:20.198	(Publisher) Logging event : Received PUBACK (Mid: 14726)
+
+2026-04-17 13:29:21.198	(API-Poller) Starting polling process: from 2026-04-17 11:29:00.862764 to 2026-04-17 11:29:20.882430
+
+2026-04-17 13:29:30.448	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:29:30.448	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:29:36.447	(DCPoller) Starting polling process: from 2026-04-17 11:29:16.924897+00:00 to 2026-04-17 11:29:35.956967+00:00
+
+2026-04-17 13:29:39.698	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:29:39.698	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:29:39.698	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:29:39.699	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14727), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (4687 bytes)
+
+2026-04-17 13:29:39.699	INFO:     127.0.0.1:57628 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:29:39.699	(Publisher) Logging event : Received PUBACK (Mid: 14727)
+
+2026-04-17 13:29:41.198	(API-Poller) Starting polling process: from 2026-04-17 11:29:20.882430 to 2026-04-17 11:29:40.883037
+
+2026-04-17 13:29:42.698	2026/04/17 13:29:42 Checking login token for boschrexroth
+
+2026-04-17 13:29:42.698	2026/04/17 13:29:42 getting secret data for PAM: "Password: "
+
+2026-04-17 13:29:42.698	2026/04/17 13:29:42 [idm] Error : get plc handle: 404 Not Found {"type": "about:blank","title": "DL_INVALID_ADDRESS","status": 404,"detail": "Can't read type information","instance": "plc/admin/identity-management/userhandles","severity": "Error"}
+
+2026-04-17 13:29:42.698	|boschrexroth|080A0300|Security: Change in identity management|0C7A0004|User login|||web.identitymanager||||User boschrexroth login
+
+2026-04-17 13:29:44.611	Log statistics; processed='global(msg_clones)=0', dropped='global(internal_source)=0', queued='global(internal_source)=0', msg_size_max='dst.syslog(d_dst57c68#0,tcp,10.223.22.184:12201)=5426', eps_last_1h='dst.syslog(d_dst57c68#0,tcp,10.223.22.184:12201)=1', processed='src.internal(s_src#0)=607', stamp='src.internal(s_src#0)=1776424784', eps_last_24h='dst.syslog(d_dst57c68#0,tcp,10.223.22.184:12201)=2', processed='source(s_src)=221526', processed='global(sdata_updates)=0', eps_since_start='dst.syslog(d_dst57c68#0,tcp,10.223.22.184:12201)=0', queued='global(scratch_buffers_count)=0', processed='center(queued)=221526', truncated_count='dst.syslog(d_dst57c68#0,tcp,10.223.22.184:12201)=0', processed='destination(d_dst57c68)=221526', truncated_bytes='dst.syslog(d_dst57c68#0,tcp,10.223.22.184:12201)=0', processed='src.journald(s_src#1,journal)=220919', stamp='src.journald(s_src#1,journal)=1776425382', msg_size_avg='dst.syslog(d_dst57c68#0,tcp,10.223.22.184:12201)=164', processed='global(payload_reallocs)=631125', processed='center(received)=221526', dropped='dst.syslog(d_dst57c68#0,tcp,10.223.22.184:12201)=0', processed='dst.syslog(d_dst57c68#0,tcp,10.223.22.184:12201)=221526', queued='dst.syslog(d_dst57c68#0,tcp,10.223.22.184:12201)=0', written='dst.syslog(d_dst57c68#0,tcp,10.223.22.184:12201)=221526', processed='global(internal_queue_length)=0', queued='global(scratch_buffers_bytes)=0'
+
+2026-04-17 13:29:46.949	[system] Activating via systemd: service name='org.freedesktop.timedate1' unit='dbus-org.freedesktop.timedate1.service' requested by ':1.10' (uid=0 pid=2352 comm="/snap/rexroth-deviceadmin/5848/bin/wasp -config /v" label="snap.rexroth-deviceadmin.web (enforce)")
+
+2026-04-17 13:29:46.949	2026/04/17 13:29:46 WatchJournal
+
+2026-04-17 13:29:46.949	2026/04/17 13:29:46 SSE client added: @
+
+2026-04-17 13:29:46.949	2026/04/17 13:29:46 1 clients registered
+
+2026-04-17 13:29:46.949	Starting Time & Date Service...
+
+2026-04-17 13:29:48.198	[system] Successfully activated service 'org.freedesktop.timedate1'
+
+2026-04-17 13:29:48.198	Started Time & Date Service.
+
+2026-04-17 13:29:50.699	2026/04/17 13:29:50 SSE client deleted: @
+
+2026-04-17 13:29:50.699	2026/04/17 13:29:50 0 SSE clients registered
+
+2026-04-17 13:29:50.699	2026/04/17 13:29:50 STOP WatchJournal
+
+2026-04-17 13:29:52.197	error send Events: failed to send request: Post "http://localhost/bulk/v1/events": dial unix /var/snap/rexroth-deviceadmin/common/rda-proxy-service/rexroth-deviceadmin/proxy.sock: connect: connection refused
+
+2026-04-17 13:29:54.698	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN was successful released
+
+2026-04-17 13:29:54.698	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN in version 1.0 was successful acquired
+
+2026-04-17 13:29:55.948	(DCPoller) Starting polling process: from 2026-04-17 11:29:35.956967+00:00 to 2026-04-17 11:29:55.458542+00:00
+
+2026-04-17 13:29:56.692	logger=cleanup t=2026-04-17T13:29:56.398033789+02:00 level=info msg="Completed cleanup jobs" duration=5.78941ms
+
+2026-04-17 13:29:56.692	logger=plugins.update.checker t=2026-04-17T13:29:56.690505309+02:00 level=info msg="Update check succeeded" duration=76.428507ms
+
+2026-04-17 13:29:59.448	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:29:59.448	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:29:59.448	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:29:59.448	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14728), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (5426 bytes)
+
+2026-04-17 13:29:59.448	INFO:     127.0.0.1:58558 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:29:59.448	(Publisher) Logging event : Received PUBACK (Mid: 14728)
+
+2026-04-17 13:30:00.698	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:30:00.698	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:30:01.198	(API-Poller) Starting polling process: from 2026-04-17 11:29:40.883037 to 2026-04-17 11:30:00.902533
+
+2026-04-17 13:30:09.198	2026/04/17 13:30:08 SSE client added: @
+
+2026-04-17 13:30:09.198	2026/04/17 13:30:08 1 clients registered
+
+2026-04-17 13:30:09.198	2026/04/17 13:30:08 WatchJournal
+
+2026-04-17 13:30:10.322	ts=2026-04-17T11:30:09.962902Z lvl=info msg=Unauthorized log_id=12DVKPWG000 error="token required"
+
+2026-04-17 13:30:10.322	2026/04/17 13:30:10 SSE client deleted: @
+
+2026-04-17 13:30:10.322	2026/04/17 13:30:10 0 SSE clients registered
+
+2026-04-17 13:30:10.698	2026/04/17 13:30:10 STOP WatchJournal
+
+2026-04-17 13:30:15.448	(DCPoller) Starting polling process: from 2026-04-17 11:29:55.458542+00:00 to 2026-04-17 11:30:15.189662+00:00
+
+2026-04-17 13:30:18.699	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:30:18.699	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:30:18.699	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:30:18.699	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14729), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (4763 bytes)
+
+2026-04-17 13:30:18.699	INFO:     127.0.0.1:40840 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:30:18.699	(Publisher) Logging event : Received PUBACK (Mid: 14729)
+
+2026-04-17 13:30:21.198	(API-Poller) Starting polling process: from 2026-04-17 11:30:00.902533 to 2026-04-17 11:30:20.917724
+
+2026-04-17 13:30:30.698	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:30:30.698	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:30:33.699	systemd-timedated.service: Deactivated successfully.
+
+2026-04-17 13:30:34.699	(DCPoller) Starting polling process: from 2026-04-17 11:30:15.189662+00:00 to 2026-04-17 11:30:34.284111+00:00
+
+2026-04-17 13:30:37.948	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:30:37.948	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:30:37.948	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:30:37.949	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14730), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (4537 bytes)
+
+2026-04-17 13:30:37.949	INFO:     127.0.0.1:38078 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:30:37.949	(Publisher) Logging event : Received PUBACK (Mid: 14730)
+
+2026-04-17 13:30:41.197	(API-Poller) Starting polling process: from 2026-04-17 11:30:20.917724 to 2026-04-17 11:30:40.935872
+
+2026-04-17 13:30:52.198	error send Events: failed to send request: Post "http://localhost/bulk/v1/events": dial unix /var/snap/rexroth-deviceadmin/common/rda-proxy-service/rexroth-deviceadmin/proxy.sock: connect: connection refused
+
+2026-04-17 13:30:54.198	(DCPoller) Starting polling process: from 2026-04-17 11:30:34.284111+00:00 to 2026-04-17 11:30:53.727951+00:00
+
+2026-04-17 13:30:54.698	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN was successful released
+
+2026-04-17 13:30:54.698	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN in version 1.0 was successful acquired
+
+2026-04-17 13:30:56.948	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:30:56.948	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:30:56.948	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:30:56.948	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14731), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (4720 bytes)
+
+2026-04-17 13:30:56.948	INFO:     127.0.0.1:60548 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:30:56.948	(Publisher) Logging event : Received PUBACK (Mid: 14731)
+
+2026-04-17 13:31:01.198	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:31:01.198	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:31:01.198	(API-Poller) Starting polling process: from 2026-04-17 11:30:40.935872 to 2026-04-17 11:31:00.951862
+
+2026-04-17 13:31:14.198	(DCPoller) Starting polling process: from 2026-04-17 11:30:53.727951+00:00 to 2026-04-17 11:31:13.701954+00:00
+
+2026-04-17 13:31:17.199	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:31:17.199	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:31:17.199	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:31:17.199	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14732), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (4997 bytes)
+
+2026-04-17 13:31:17.199	INFO:     127.0.0.1:53980 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:31:17.199	(Publisher) Logging event : Received PUBACK (Mid: 14732)
+
+2026-04-17 13:31:21.448	(API-Poller) Starting polling process: from 2026-04-17 11:31:00.951862 to 2026-04-17 11:31:20.954609
+
+2026-04-17 13:31:31.198	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:31:31.198	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:31:33.198	(DCPoller) Starting polling process: from 2026-04-17 11:31:13.701954+00:00 to 2026-04-17 11:31:32.897537+00:00
+
+2026-04-17 13:31:36.448	(DCPoller) Publishing data to http://127.0.0.1:9003/ctrlx-linck-linckdc/publisher/publish
+
+2026-04-17 13:31:36.448	(Publisher) Publishing data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:31:36.448	(Publisher) Send data to topic /linck/asset/ALPHA-DE-001/measurements
+
+2026-04-17 13:31:36.449	(Publisher) Logging event : Sending PUBLISH (d0, q1, r0, m14733), 'b'/linck/asset/ALPHA-DE-001/measurements'', properties=None, ... (4765 bytes)
+
+2026-04-17 13:31:36.449	INFO:     127.0.0.1:35144 - "POST /ctrlx-linck-linckdc/publisher/publish HTTP/1.1" 200 OK
+
+2026-04-17 13:31:36.449	(Publisher) Logging event : Received PUBACK (Mid: 14733)
+
+2026-04-17 13:31:39.448	ts=2026-04-17T11:31:39.149839Z lvl=info msg="Retention policy deletion check (start)" log_id=12DVKPWG000 service=retention op_name=retention_delete_check op_event=start
+
+2026-04-17 13:31:39.448	ts=2026-04-17T11:31:39.151061Z lvl=info msg="Pruning shard groups after retention check (start)" log_id=12DVKPWG000 service=retention op_name=retention_delete_check op_name=retention_prune_shard_groups op_event=start
+
+2026-04-17 13:31:39.448	ts=2026-04-17T11:31:39.151521Z lvl=info msg="Pruning shard groups after retention check (end)" log_id=12DVKPWG000 service=retention op_name=retention_delete_check op_name=retention_prune_shard_groups op_event=end op_elapsed=0.484ms
+
+2026-04-17 13:31:39.449	ts=2026-04-17T11:31:39.151596Z lvl=info msg="Retention policy deletion check (end)" log_id=12DVKPWG000 service=retention op_name=retention_delete_check op_event=end op_elapsed=1.868ms
+
+2026-04-17 13:31:41.448	(API-Poller) Starting polling process: from 2026-04-17 11:31:20.954609 to 2026-04-17 11:31:40.968993
+
+2026-04-17 13:32:58.522	2026-04-17T11:31:52.425658Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.522	2026-04-17T11:31:52.436204Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.522	2026-04-17T11:31:52.446551Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.522	2026-04-17T11:31:52.456886Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.522	2026-04-17T11:31:52.467201Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.522	(DCPoller) Starting polling process: from 2026-04-17 11:31:32.897537+00:00 to 2026-04-17 11:31:52.099776+00:00
+
+2026-04-17 13:32:58.522	(API-Poller) Starting polling process: from 2026-04-17 11:31:40.968993 to 2026-04-17 11:32:00.974588
+
+2026-04-17 13:32:58.522	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:32:58.522	packet queue is empty, aborting
+
+2026-04-17 13:32:58.522	2026-04-17T11:32:02.477651Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.522	2026-04-17T11:32:02.487995Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.523	2026-04-17T11:32:02.498341Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.523	2026-04-17T11:32:02.508656Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.523	2026-04-17T11:32:02.519004Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.523	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:32:58.523	(Storage) Could not query database: ReadTimeoutError("HTTPConnectionPool(host='127.0.0.1', port=8086): Read timed out. (read timeout=9.99919076700462)")
+
+2026-04-17 13:32:58.523	HTTPConnectionPool(host='127.0.0.1', port=8086): Read timed out. (read timeout=9.99919076700462)
+
+2026-04-17 13:32:58.523	(DCPoller) Measurements values is None
+
+2026-04-17 13:32:58.523	(DCPoller) No publish because of an empty payload !
+
+2026-04-17 13:32:58.523	Exception in thread Thread-1 (loop):
+
+2026-04-17 13:32:58.523	Traceback (most recent call last):
+
+2026-04-17 13:32:58.523	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/urllib3/connectionpool.py", line 534, in _make_request
+
+2026-04-17 13:32:58.523	2026-04-17T11:32:12.529574Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.523	2026-04-17T11:32:12.539889Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.523	2026-04-17T11:32:12.550272Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.523	2026-04-17T11:32:12.560584Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.523	2026-04-17T11:32:12.570867Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.523	    response = conn.getresponse()
+
+2026-04-17 13:32:58.523	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/urllib3/connection.py", line 571, in getresponse
+
+2026-04-17 13:32:58.523	    httplib_response = super().getresponse()
+
+2026-04-17 13:32:58.523	  File "/usr/lib/python3.10/http/client.py", line 1375, in getresponse
+
+2026-04-17 13:32:58.523	    response.begin()
+
+2026-04-17 13:32:58.523	  File "/usr/lib/python3.10/http/client.py", line 318, in begin
+
+2026-04-17 13:32:58.523	    version, status, reason = self._read_status()
+
+2026-04-17 13:32:58.523	  File "/usr/lib/python3.10/http/client.py", line 279, in _read_status
+
+2026-04-17 13:32:58.523	    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+
+2026-04-17 13:32:58.523	  File "/usr/lib/python3.10/socket.py", line 705, in readinto
+
+2026-04-17 13:32:58.523	    return self._sock.recv_into(b)
+
+2026-04-17 13:32:58.523	TimeoutError: timed out
+
+2026-04-17 13:32:58.523	The above exception was the direct cause of the following exception:
+
+2026-04-17 13:32:58.523	Traceback (most recent call last):
+
+2026-04-17 13:32:58.523	  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+
+2026-04-17 13:32:58.523	    self.run()
+
+2026-04-17 13:32:58.523	  File "/usr/lib/python3.10/threading.py", line 953, in run
+
+2026-04-17 13:32:58.523	    self._target(*self._args, **self._kwargs)
+
+2026-04-17 13:32:58.523	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/linckapi/poller/poller.py", line 215, in loop
+
+2026-04-17 13:32:58.523	    results = self.influxdb.query_data("linckapi", self.start_period, self.stop_period)
+
+2026-04-17 13:32:58.523	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/utils/db.py", line 601, in query_data
+
+2026-04-17 13:32:58.523	    if not self.connected or not self.bucket_api.find_bucket_by_name(bucket):
+
+2026-04-17 13:32:58.523	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/influxdb_client/client/bucket_api.py", line 101, in find_bucket_by_name
+
+2026-04-17 13:32:58.523	    buckets = self._buckets_service.get_buckets(name=bucket_name)
+
+2026-04-17 13:32:58.523	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/influxdb_client/service/buckets_service.py", line 558, in get_buckets
+
+2026-04-17 13:32:58.523	    (data) = self.get_buckets_with_http_info(**kwargs)  # noqa: E501
+
+2026-04-17 13:32:58.523	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/influxdb_client/service/buckets_service.py", line 586, in get_buckets_with_http_info
+
+2026-04-17 13:32:58.523	    return self.api_client.call_api(
+
+2026-04-17 13:32:58.523	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/influxdb_client/_sync/api_client.py", line 343, in call_api
+
+2026-04-17 13:32:58.523	    return self.__call_api(resource_path, method,
+
+2026-04-17 13:32:58.523	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/influxdb_client/_sync/api_client.py", line 173, in __call_api
+
+2026-04-17 13:32:58.523	    response_data = self.request(
+
+2026-04-17 13:32:58.523	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/influxdb_client/_sync/api_client.py", line 365, in request
+
+2026-04-17 13:32:58.523	    return self.rest_client.GET(url,
+
+2026-04-17 13:32:58.524	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/influxdb_client/_sync/rest.py", line 268, in GET
+
+2026-04-17 13:32:58.524	    return self.request("GET", url,
+
+2026-04-17 13:32:58.524	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/influxdb_client/_sync/rest.py", line 235, in request
+
+2026-04-17 13:32:58.524	    r = self.pool_manager.request(method, url,
+
+2026-04-17 13:32:58.524	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/urllib3/_request_methods.py", line 135, in request
+
+2026-04-17 13:32:58.524	    return self.request_encode_url(
+
+2026-04-17 13:32:58.524	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/urllib3/_request_methods.py", line 182, in request_encode_url
+
+2026-04-17 13:32:58.524	    return self.urlopen(method, url, **extra_kw)
+
+2026-04-17 13:32:58.524	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/urllib3/poolmanager.py", line 457, in urlopen
+
+2026-04-17 13:32:58.524	    response = conn.urlopen(method, u.request_uri, **kw)
+
+2026-04-17 13:32:58.524	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+
+2026-04-17 13:32:58.524	    retries = retries.increment(
+
+2026-04-17 13:32:58.524	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/urllib3/util/retry.py", line 465, in increment
+
+2026-04-17 13:32:58.524	    raise reraise(type(error), error, _stacktrace)
+
+2026-04-17 13:32:58.524	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/urllib3/util/util.py", line 39, in reraise
+
+2026-04-17 13:32:58.524	    raise value
+
+2026-04-17 13:32:58.524	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+
+2026-04-17 13:32:58.524	    response = self._make_request(
+
+2026-04-17 13:32:58.524	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/urllib3/connectionpool.py", line 536, in _make_request
+
+2026-04-17 13:32:58.524	    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+
+2026-04-17 13:32:58.524	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/urllib3/connectionpool.py", line 367, in _raise_timeout
+
+2026-04-17 13:32:58.524	    raise ReadTimeoutError(
+
+2026-04-17 13:32:58.524	urllib3.exceptions.ReadTimeoutError: HTTPConnectionPool(host='127.0.0.1', port=8086): Read timed out. (read timeout=9.965110669028945)
+
+2026-04-17 13:32:58.524	(API-Poller) Poller isn't running anymore. Establish new connection in 10 seconds...
+
+2026-04-17 13:32:58.524	2026-04-17T11:32:22.581327Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.524	2026-04-17T11:32:22.591695Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.524	2026-04-17T11:32:22.602034Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.524	2026-04-17T11:32:22.612350Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.524	2026-04-17T11:32:22.622713Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.524	ts=2026-04-17T11:32:16.544769Z lvl=warn msg="internal error not returned to client" log_id=12DVKPWG000 handler=error_logger error="context canceled"
+
+2026-04-17 13:32:58.524	(DCPoller) Starting polling process: from 2026-04-17 11:31:52.099776+00:00 to 2026-04-17 11:32:23.929931+00:00
+
+2026-04-17 13:32:58.524	(API-Poller) Creating poller...
+
+2026-04-17 13:32:58.524	2026-04-17T11:32:31.265884Z||080E0280|Data layer provider connection interrupted|0C340000|The Data Layer provider was logged off due to inactivity.|PROV eb1b386383||||||Responsible for system/admin/busysystem/characteristicssystem/characteristics/connectivitysystem/characteristics/connectivity/ethernetsystem/characteristics/connectivity/ethernet/portssystem/characteristics/cpusystem/characteristics/cpu/architecturesystem
+
+2026-04-17 13:32:58.524	2026-04-17T11:32:31.265874Z||080F0110|Trace error common.log.diagnosis|||diagnosis|Automation Core|common.log.diagnosis|log.cpp|log|145|For diagnostic 080E0280/0C340000: Source string size of parameter 'dynamic description' exceeded and is truncated after 255 characters (or before, depending on variable arguments).
+
+2026-04-17 13:32:58.524	2026-04-17T11:32:32.633179Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.524	2026-04-17T11:32:32.643554Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.524	2026-04-17T11:32:32.653894Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.524	2026-04-17T11:32:32.664248Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.524	2026-04-17T11:32:32.674577Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.525	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:32:58.525	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:32:58.525	AVC apparmor="DENIED" operation="capable" profile="snap.ctrlx-linck-linckdc.linckdc" pid=116381 comm="python3" capability=12  capname="net_admin"
+
+2026-04-17 13:32:58.525	audit: type=1400 audit(1776425555.210:230): apparmor="DENIED" operation="capable" profile="snap.ctrlx-linck-linckdc.linckdc" pid=116381 comm="python3" capability=12  capname="net_admin"
+
+2026-04-17 13:32:58.525	(Storage) Could not query database: ReadTimeoutError("HTTPConnectionPool(host='127.0.0.1', port=8086): Read timed out. (read timeout=9.980215431016404)")
+
+2026-04-17 13:32:58.525	HTTPConnectionPool(host='127.0.0.1', port=8086): Read timed out. (read timeout=9.980215431016404)
+
+2026-04-17 13:32:58.525	(DCPoller) Measurements values is None
+
+2026-04-17 13:32:58.525	(DCPoller) No publish because of an empty payload !
+
+2026-04-17 13:32:58.525	(Storage) Could not write in database: ReadTimeoutError("HTTPConnectionPool(host='127.0.0.1', port=8086): Read timed out. (read timeout=9.999217476986814)")
+
+2026-04-17 13:32:58.525	ts=2026-04-17T11:32:28.407667Z lvl=info msg="Cache snapshot (start)" log_id=12DVKPWG000 service=storage-engine engine=tsm1 op_name=tsm1_cache_snapshot op_event=start
+
+2026-04-17 13:32:58.525	(Storage) Could not write in database: ReadTimeoutError("HTTPConnectionPool(host='127.0.0.1', port=8086): Read timed out. (read timeout=9.99928693799302)")
+
+2026-04-17 13:32:58.525	2026-04-17T11:32:42.685052Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.525	2026-04-17T11:32:42.695361Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.525	2026-04-17T11:32:42.705690Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.525	2026-04-17T11:32:42.716112Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.525	2026-04-17T11:32:42.726457Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.525	Traceback (most recent call last):
+
+2026-04-17 13:32:58.525	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/urllib3/connectionpool.py", line 534, in _make_request
+
+2026-04-17 13:32:58.525	    response = conn.getresponse()
+
+2026-04-17 13:32:58.525	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/urllib3/connection.py", line 571, in getresponse
+
+2026-04-17 13:32:58.525	    httplib_response = super().getresponse()
+
+2026-04-17 13:32:58.525	  File "/usr/lib/python3.10/http/client.py", line 1375, in getresponse
+
+2026-04-17 13:32:58.525	    response.begin()
+
+2026-04-17 13:32:58.525	  File "/usr/lib/python3.10/http/client.py", line 318, in begin
+
+2026-04-17 13:32:58.525	    version, status, reason = self._read_status()
+
+2026-04-17 13:32:58.525	  File "/usr/lib/python3.10/http/client.py", line 279, in _read_status
+
+2026-04-17 13:32:58.525	    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+
+2026-04-17 13:32:58.525	  File "/usr/lib/python3.10/socket.py", line 705, in readinto
+
+2026-04-17 13:32:58.525	    return self._sock.recv_into(b)
+
+2026-04-17 13:32:58.525	TimeoutError: timed out
+
+2026-04-17 13:32:58.525	The above exception was the direct cause of the following exception:
+
+2026-04-17 13:32:58.525	Traceback (most recent call last):
+
+2026-04-17 13:32:58.525	  File "/snap/ctrlx-linck-linckdc/x12/bin/apidata", line 6, in <module>
+
+2026-04-17 13:32:58.525	    sys.exit(main())
+
+2026-04-17 13:32:58.525	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/linckapi/poller/poller.py", line 361, in main
+
+2026-04-17 13:32:58.525	    poller_thread = create_poller()
+
+2026-04-17 13:32:58.525	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/linckapi/poller/poller.py", line 334, in create_poller
+
+2026-04-17 13:32:58.525	    poller = DataPoller()
+
+2026-04-17 13:32:58.526	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/linckapi/poller/poller.py", line 138, in __init__
+
+2026-04-17 13:32:58.526	    self.influxdb = InfluxDataBaseHandler(url)
+
+2026-04-17 13:32:58.526	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/utils/db.py", line 309, in __init__
+
+2026-04-17 13:32:58.526	    self.influx_client.authorizations_api().find_authorizations()
+
+2026-04-17 13:32:58.526	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/influxdb_client/client/authorizations_api.py", line 51, in find_authorizations
+
+2026-04-17 13:32:58.526	    authorizations = self._authorizations_service.get_authorizations(**kwargs)
+
+2026-04-17 13:32:58.526	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/influxdb_client/service/authorizations_service.py", line 175, in get_authorizations
+
+2026-04-17 13:32:58.526	    (data) = self.get_authorizations_with_http_info(**kwargs)  # noqa: E501
+
+2026-04-17 13:32:58.526	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/influxdb_client/service/authorizations_service.py", line 201, in get_authorizations_with_http_info
+
+2026-04-17 13:32:58.526	    return self.api_client.call_api(
+
+2026-04-17 13:32:58.526	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/influxdb_client/_sync/api_client.py", line 343, in call_api
+
+2026-04-17 13:32:58.526	    return self.__call_api(resource_path, method,
+
+2026-04-17 13:32:58.526	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/influxdb_client/_sync/api_client.py", line 173, in __call_api
+
+2026-04-17 13:32:58.526	    response_data = self.request(
+
+2026-04-17 13:32:58.526	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/influxdb_client/_sync/api_client.py", line 365, in request
+
+2026-04-17 13:32:58.526	    return self.rest_client.GET(url,
+
+2026-04-17 13:32:58.526	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/influxdb_client/_sync/rest.py", line 268, in GET
+
+2026-04-17 13:32:58.526	    return self.request("GET", url,
+
+2026-04-17 13:32:58.526	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/influxdb_client/_sync/rest.py", line 235, in request
+
+2026-04-17 13:32:58.526	    r = self.pool_manager.request(method, url,
+
+2026-04-17 13:32:58.526	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/urllib3/_request_methods.py", line 135, in request
+
+2026-04-17 13:32:58.526	    return self.request_encode_url(
+
+2026-04-17 13:32:58.526	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/urllib3/_request_methods.py", line 182, in request_encode_url
+
+2026-04-17 13:32:58.526	    return self.urlopen(method, url, **extra_kw)
+
+2026-04-17 13:32:58.526	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/urllib3/poolmanager.py", line 457, in urlopen
+
+2026-04-17 13:32:58.526	    response = conn.urlopen(method, u.request_uri, **kw)
+
+2026-04-17 13:32:58.526	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+
+2026-04-17 13:32:58.526	    retries = retries.increment(
+
+2026-04-17 13:32:58.526	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/urllib3/util/retry.py", line 465, in increment
+
+2026-04-17 13:32:58.526	    raise reraise(type(error), error, _stacktrace)
+
+2026-04-17 13:32:58.526	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/urllib3/util/util.py", line 39, in reraise
+
+2026-04-17 13:32:58.526	    raise value
+
+2026-04-17 13:32:58.526	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+
+2026-04-17 13:32:58.526	    response = self._make_request(
+
+2026-04-17 13:32:58.526	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/urllib3/connectionpool.py", line 536, in _make_request
+
+2026-04-17 13:32:58.526	    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+
+2026-04-17 13:32:58.526	  File "/snap/ctrlx-linck-linckdc/x12/lib/python3.10/site-packages/urllib3/connectionpool.py", line 367, in _raise_timeout
+
+2026-04-17 13:32:58.526	    raise ReadTimeoutError(
+
+2026-04-17 13:32:58.526	urllib3.exceptions.ReadTimeoutError: HTTPConnectionPool(host='127.0.0.1', port=8086): Read timed out. (read timeout=9.999440417974256)
+
+2026-04-17 13:32:58.526	(Storage) Database on http://127.0.0.1:8086 is currently not available. Storing data in a temporary file. Please check connection.
+
+2026-04-17 13:32:58.527	snap.ctrlx-linck-linckdc.apidata.service: Main process exited, code=exited, status=1/FAILURE
+
+2026-04-17 13:32:58.527	snap.ctrlx-linck-linckdc.apidata.service: Failed with result 'exit-code'.
+
+2026-04-17 13:32:58.527	2026-04-17T11:32:52.736927Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.527	2026-04-17T11:32:52.747278Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.527	2026-04-17T11:32:52.757573Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.527	2026-04-17T11:32:52.767845Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.528	2026-04-17T11:32:52.778132Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:32:58.528	(Storage) Database on http://127.0.0.1:8086 is currently not available. Storing data in a temporary file. Please check connection.
+
+2026-04-17 13:32:58.528	(DCPoller) Starting polling process: from 2026-04-17 11:32:23.929931+00:00 to 2026-04-17 11:32:55.560100+00:00
+
+2026-04-17 13:32:58.528	ts=2026-04-17T11:32:56.040368Z lvl=warn msg="internal error not returned to client" log_id=12DVKPWG000 handler=error_logger error="context canceled"
+
+2026-04-17 13:32:58.528	AVC apparmor="DENIED" operation="capable" profile="snap.ctrlx-linck-linckdc.linckdc" pid=116381 comm="python3" capability=12  capname="net_admin"
+
+2026-04-17 13:32:58.528	audit: type=1400 audit(1776425577.110:231): apparmor="DENIED" operation="capable" profile="snap.ctrlx-linck-linckdc.linckdc" pid=116381 comm="python3" capability=12  capname="net_admin"
+
+2026-04-17 13:32:58.530	ts=2026-04-17T11:32:58.416387Z lvl=info msg="Snapshot for path written" log_id=12DVKPWG000 service=storage-engine engine=tsm1 op_name=tsm1_cache_snapshot path=/media/mmcblk1p1/ctrlx-influxdb/common/engine/data/0a595a6a7e691014/autogen/197 duration=31000.408ms
+
+2026-04-17 13:32:58.530	ts=2026-04-17T11:32:58.416526Z lvl=info msg="Cache snapshot (end)" log_id=12DVKPWG000 service=storage-engine engine=tsm1 op_name=tsm1_cache_snapshot op_event=end op_elapsed=30591.572ms
+
+2026-04-17 13:32:59.111	ts=2026-04-17T11:32:58.746612Z lvl=info msg="TSM compaction (start)" log_id=12DVKPWG000 service=storage-engine engine=tsm1 tsm1_level=1 tsm1_strategy=level op_name=tsm1_compact_group op_event=start
+
+2026-04-17 13:32:59.111	ts=2026-04-17T11:32:58.746774Z lvl=info msg="Beginning compaction" log_id=12DVKPWG000 service=storage-engine engine=tsm1 tsm1_level=1 tsm1_strategy=level op_name=tsm1_compact_group tsm1_files_n=8
+
+2026-04-17 13:32:59.111	ts=2026-04-17T11:32:58.746805Z lvl=info msg="Compacting file" log_id=12DVKPWG000 service=storage-engine engine=tsm1 tsm1_level=1 tsm1_strategy=level op_name=tsm1_compact_group tsm1_index=0 tsm1_file=/media/mmcblk1p1/ctrlx-influxdb/common/engine/data/0a595a6a7e691014/autogen/197/000000469-000000001.tsm
+
+2026-04-17 13:32:59.111	ts=2026-04-17T11:32:58.746834Z lvl=info msg="Compacting file" log_id=12DVKPWG000 service=storage-engine engine=tsm1 tsm1_level=1 tsm1_strategy=level op_name=tsm1_compact_group tsm1_index=1 tsm1_file=/media/mmcblk1p1/ctrlx-influxdb/common/engine/data/0a595a6a7e691014/autogen/197/000000470-000000001.tsm
+
+2026-04-17 13:32:59.111	ts=2026-04-17T11:32:58.746865Z lvl=info msg="Compacting file" log_id=12DVKPWG000 service=storage-engine engine=tsm1 tsm1_level=1 tsm1_strategy=level op_name=tsm1_compact_group tsm1_index=2 tsm1_file=/media/mmcblk1p1/ctrlx-influxdb/common/engine/data/0a595a6a7e691014/autogen/197/000000471-000000001.tsm
+
+2026-04-17 13:32:59.111	ts=2026-04-17T11:32:58.746894Z lvl=info msg="Compacting file" log_id=12DVKPWG000 service=storage-engine engine=tsm1 tsm1_level=1 tsm1_strategy=level op_name=tsm1_compact_group tsm1_index=3 tsm1_file=/media/mmcblk1p1/ctrlx-influxdb/common/engine/data/0a595a6a7e691014/autogen/197/000000472-000000001.tsm
+
+2026-04-17 13:32:59.111	ts=2026-04-17T11:32:58.746922Z lvl=info msg="Compacting file" log_id=12DVKPWG000 service=storage-engine engine=tsm1 tsm1_level=1 tsm1_strategy=level op_name=tsm1_compact_group tsm1_index=4 tsm1_file=/media/mmcblk1p1/ctrlx-influxdb/common/engine/data/0a595a6a7e691014/autogen/197/000000473-000000001.tsm
+
+2026-04-17 13:32:59.111	ts=2026-04-17T11:32:58.746954Z lvl=info msg="Compacting file" log_id=12DVKPWG000 service=storage-engine engine=tsm1 tsm1_level=1 tsm1_strategy=level op_name=tsm1_compact_group tsm1_index=5 tsm1_file=/media/mmcblk1p1/ctrlx-influxdb/common/engine/data/0a595a6a7e691014/autogen/197/000000474-000000001.tsm
+
+2026-04-17 13:32:59.111	ts=2026-04-17T11:32:58.746983Z lvl=info msg="Compacting file" log_id=12DVKPWG000 service=storage-engine engine=tsm1 tsm1_level=1 tsm1_strategy=level op_name=tsm1_compact_group tsm1_index=6 tsm1_file=/media/mmcblk1p1/ctrlx-influxdb/common/engine/data/0a595a6a7e691014/autogen/197/000000475-000000001.tsm
+
+2026-04-17 13:32:59.111	ts=2026-04-17T11:32:58.747011Z lvl=info msg="Compacting file" log_id=12DVKPWG000 service=storage-engine engine=tsm1 tsm1_level=1 tsm1_strategy=level op_name=tsm1_compact_group tsm1_index=7 tsm1_file=/media/mmcblk1p1/ctrlx-influxdb/common/engine/data/0a595a6a7e691014/autogen/197/000000476-000000001.tsm
+
+2026-04-17 13:32:59.111	ts=2026-04-17T11:32:59.012052Z lvl=error msg="failed to write to response writer" log_id=12DVKPWG000 error="write tcp 127.0.0.1:8086->127.0.0.1:49122: write: broken pipe"
+
+2026-04-17 13:32:59.450	ts=2026-04-17T11:32:59.310523Z lvl=info msg="Compacted file" log_id=12DVKPWG000 service=storage-engine engine=tsm1 tsm1_level=1 tsm1_strategy=level op_name=tsm1_compact_group tsm1_index=0 tsm1_file=/media/mmcblk1p1/ctrlx-influxdb/common/engine/data/0a595a6a7e691014/autogen/197/000000476-000000002.tsm.tmp
+
+2026-04-17 13:32:59.450	ts=2026-04-17T11:32:59.310616Z lvl=info msg="Finished compacting files" log_id=12DVKPWG000 service=storage-engine engine=tsm1 tsm1_level=1 tsm1_strategy=level op_name=tsm1_compact_group tsm1_files_n=1
+
+2026-04-17 13:32:59.450	ts=2026-04-17T11:32:59.310644Z lvl=info msg="TSM compaction (end)" log_id=12DVKPWG000 service=storage-engine engine=tsm1 tsm1_level=1 tsm1_strategy=level op_name=tsm1_compact_group op_event=end op_elapsed=698.208ms
+
+2026-04-17 13:33:02.488	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.488	2026-04-17T11:33:01.266288Z||080F0FFF|Trace error common.scheduler.rt|||scheduler|Automation Core|common.scheduler.rt|scheduler_datalayer.cpp|operator()|401|Reading 'system/admin/busy' failed. Reset of busy flag in scheduler.
+
+2026-04-17 13:33:02.488	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.488	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.489	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.489	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.489	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.489	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.489	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.489	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.490	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.490	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.490	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.490	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.490	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.490	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.490	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.490	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.490	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.490	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.492	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.492	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.492	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.492	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.492	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.492	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.492	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.492	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.492	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.492	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.494	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.494	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.494	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.494	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.494	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.494	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:02.494	(Publisher) Logging event : Sending PINGREQ
+
+2026-04-17 13:33:02.494	(Publisher) Logging event : Received PINGRESP
+
+2026-04-17 13:33:02.798	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN was successful released
+
+2026-04-17 13:33:03.199	2026-04-17T11:33:02.788634Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:33:03.199	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:03.199	2026-04-17T11:33:02.807718Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:33:03.199	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:03.199	error send Events: failed to send request: Post "http://localhost/bulk/v1/events": dial unix /var/snap/rexroth-deviceadmin/common/rda-proxy-service/rexroth-deviceadmin/proxy.sock: connect: connection refused
+
+2026-04-17 13:33:03.199	2026-04-17T11:33:02.818035Z||080F0602|Trace error web.automation.verifier|||webserver|Automation Core|web.automation.verifier|token_verifier.cpp|validateToken|95|Verifier timeout
+
+2026-04-17 13:33:03.199	||080F0410|Trace error|||||web.identitymanager|jlogger.go|jlogger.(*JLoggerImpl).TraceError|179|Server validation: Failed to write WLS_CMD_VALIDATE response: write unixpacket /var/snap/rexroth-deviceadmin/5848/auth-service/token-validation.sock->@: write: broken pipe
+
+2026-04-17 13:33:03.200	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN in version 1.0 was successful acquired
+
+2026-04-17 13:33:03.200	error send Events: failed to send request: Post "http://localhost/bulk/v1/events": dial unix /var/snap/rexroth-deviceadmin/common/rda-proxy-service/rexroth-deviceadmin/proxy.sock: connect: connection refused
+
+2026-04-17 13:33:03.200	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN was successful released
+
+2026-04-17 13:33:03.200	||080A0410|Trace message|||||web.common.licensing|util.go|util.TraceInfo|59|License SWL-XOH-RUN-xxxxxxxxxxxxx-NNNN in version 1.0 was successful acquired
+
+2026-04-17 13:33:03.949	2026-04-17T11:33:03.487278Z||080F0FFF|Trace error common.scheduler.rt|||scheduler|Automation Core|common.scheduler.rt|scheduler_datalayer.cpp|operator()|401|Reading 'system/admin/busy' failed. Reset of busy flag in scheduler.
+
+2026-04-17 13:33:03.949	||080F0410|Trace error|||||web.licensemanager|subscriptionClient.go|util.(*subscriptionClient).onSubscribe|39|onSubscribe result: DL_TIMEOUT
+

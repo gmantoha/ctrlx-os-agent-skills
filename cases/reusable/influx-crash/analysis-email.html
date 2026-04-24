@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>ctrlX M4 &mdash; InfluxDB Absturz-Analyse</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f4;font-family:Calibri,Arial,sans-serif;font-size:15px;color:#1a1a1a;">
+
+<!-- Outer wrapper -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f4f4f4;">
+  <tr>
+    <td align="center" style="padding:32px 16px;">
+
+      <!-- Email card -->
+      <table width="680" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;border-radius:4px;border:1px solid #d8d8d8;">
+
+        <!-- Header banner -->
+        <tr>
+          <td style="background-color:#002d5a;padding:28px 36px 24px 36px;border-radius:4px 4px 0 0;">
+            <p style="margin:0 0 4px 0;font-family:Calibri,Arial,sans-serif;font-size:11px;font-weight:bold;letter-spacing:2px;color:#7eb3e0;text-transform:uppercase;">Vorfallsbericht &mdash; 2026-04-07</p>
+            <p style="margin:0 0 6px 0;font-family:Calibri,Arial,sans-serif;font-size:24px;font-weight:bold;color:#ffffff;line-height:1.2;">ctrlX M4 &mdash; Systemweiter OOM-Ereignis</p>
+            <p style="margin:0;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#a8c8e8;">Plattform: ctrlX M4 (ARM64) &nbsp;|&nbsp; Kernel: 6.1.80-rt26-ctrlx-43 &nbsp;|&nbsp; Log-Zeitfenster: 12:19Z &ndash; 13:01Z</p>
+          </td>
+        </tr>
+
+        <!-- Verdict bar -->
+        <tr>
+          <td style="background-color:#e8f4e8;border-left:5px solid #2e7d32;padding:14px 36px;">
+            <p style="margin:0;font-family:Calibri,Arial,sans-serif;font-size:14px;color:#1b5e20;">
+              <strong>Ergebnis:</strong> InfluxDB ist nicht abgest&uuml;rzt. Der Dienst wurde durch einen systemweiten Speichermangel vor&uuml;bergehend nicht mehr reagiert und erholte sich anschlie&szlig;end selbst&auml;ndig. Es handelt sich um ein Kernel-OOM-Ereignis; InfluxDB ist ein nachgelagertes Opfer, nicht die Ursache.
+            </p>
+          </td>
+        </tr>
+
+        <!-- Body padding -->
+        <tr>
+          <td style="padding:32px 36px 0 36px;">
+
+            <!-- Section: Grundursache -->
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td style="padding-bottom:6px;border-bottom:2px solid #002d5a;">
+                  <p style="margin:0;font-family:Calibri,Arial,sans-serif;font-size:13px;font-weight:bold;letter-spacing:1.5px;color:#002d5a;text-transform:uppercase;">Grundursache</p>
+                </td>
+              </tr>
+            </table>
+            <p style="margin:16px 0 10px 0;font-family:Calibri,Arial,sans-serif;font-size:15px;line-height:1.6;color:#1a1a1a;">
+              Der <strong>ctrlx-linck</strong>-Snap betreibt 6 gleichzeitige Python-Prozesse, die zusammen ca. <strong>838 MB RAM</strong> belegten (~41&nbsp;% der 2&nbsp;GB des Ger&auml;ts). Ein einzelner Speicher-/Publisher-Worker (PID 1576622) erreichte allein <strong>390 MB RSS / 721 MB virtuell</strong>.
+            </p>
+            <p style="margin:0 0 10px 0;font-family:Calibri,Arial,sans-serif;font-size:15px;line-height:1.6;color:#1a1a1a;">
+              Da <strong>kein Swap-Speicher konfiguriert</strong> ist, verf&uuml;gt der Kernel &uuml;ber keinen R&uuml;ckgewinnungspfad f&uuml;r anonymen Speicher. Als eine routinem&auml;&szlig;ige Kernel-Thread-Zuweisung nur 4 zusammenh&auml;ngende Seiten ben&ouml;tigte, l&ouml;ste der OOM-Killer aus.
+            </p>
+            <p style="margin:0 0 24px 0;font-family:Calibri,Arial,sans-serif;font-size:15px;line-height:1.6;color:#1a1a1a;">
+              Der wahrscheinliche Ausl&ouml;ser ist eine <strong>positive R&uuml;ckkopplungsschleife</strong>: ctrlx-linck puffert InfluxDB-Schreibdaten im Arbeitsspeicher, wenn InfluxDB langsam reagiert. Da fr&uuml;her Speicherdruck InfluxDB verlangsamte, wuchs die In-Memory-Schreibwarteschlange von ctrlx-linck &mdash; was den Speicherdruck weiter versch&auml;rfte.
+            </p>
+
+            <!-- Section: Ablauf -->
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td style="padding-bottom:6px;border-bottom:2px solid #002d5a;">
+                  <p style="margin:0;font-family:Calibri,Arial,sans-serif;font-size:13px;font-weight:bold;letter-spacing:1.5px;color:#002d5a;text-transform:uppercase;">Ereignisablauf (Ger&auml;te-Zeitstempel, UTC)</p>
+                </td>
+              </tr>
+            </table>
+
+            <!-- Timeline table -->
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:16px;margin-bottom:24px;border-collapse:collapse;">
+              <!-- Header row -->
+              <tr style="background-color:#002d5a;">
+                <td style="padding:8px 12px;font-family:Calibri,Arial,sans-serif;font-size:12px;font-weight:bold;color:#ffffff;white-space:nowrap;width:130px;">Zeit (UTC)</td>
+                <td style="padding:8px 12px;font-family:Calibri,Arial,sans-serif;font-size:12px;font-weight:bold;color:#ffffff;">Ereignis</td>
+              </tr>
+              <!-- Row 1 -->
+              <tr style="background-color:#f9f9f9;">
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#555555;white-space:nowrap;border-bottom:1px solid #e8e8e8;vertical-align:top;">Vor T12:19Z</td>
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#1a1a1a;border-bottom:1px solid #e8e8e8;vertical-align:top;">ctrlx-linck-Speicher w&auml;chst; InfluxDB-HTTP-API bereits nicht mehr erreichbar</td>
+              </tr>
+              <!-- Row 2 -->
+              <tr style="background-color:#ffffff;">
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#555555;white-space:nowrap;border-bottom:1px solid #e8e8e8;vertical-align:top;">T12:19:26Z</td>
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#1a1a1a;border-bottom:1px solid #e8e8e8;vertical-align:top;">Log beginnt. Token-Verifier-Fehler mit ~10&nbsp;Hz (Symptom &uuml;berlasteter Ressourcen). ctrlx-linck meldet <code style="font-family:Consolas,'Courier New',monospace;font-size:12px;background:#f0f0f0;padding:1px 4px;">TimeoutError</code> auf der InfluxDB-Schreib-API</td>
+              </tr>
+              <!-- Row 3 -->
+              <tr style="background-color:#f9f9f9;">
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#555555;white-space:nowrap;border-bottom:1px solid #e8e8e8;vertical-align:top;">T12:19:46&ndash;T12:20:16Z</td>
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#1a1a1a;border-bottom:1px solid #e8e8e8;vertical-align:top;">Data-Layer-Provider trennen sich in Wellen: system/health, system/admin/busy, storage, network, apps/installed</td>
+              </tr>
+              <!-- Row 4 -->
+              <tr style="background-color:#ffffff;">
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#555555;white-space:nowrap;border-bottom:1px solid #e8e8e8;vertical-align:top;">T12:20:46Z</td>
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#1a1a1a;border-bottom:1px solid #e8e8e8;vertical-align:top;">ctrlx-linck best&auml;tigt InfluxDB nicht erreichbar; wechselt zu lokalem tempor&auml;rem Dateipuffer</td>
+              </tr>
+              <!-- Row 5 -->
+              <tr style="background-color:#f9f9f9;">
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#555555;white-space:nowrap;border-bottom:1px solid #e8e8e8;vertical-align:top;">T12:21:46Z</td>
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#1a1a1a;border-bottom:1px solid #e8e8e8;vertical-align:top;">MQTT-Publisher verliert Keep-alive (Broker CPU-ausgehungert)</td>
+              </tr>
+              <!-- Row 6 -->
+              <tr style="background-color:#fff8e1;">
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#555555;white-space:nowrap;border-bottom:1px solid #e8e8e8;vertical-align:top;border-left:3px solid #f9a825;">T12:26:46Z</td>
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#1a1a1a;border-bottom:1px solid #e8e8e8;vertical-align:top;"><strong>snapd-Watchdog l&ouml;st aus</strong> &mdash; 5-Minuten-Limit &uuml;berschritten. snapd wurde 5 volle Minuten lang von CPU/Speicher ausgehungert</td>
+              </tr>
+              <!-- Row 7 -->
+              <tr style="background-color:#fdf3f3;">
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#555555;white-space:nowrap;border-bottom:1px solid #e8e8e8;vertical-align:top;border-left:3px solid #c62828;">~T12:28:06Z</td>
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#1a1a1a;border-bottom:1px solid #e8e8e8;vertical-align:top;"><strong>Kernel-OOM-Killer wird ausgel&ouml;st.</strong> <code style="font-family:Consolas,'Courier New',monospace;font-size:12px;background:#f0f0f0;padding:1px 4px;">kthreadd</code> schl&auml;gt bei einer Order-2-Seitenzuweisung fehl. Freier RAM: <strong>20.076 kB</strong> (unterhalb des Kernel-Mindestschwellenwerts von 20.280 kB). Kein Swap. <strong>python3 PID 1576622 beendet</strong> (390 MB freigegeben). snapd erh&auml;lt SIGABRT.</td>
+              </tr>
+              <!-- Row 8 -->
+              <tr style="background-color:#fdf3f3;">
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#555555;white-space:nowrap;border-bottom:1px solid #e8e8e8;vertical-align:top;border-left:3px solid #c62828;">~T12:28:11Z</td>
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#1a1a1a;border-bottom:1px solid #e8e8e8;vertical-align:top;">snapd reagiert nicht rechtzeitig auf SIGABRT &mdash; Eskalation zu <strong>SIGKILL</strong>. snapd-Neustartschleife beginnt (Neustart-Z&auml;hler bereits bei 16)</td>
+              </tr>
+              <!-- Row 9 -->
+              <tr style="background-color:#f9f9f9;">
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#555555;white-space:nowrap;border-bottom:1px solid #e8e8e8;vertical-align:top;">T13:00:43Z</td>
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#1a1a1a;border-bottom:1px solid #e8e8e8;vertical-align:top;"><strong>InfluxDB-TSM-Engine erholt sich.</strong> Cache-Snapshot abgeschlossen (1.476 ms). Aufbewahrungsrichtlinienpr&uuml;fung abgeschlossen (1.205 ms). influxd nimmt normalen Betrieb wieder auf.</td>
+              </tr>
+              <!-- Row 10 -->
+              <tr style="background-color:#ffffff;">
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#555555;white-space:nowrap;border-bottom:1px solid #e8e8e8;vertical-align:top;">T13:00:46Z</td>
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#1a1a1a;border-bottom:1px solid #e8e8e8;vertical-align:top;">MQTT-Publisher verbindet sich erfolgreich neu</td>
+              </tr>
+              <!-- Row 11 -->
+              <tr style="background-color:#f9f9f9;">
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#555555;white-space:nowrap;vertical-align:top;">Nach Wiederherstellung</td>
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#1a1a1a;vertical-align:top;"><code style="font-family:Consolas,'Courier New',monospace;font-size:12px;background:#f0f0f0;padding:1px 4px;">broken pipe</code>-Sturmflut vom Identity-Manager, der w&auml;hrend des Ausfalls aufgestaute Token-Validierungsanfragen abarbeitet</td>
+              </tr>
+            </table>
+
+            <!-- Section: Wichtige Belege -->
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td style="padding-bottom:6px;border-bottom:2px solid #002d5a;">
+                  <p style="margin:0;font-family:Calibri,Arial,sans-serif;font-size:13px;font-weight:bold;letter-spacing:1.5px;color:#002d5a;text-transform:uppercase;">Wichtige Belege</p>
+                </td>
+              </tr>
+            </table>
+
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:16px;margin-bottom:24px;border-collapse:collapse;">
+              <tr style="background-color:#002d5a;">
+                <td style="padding:8px 12px;font-family:Calibri,Arial,sans-serif;font-size:12px;font-weight:bold;color:#ffffff;width:220px;">Messwert</td>
+                <td style="padding:8px 12px;font-family:Calibri,Arial,sans-serif;font-size:12px;font-weight:bold;color:#ffffff;">Wert</td>
+              </tr>
+              <tr style="background-color:#f9f9f9;">
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#555555;border-bottom:1px solid #e8e8e8;vertical-align:top;">Gesamter RAM</td>
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#1a1a1a;border-bottom:1px solid #e8e8e8;vertical-align:top;">2.096.128 kB (~2 GB) &mdash; <strong>kein Swap konfiguriert</strong></td>
+              </tr>
+              <tr style="background-color:#ffffff;">
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#555555;border-bottom:1px solid #e8e8e8;vertical-align:top;">Freier RAM bei OOM</td>
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#c62828;border-bottom:1px solid #e8e8e8;vertical-align:top;"><strong>20.076 kB</strong> (Mindestschwellenwert = 20.280 kB &mdash; System war <em>unterhalb des Minimums</em>)</td>
+              </tr>
+              <tr style="background-color:#f9f9f9;">
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#555555;border-bottom:1px solid #e8e8e8;vertical-align:top;">Inaktiver anonymer RAM</td>
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#1a1a1a;border-bottom:1px solid #e8e8e8;vertical-align:top;">1.631.888 kB (~1,56 GB) &mdash; ohne Swap nicht r&uuml;ckgewinnbar</td>
+              </tr>
+              <tr style="background-color:#ffffff;">
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#555555;border-bottom:1px solid #e8e8e8;vertical-align:top;">ctrlx-linck (6&times; python3) RSS</td>
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#1a1a1a;border-bottom:1px solid #e8e8e8;vertical-align:top;">~838 MB gesamt (41&nbsp;% des gesamten RAM)</td>
+              </tr>
+              <tr style="background-color:#f9f9f9;">
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#555555;border-bottom:1px solid #e8e8e8;vertical-align:top;">OOM-Opfer</td>
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#1a1a1a;border-bottom:1px solid #e8e8e8;vertical-align:top;">python3 PID 1576622 (ctrlx-linck-Speicher-Worker) &mdash; anon-rss 399 MB</td>
+              </tr>
+              <tr style="background-color:#ffffff;">
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#555555;border-bottom:1px solid #e8e8e8;vertical-align:top;">influxd RSS bei OOM</td>
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#1a1a1a;border-bottom:1px solid #e8e8e8;vertical-align:top;">~260 MB &mdash; &uuml;berlebt, normal erholt</td>
+              </tr>
+              <tr style="background-color:#f9f9f9;">
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#555555;vertical-align:top;">snapd-Neustart-Z&auml;hler</td>
+                <td style="padding:7px 12px;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#c62828;vertical-align:top;"><strong>16</strong> &mdash; das OOM-/Watchdog-Muster ist wiederkehrend, kein Einzelfall</td>
+              </tr>
+            </table>
+
+            <!-- Section: Empfehlungen -->
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td style="padding-bottom:6px;border-bottom:2px solid #002d5a;">
+                  <p style="margin:0;font-family:Calibri,Arial,sans-serif;font-size:13px;font-weight:bold;letter-spacing:1.5px;color:#002d5a;text-transform:uppercase;">Empfehlungen</p>
+                </td>
+              </tr>
+            </table>
+
+            <!-- Rec 1 -->
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:16px;">
+              <tr>
+                <td style="width:36px;vertical-align:top;padding-top:2px;">
+                  <table cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <td style="background-color:#002d5a;color:#ffffff;font-family:Calibri,Arial,sans-serif;font-size:12px;font-weight:bold;width:24px;height:24px;text-align:center;vertical-align:middle;border-radius:50%;">1</td>
+                    </tr>
+                  </table>
+                </td>
+                <td style="padding-left:12px;padding-bottom:16px;">
+                  <p style="margin:0 0 4px 0;font-family:Calibri,Arial,sans-serif;font-size:15px;font-weight:bold;color:#1a1a1a;">Schreibpuffer-Gegendruck in ctrlx-linck einf&uuml;hren</p>
+                  <p style="margin:0;font-family:Calibri,Arial,sans-serif;font-size:14px;line-height:1.5;color:#444444;">Eine maximale Warteschlangentiefe konfigurieren, sodass der Speicher-Worker neue Daten verwirft oder ablehnt, wenn InfluxDB langsam reagiert, anstatt unbegrenzte In-Memory-Puffer anzuh&auml;ufen. Dies unterbricht die positive R&uuml;ckkopplungsschleife, die das OOM-Ereignis ausgel&ouml;st hat.</p>
+                </td>
+              </tr>
+              <!-- Rec 2 -->
+              <tr>
+                <td style="width:36px;vertical-align:top;padding-top:2px;">
+                  <table cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <td style="background-color:#002d5a;color:#ffffff;font-family:Calibri,Arial,sans-serif;font-size:12px;font-weight:bold;width:24px;height:24px;text-align:center;vertical-align:middle;border-radius:50%;">2</td>
+                    </tr>
+                  </table>
+                </td>
+                <td style="padding-left:12px;padding-bottom:16px;">
+                  <p style="margin:0 0 4px 0;font-family:Calibri,Arial,sans-serif;font-size:15px;font-weight:bold;color:#1a1a1a;">zram-Swap aktivieren</p>
+                  <p style="margin:0;font-family:Calibri,Arial,sans-serif;font-size:14px;line-height:1.5;color:#444444;">Das Ger&auml;t hat derzeit keinen Swap-Speicher. Die Konfiguration von zram (komprimierter RAM-Swap) gibt dem Kernel einen R&uuml;ckgewinnungspfad f&uuml;r anonymen Speicher auf diesem 2-GB-Ger&auml;t und bietet einen Puffer gegen zuk&uuml;nftige vor&uuml;bergehende Spitzen.</p>
+                </td>
+              </tr>
+              <!-- Rec 3 -->
+              <tr>
+                <td style="width:36px;vertical-align:top;padding-top:2px;">
+                  <table cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <td style="background-color:#002d5a;color:#ffffff;font-family:Calibri,Arial,sans-serif;font-size:12px;font-weight:bold;width:24px;height:24px;text-align:center;vertical-align:middle;border-radius:50%;">3</td>
+                    </tr>
+                  </table>
+                </td>
+                <td style="padding-left:12px;padding-bottom:16px;">
+                  <p style="margin:0 0 4px 0;font-family:Calibri,Arial,sans-serif;font-size:15px;font-weight:bold;color:#1a1a1a;">OOM-Score-Anpassungen konfigurieren</p>
+                  <p style="margin:0;font-family:Calibri,Arial,sans-serif;font-size:14px;line-height:1.5;color:#444444;"><code style="font-family:Consolas,'Courier New',monospace;font-size:12px;background:#f0f0f0;padding:1px 4px;">oom_score_adj</code> so einstellen, dass kritische Dienste (influxd, snapd) gesch&uuml;tzt werden und der OOM-Killer bevorzugt weniger kritische Prozesse beendet. Derzeit teilen sich influxd und die ctrlx-linck-Worker alle <code style="font-family:Consolas,'Courier New',monospace;font-size:12px;background:#f0f0f0;padding:1px 4px;">oom_score_adj=0</code>, sodass die Auswahl allein vom RSS-Wert abh&auml;ngt.</p>
+                </td>
+              </tr>
+              <!-- Rec 4 -->
+              <tr>
+                <td style="width:36px;vertical-align:top;padding-top:2px;">
+                  <table cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                      <td style="background-color:#002d5a;color:#ffffff;font-family:Calibri,Arial,sans-serif;font-size:12px;font-weight:bold;width:24px;height:24px;text-align:center;vertical-align:middle;border-radius:50%;">4</td>
+                    </tr>
+                  </table>
+                </td>
+                <td style="padding-left:12px;padding-bottom:16px;">
+                  <p style="margin:0 0 4px 0;font-family:Calibri,Arial,sans-serif;font-size:15px;font-weight:bold;color:#1a1a1a;">Chronisches Speicherwachstum untersuchen (snapd-Neustart-Z&auml;hler = 16)</p>
+                  <p style="margin:0;font-family:Calibri,Arial,sans-serif;font-size:14px;line-height:1.5;color:#444444;">Der Neustart-Z&auml;hler von 16 best&auml;tigt, dass dies ein wiederkehrendes Muster ist. Ermitteln, ob der Speicher von ctrlx-linck &uuml;ber die Zeit stetig anw&auml;chst (langsames Speicherleck) oder unter bestimmten Lastbedingungen sprunghaft steigt (burst-Schreibereignisse). Speicher&uuml;berwachung und -alarmierung vor dem n&auml;chsten Auftreten aktivieren.</p>
+                </td>
+              </tr>
+            </table>
+
+          </td>
+        </tr>
+
+        <!-- Notes box -->
+        <tr>
+          <td style="padding:0 36px 32px 36px;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f0f4f8;border:1px solid #c8d8e8;border-radius:4px;">
+              <tr>
+                <td style="padding:14px 18px;">
+                  <p style="margin:0 0 6px 0;font-family:Calibri,Arial,sans-serif;font-size:12px;font-weight:bold;letter-spacing:1px;color:#002d5a;text-transform:uppercase;">Hinweis zur Log-Abdeckung</p>
+                  <p style="margin:0;font-family:Calibri,Arial,sans-serif;font-size:13px;line-height:1.5;color:#444444;">Der Loki-Export deckt nur ~5,5&nbsp;% des ausgew&auml;hlten Zeitfensters ab (das 5.000-Zeilen-Limit wurde in ~6 Sekunden Erfassungszeit aufgebraucht, bedingt durch den 10-Hz-Token-Verifier-Rauschen). Der tats&auml;chliche Beginn des Speicherdrucks liegt mit hoher Wahrscheinlichkeit vor T12:19:26Z. Ein Export &uuml;ber einen gr&ouml;&szlig;eren Zeitbereich mit herausgefilterten Token-Verifier-Meldungen w&uuml;rde ein vollst&auml;ndigeres Bild des Speicherwachstums vor dem OOM-Ereignis liefern.</p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+          <td style="background-color:#f4f4f4;border-top:1px solid #e0e0e0;padding:14px 36px;border-radius:0 0 4px 4px;">
+            <p style="margin:0;font-family:Calibri,Arial,sans-serif;font-size:12px;color:#888888;">Erstellt: 2026-04-14 &nbsp;&middot;&nbsp; Log-Datei: Explore-logs-2026-04-08 08_37_55.txt &nbsp;&middot;&nbsp; Ger&auml;t: ctrlX M4 (ARM64)</p>
+          </td>
+        </tr>
+
+      </table>
+      <!-- /Email card -->
+
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>
