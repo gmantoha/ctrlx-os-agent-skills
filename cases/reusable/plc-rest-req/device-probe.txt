@@ -1,0 +1,164 @@
+Device-Probe — ctrlX Data Layer Storage Nodes
+==============================================
+Datum:       2026-04-20
+Device:      192.168.47.219 (ctrlX M4, real hardware)
+OS:          Ubuntu Core 24 / ctrlX OS 4.6
+Snaps:
+  rexroth-deviceadmin     4.6.0   (Rev 6464)
+  rexroth-automationcore  4.6.0   (Rev 2302)
+  ctrlx-node-red          4.4.0+4.1.1-ctrlx
+Methode:     DL REST API v2 via Unix socket
+             /var/snap/rexroth-automationcore/2302/package-run/rexroth-automationcore/datalayer.web.sock
+             (root-Zugriff per sudo, da Socket nur für root zugänglich)
+
+
+=== VERIFIZIERTE DATA-LAYER-KNOTEN ===
+
+system/resources/tasks/storage/mountDevice
+  HTTP-Methode:  POST  (DL_Create im PLC-FB)
+  Status GET:    501 DL_UNSUPPORTED  (korrekt — nur POST/Create unterstützt)
+  Status POST:   500 DL_FAILED       (korrekt — kein USB-Stick angesteckt)
+  JSON-Schema (aus types/storage/tasks/mountDevice):
+    {
+      "$schema": "https://json-schema.org/draft/2019-09/schema",
+      "definitions": {
+        "tasks_MountAssignmentType": {
+          "type": "string",
+          "enum": ["DataExchange", "StorageExtension"]
+        },
+        "tasks_MountDevice": {
+          "type": "object",
+          "properties": {
+            "media":      { "type": "string" },
+            "device":     { "type": "string" },
+            "assignment": { "$ref": "#/definitions/tasks_MountAssignmentType",
+                            "default": "DataExchange" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "$ref": "#/definitions/tasks_MountDevice"
+    }
+
+system/resources/tasks/storage/unmount
+  HTTP-Methode:  POST  (DL_Create im PLC-FB)
+  Status GET:    501 DL_UNSUPPORTED
+  JSON-Schema (aus types/storage/tasks/unmount):
+    {
+      "$schema": "https://json-schema.org/draft/2019-09/schema",
+      "definitions": {
+        "tasks_Unmount": {
+          "type": "object",
+          "properties": {
+            "media":  { "type": "string" },
+            "device": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "$ref": "#/definitions/tasks_Unmount"
+    }
+
+system/resources/storage
+  HTTP-Methode:  GET  (DL_Read im PLC-FB)
+  Status GET:    200 OK
+  Schema:        types/resources/storage
+  Beispiel-Response (internes SSD-Medium, kein USB angesteckt):
+    {
+      "type": "object",
+      "value": {
+        "storages": [
+          {
+            "size": 113952718848,
+            "used": 7665594368,
+            "label": "ubuntu-data",
+            "uuid": "7d60b16f-987e-4a34-832b-6a580eab8a37",
+            "mounted": true,
+            "format": "ext4",
+            "device": "sda6",
+            "parent": "sda",
+            "filesystemSize": 0
+          }
+        ]
+      },
+      "schema": "types/resources/storage",
+      "responseType": "read"
+    }
+  (Bei angestecktem USB-Stick erscheint ein zweites Objekt mit mounted=false und internal fehlt oder false)
+
+system/resources/tasks/storage/mountSmb
+  Schema (aus types/storage/tasks/mountSmb):
+    Felder: server, share, version (enum: Default/V1_0/.../V3_1_1),
+            username, password, domain, assignment (DataExchange/StorageExtension)
+
+system/resources/tasks/storage/mountNfs
+  Schema (aus types/storage/tasks/mountNfs):
+    Felder: server, share, protocol (enum: Default/Tcp/Sctp),
+            version (enum: Default/V3/V4/V4_1/V4_2), assignment
+
+system/characteristics/storage
+  Aktuell: [{"type":"sd","writeSupport":"sporadic","size":120034123776,"removable":false}]
+  Schema: types/system/characteristics/storages
+
+
+=== VOLLSTÄNDIGE STORAGE/TASK-KNOTEN-LISTE (aus datalayer/nodes) ===
+
+system/characteristics/storage
+system/characteristics/storage/*
+system/characteristics/storage/*/type
+system/characteristics/storage/*/writeSupport
+system/characteristics/storage/*/size
+system/characteristics/storage/*/removable
+system/resources/tasks/system/reboot
+system/resources/tasks/system/shutdown
+system/resources/tasks/storage/mountSmb
+system/resources/tasks/storage/mountNfs
+system/resources/tasks/storage/mountDevice     <-- USB Mount
+system/resources/tasks/storage/unmount         <-- USB Unmount
+system/resources/storage
+system/resources/storage/*
+system/resources/storage/*/size
+system/resources/storage/*/filesystemSize
+system/resources/storage/*/used
+system/resources/storage/*/label
+system/resources/storage/*/uuid
+system/resources/storage/*/mounted
+system/resources/storage/*/format
+system/resources/storage/*/device
+system/resources/storage/*/mountPoint
+system/resources/storage/*/parent
+types/storage/tasks/mountSmb
+types/storage/tasks/mountNfs
+types/storage/tasks/mountDevice
+types/storage/tasks/unmount
+types/resources/storage
+types/resources/storage/device
+types/devices/removable
+types/devices/removable/mbr
+
+
+=== VIRTUAL DEVICE (localhost:8022) ===
+
+OS:          Ubuntu Core 22 / ctrlX OS (virtual)
+Snaps:
+  rexroth-deviceadmin     4.6.0   (Rev 6464)
+  rexroth-plc             4.4.0   (Rev 1438)
+  rexroth-automationcore  4.6.0   (Rev 2302)
+
+Befund:  Knoten system/resources/tasks/storage/* existieren NICHT auf dem Virtual Device.
+         Grund: Kein physisches Speichermedium / kein deviceadmin-Storage-Provider aktiv.
+         Die Knoten sind ausschließlich auf Hardware mit ansteckbarem Medium vorhanden.
+         DL-API-Pfad /automation/api/v2/nodes/{Path} liefert 404 DL_INVALID_ADDRESS.
+
+
+=== REST API (Storage) ===
+
+Endpunkt:  GET  /storage/api/v1/media
+           POST /storage/api/v1/tasks
+
+Payload POST (entspricht altem REST-Ansatz, jetzt via DL bevorzugt):
+  {"action":"mount","parameters":{"media":"3C20-2F7A","device":"sdb1","assignment":"data-exchange"}}
+
+ACHTUNG: Im REST-API-Payload heißt das Feld "assignment" mit Kleinbuchstaben ("data-exchange"),
+         im Data-Layer-Schema wird der Enum-Wert "DataExchange" (CamelCase) verwendet.
+         Beide Wege führen zum selben Ergebnis.

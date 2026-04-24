@@ -1,0 +1,18 @@
+Kunde: Berg Anton (DCEM/SLC6)
+Kontext: Versuch, Microsoft SQL Server 2025 als Snap für ctrlX OS im
+strict-Confinement zu bauen. Der Kunde vermutet, dass nur classic-
+Confinement funktionieren würde.
+
+Originale Fehlermeldung (journalctl, Build-Umgebung "app-build-env"):
+
+Apr 20 07:51:20 app-build-env systemd[1]: Started snap.hk-mssql.mssql.service - Service for snap application hk-mssql.mssql.
+Apr 20 07:51:20 app-build-env hk-mssql.mssql[45557]: First boot — SQL Server will initialize using environment variables...
+Apr 20 07:51:20 app-build-env hk-mssql.mssql[45557]: Starting Microsoft SQL Server 2025 on port 1433
+Apr 20 07:51:20 app-build-env hk-mssql.mssql[45557]: /snap/hk-mssql/x1/opt/mssql/bin/sqlservr: Error: The system directory [/.system] could not be created. File: /mnt/vss/_work/1/s/sqlpal/Hosts/Linux/LinuxDirectory.cpp:420 [Status: 0xC0000022 Access denied errno = 0xD(13) Permission denied]
+Apr 20 07:51:20 app-build-env systemd[1]: snap.hk-mssql.mssql.service: Main process exited, code=exited, status=1/FAILURE
+Apr 20 07:51:20 app-build-env systemd[1]: snap.hk-mssql.mssql.service: Failed with result 'exit-code'.
+
+Kunden-Hypothese (O-Ton):
+> "SQL Server möchte in ein Verzeichnis /.system schreiben, das man auch
+> nicht umkonfigurieren kann. Und wenn ich SNAP richtig verstehe, dann
+> ist das nur im classic-Confinement möglich."
