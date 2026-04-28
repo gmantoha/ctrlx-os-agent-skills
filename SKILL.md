@@ -44,6 +44,8 @@ Use `workflows/use-webdav.md` for file transfer and app data inspection through 
 
 Use `workflows/work-with-plc.md` for PLC Engineering, ST examples, and PLC integration guidance.
 
+Use `workflows/use-virtual-core.md` for launching, stopping, monitoring, and testing against a local virtual ctrlX CORE lab.
+
 Use `workflows/answer-customer.md` when the primary output is a customer or colleague technical answer.
 
 ## Common Recipes
