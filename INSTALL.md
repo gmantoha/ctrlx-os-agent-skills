@@ -2,32 +2,64 @@
 
 This repository is an installable agent skill named `ctrlx`.
 
-## OpenCode
+## Recommended: Skills CLI
 
-Install with a symlink so repository edits are immediately visible to the agent:
+Install from GitHub with the same CLI pattern used by Vercel's skills ecosystem:
 
 ```bash
-ln -s "$(pwd)" "$HOME/.agents/skills/ctrlx"
+npx skills add gmantoha/ctrlx-os-agent-skills \
+  --skill ctrlx \
+  --agent opencode \
+  --global \
+  --copy \
+  --yes
 ```
 
-Verify:
+The important flag is `--copy`. Do not install this skill as a symlink when the agent enforces workspace or skill-directory read permissions, because symlink targets can resolve outside the installed skill folder.
+
+List skills available in this repository:
 
 ```bash
-test -f "$HOME/.agents/skills/ctrlx/SKILL.md"
+npx skills add gmantoha/ctrlx-os-agent-skills --list
 ```
 
-## Claude Code
-
-Optionally install the same skill for Claude Code:
+Update an installed skill:
 
 ```bash
-ln -s "$(pwd)" "$HOME/.claude/skills/ctrlx"
+npx skills update ctrlx --global --yes
 ```
 
-Verify:
+## Local Development
+
+Develop in a normal Git checkout:
 
 ```bash
-test -f "$HOME/.claude/skills/ctrlx/SKILL.md"
+git clone https://github.com/gmantoha/ctrlx-os-agent-skills.git
+cd ctrlx-os-agent-skills
+```
+
+Install the current checkout as a copied skill:
+
+```bash
+npm run skill:install
+```
+
+Pull the latest Git changes and reinstall:
+
+```bash
+npm run skill:update
+```
+
+Install for a different supported agent:
+
+```bash
+CTRLX_SKILL_AGENT=claude-code npm run skill:install
+```
+
+Install into the current project instead of the global skill location:
+
+```bash
+CTRLX_SKILL_SCOPE=project npm run skill:install
 ```
 
 ## Expected Usage
@@ -40,5 +72,7 @@ After installation, prompts can be phrased naturally:
 
 ## Notes
 
-- Do not copy this repository into the skill directory during active development; use symlinks to avoid stale installed copies.
+- Keep Git development in the repository checkout, not in the installed skill directory.
+- Re-run `npm run skill:install` after local edits, or `npm run skill:update` to pull and reinstall.
+- Use copy mode, not symlinks, to avoid permission prompts caused by symlink targets outside the installed skill directory.
 - Real-device persistent changes still require explicit confirmation according to `SKILL.md`.

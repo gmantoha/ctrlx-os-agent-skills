@@ -1,0 +1,11 @@
+{
+  "name": "ctrlx-os-agent-skills",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Installable agent skill for Bosch Rexroth ctrlX OS and ctrlX CORE.",
+  "scripts": {
+    "skill:install": "bash scripts/install-skill.sh",
+    "skill:update": "bash scripts/update-skill.sh",
+    "skill:list": "npx skills add . --list"
+  }
+}

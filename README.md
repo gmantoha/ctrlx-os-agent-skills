@@ -51,18 +51,39 @@ This repository is structured for three equal goals:
 5. Use `labs/ctrlx-os-virtual/` when testing against a local virtual ctrlX OS.
 6. Store private customer work only in `customers/`.
 
-## Install Locally
+## Install
 
-For live development, install by symlinking this repository as the `ctrlx` skill:
+This repository is compatible with the open agent skills CLI used by Vercel.
+
+Install directly from GitHub:
 
 ```bash
-ln -s "$(pwd)" "$HOME/.agents/skills/ctrlx"
+npx skills add gmantoha/ctrlx-os-agent-skills \
+  --skill ctrlx \
+  --agent opencode \
+  --global \
+  --copy \
+  --yes
 ```
 
-For Claude Code as well:
+Use `--copy` instead of a symlink so the agent can read bundled skill files without resolving paths outside the installed skill directory.
+
+For local development, work in this Git repository and install the current checkout:
 
 ```bash
-ln -s "$(pwd)" "$HOME/.claude/skills/ctrlx"
+npm run skill:install
+```
+
+Update from Git and reinstall the copied skill:
+
+```bash
+npm run skill:update
+```
+
+Set `CTRLX_SKILL_AGENT` to install for another supported agent, for example:
+
+```bash
+CTRLX_SKILL_AGENT=claude-code npm run skill:install
 ```
 
 See `INSTALL.md` for details and verification steps.
