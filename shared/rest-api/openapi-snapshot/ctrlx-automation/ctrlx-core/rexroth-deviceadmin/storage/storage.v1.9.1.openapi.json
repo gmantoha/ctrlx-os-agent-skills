@@ -1,0 +1,2264 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "contact" : {
+      "email" : "support@boschrexroth.de",
+      "name" : "Bosch Rexroth AG",
+      "url" : "https://www.boschrexroth.de"
+    },
+    "description" : "Provides storage related information and functionalities of ctrlX OS.",
+    "title" : "ctrlX OS - Storage API",
+    "version" : "1.9.1"
+  },
+  "servers" : [ {
+    "url" : "/storage/api/v1"
+  } ],
+  "security" : [ {
+    "UsernamePassword" : [ ]
+  }, {
+    "Bearer" : [ ]
+  } ],
+  "tags" : [ {
+    "description" : "Retrieve a storage device",
+    "name" : "device"
+  }, {
+    "description" : "Change or add password in key slot",
+    "name" : "encryption"
+  }, {
+    "description" : "Storage media handling",
+    "name" : "media"
+  }, {
+    "description" : "Retrieve a list of mounted media",
+    "name" : "mounts"
+  }, {
+    "description" : "Handle asnychronious operations",
+    "name" : "tasks"
+  }, {
+    "description" : "Handle network shares (nfs, smb)",
+    "name" : "network-shares"
+  } ],
+  "paths" : {
+    "/media" : {
+      "get" : {
+        "description" : "Retrieve a list of available storage media",
+        "operationId" : "getMedias",
+        "parameters" : [ {
+          "description" : "Cipherkey to encrypt password secret.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "cipherkey",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/Media"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          }
+        },
+        "tags" : [ "media" ]
+      }
+    },
+    "/media/{uuid}" : {
+      "get" : {
+        "description" : "Retrieve information of storage media",
+        "operationId" : "getMedia",
+        "parameters" : [ {
+          "description" : "UUID of the media (partition). In case of network shares (nfs, smb), the content of 'device' of the media has to be used.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "uuid",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Cipherkey to encrypt password secret.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "cipherkey",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Media"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          }
+        },
+        "tags" : [ "media" ]
+      }
+    },
+    "/media/{uuid}/encrypted-device" : {
+      "get" : {
+        "description" : "Get detailed information about encrypted partition",
+        "operationId" : "getEncryptedDevice",
+        "parameters" : [ {
+          "description" : "UUID of the media (partition). In case of network shares (nfs, smb), the content of 'device' of the media has to be used.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "uuid",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Media"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          }
+        },
+        "tags" : [ "encryption" ]
+      }
+    },
+    "/media/{uuid}/encrypted-device/user-keys" : {
+      "get" : {
+        "description" : "If encrypted partition get state of keys",
+        "operationId" : "getUserKeySlots",
+        "parameters" : [ {
+          "description" : "UUID of the media (partition). In case of network shares (nfs, smb), the content of 'device' of the media has to be used.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "uuid",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/KeySlots"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          }
+        },
+        "tags" : [ "encryption" ]
+      }
+    },
+    "/media/{uuid}/encrypted-device/user-keys/{slot}" : {
+      "delete" : {
+        "description" : "Remove key by slot",
+        "operationId" : "deleteUserKeySlot",
+        "parameters" : [ {
+          "description" : "UUID of the media (partition). In case of network shares (nfs, smb), the content of 'device' of the media has to be used.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "uuid",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "path",
+          "name" : "slot",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RemoveKey"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "204" : {
+            "description" : "Deleted successfully"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          }
+        },
+        "tags" : [ "encryption" ]
+      },
+      "get" : {
+        "description" : "Get state of key slot",
+        "operationId" : "getUserKeySlot",
+        "parameters" : [ {
+          "description" : "UUID of the media (partition). In case of network shares (nfs, smb), the content of 'device' of the media has to be used.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "uuid",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "path",
+          "name" : "slot",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/KeySlot"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          }
+        },
+        "tags" : [ "encryption" ]
+      },
+      "put" : {
+        "description" : "Change or add password in key slot",
+        "operationId" : "changeUserKeySlot",
+        "parameters" : [ {
+          "description" : "UUID of the media (partition). In case of network shares (nfs, smb), the content of 'device' of the media has to be used.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "uuid",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "path",
+          "name" : "slot",
+          "required" : true,
+          "schema" : {
+            "type" : "integer"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AddKey"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/KeySlot"
+                }
+              }
+            },
+            "description" : "State of modified key"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          }
+        },
+        "tags" : [ "encryption" ]
+      }
+    },
+    "/network-shares" : {
+      "get" : {
+        "description" : "Retrieve a list of network shares (nfs, smb)",
+        "operationId" : "getNetworkShares",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/NetworkShare"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          }
+        },
+        "tags" : [ "network-shares" ]
+      },
+      "post" : {
+        "description" : "Add a network share",
+        "operationId" : "addNetworkShare",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/NetworkShare"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/NetworkShare"
+                }
+              }
+            },
+            "description" : "Added network share"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          }
+        },
+        "tags" : [ "network-shares" ]
+      }
+    },
+    "/network-shares/{id}" : {
+      "delete" : {
+        "description" : "Remove network share",
+        "operationId" : "deleteNetworkShare",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Deleted successfully"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          }
+        },
+        "tags" : [ "network-shares" ]
+      },
+      "get" : {
+        "description" : "Get details of network share",
+        "operationId" : "getNetworkShare",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/NetworkShare"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          }
+        },
+        "tags" : [ "network-shares" ]
+      },
+      "put" : {
+        "description" : "Change a network share",
+        "operationId" : "changeNetworkShare",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/NetworkShare"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/NetworkShare"
+                }
+              }
+            },
+            "description" : "Modified network share"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          }
+        },
+        "tags" : [ "network-shares" ]
+      }
+    },
+    "/devices" : {
+      "get" : {
+        "description" : "Retrieve a list of available storage devices",
+        "operationId" : "getDevices",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/Device"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          }
+        },
+        "tags" : [ "device" ]
+      }
+    },
+    "/devices/{deviceName}" : {
+      "get" : {
+        "description" : "Retrieve a storage device",
+        "operationId" : "getDevice",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "deviceName",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Device"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          }
+        },
+        "tags" : [ "device" ]
+      }
+    },
+    "/tasks" : {
+      "get" : {
+        "description" : "Retrive list of running, done and failed tasks",
+        "operationId" : "getTasks",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/OneOfTasks"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          }
+        },
+        "tags" : [ "tasks" ]
+      },
+      "post" : {
+        "description" : "Create a new task",
+        "operationId" : "createTask",
+        "parameters" : [ {
+          "description" : "Cipherkey to encrypt password secret.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "cipherkey",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "mount" : {
+                  "$ref" : "#/components/examples/mount"
+                },
+                "mountNfs" : {
+                  "$ref" : "#/components/examples/mountNfs"
+                },
+                "mountSmb" : {
+                  "$ref" : "#/components/examples/mountSmb"
+                },
+                "unmount" : {
+                  "$ref" : "#/components/examples/unmount"
+                },
+                "format" : {
+                  "$ref" : "#/components/examples/format"
+                },
+                "createStorageExtension" : {
+                  "$ref" : "#/components/examples/createStorageExtension"
+                },
+                "createPartition" : {
+                  "$ref" : "#/components/examples/createPartition"
+                },
+                "deletePartition" : {
+                  "$ref" : "#/components/examples/deletePartition"
+                },
+                "changePartitionLayout" : {
+                  "$ref" : "#/components/examples/changePartitionLayout"
+                }
+              },
+              "schema" : {
+                "$ref" : "#/components/schemas/OneOfTasks"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OneOfTasks"
+                }
+              }
+            },
+            "description" : "Created",
+            "headers" : {
+              "Location" : {
+                "explode" : false,
+                "schema" : {
+                  "example" : "/tasks/123",
+                  "type" : "string"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "tasks" ]
+      }
+    },
+    "/tasks/{id}" : {
+      "get" : {
+        "description" : "Retrive list of running, done and failed tasks",
+        "operationId" : "GetTask",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "unmount" : {
+                    "value" : {
+                      "id" : 123,
+                      "state" : "running",
+                      "progress" : 10,
+                      "action" : "unmount",
+                      "parameters" : {
+                        "media" : "d713f534-1240-4d5e-ae66-f79936c88bb5",
+                        "device" : "sda",
+                        "assignment" : "data-exchange"
+                      }
+                    }
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/OneOfTasks"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          }
+        },
+        "tags" : [ "tasks" ]
+      }
+    },
+    "/mounts" : {
+      "get" : {
+        "description" : "Retrieve a list of mounted media",
+        "operationId" : "getMounts",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/Mount"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          }
+        },
+        "tags" : [ "mounts" ]
+      }
+    }
+  },
+  "components" : {
+    "examples" : {
+      "mount" : {
+        "value" : {
+          "action" : "mount",
+          "parameters" : {
+            "media" : "d713f534-1240-4d5e-ae66-f79936c88bb5",
+            "device" : "sda1",
+            "assignment" : "data-exchange"
+          }
+        }
+      },
+      "mountNfs" : {
+        "value" : {
+          "action" : "mountNfs",
+          "parameters" : {
+            "server" : "192.168.1.2",
+            "share" : "/volume1/share1",
+            "protocol" : "tcp",
+            "port" : 2049
+          }
+        }
+      },
+      "mountSmb" : {
+        "value" : {
+          "action" : "mountSmb",
+          "parameters" : {
+            "server" : "192.168.1.2",
+            "share" : "/volume1/share1",
+            "username" : "myUsername",
+            "password" : "myPassword"
+          }
+        }
+      },
+      "unmount" : {
+        "value" : {
+          "action" : "unmount",
+          "parameters" : {
+            "media" : "d713f534-1240-4d5e-ae66-f79936c88bb5",
+            "device" : "sda1",
+            "assignment" : "data-exchange"
+          }
+        }
+      },
+      "format" : {
+        "value" : {
+          "action" : "format",
+          "parameters" : {
+            "media" : "d713f534-1240-4d5e-ae66-f79936c88bb5",
+            "device" : "sda1",
+            "format" : "fat32",
+            "label" : "mylabel"
+          }
+        }
+      },
+      "createStorageExtension" : {
+        "value" : {
+          "action" : "createStorageExtension",
+          "parameters" : {
+            "device" : "sdb",
+            "passphrase" : "myInitialPassphrase"
+          }
+        }
+      },
+      "createPartition" : {
+        "value" : {
+          "action" : "createPartition",
+          "parameters" : {
+            "device" : "sda",
+            "type" : "0C",
+            "size" : "100M",
+            "offset" : 2048
+          }
+        }
+      },
+      "deletePartition" : {
+        "value" : {
+          "action" : "deletePartition",
+          "parameters" : {
+            "device" : "sda1"
+          }
+        }
+      },
+      "changePartitionLayout" : {
+        "value" : {
+          "action" : "changePartitionLayout",
+          "parameters" : {
+            "device" : "sda",
+            "schema" : "gpt"
+          }
+        }
+      }
+    },
+    "parameters" : {
+      "uuid" : {
+        "description" : "UUID of the media (partition). In case of network shares (nfs, smb), the content of 'device' of the media has to be used.",
+        "explode" : false,
+        "in" : "path",
+        "name" : "uuid",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "id" : {
+        "explode" : false,
+        "in" : "path",
+        "name" : "id",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "deviceName" : {
+        "explode" : false,
+        "in" : "path",
+        "name" : "deviceName",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "slot" : {
+        "explode" : false,
+        "in" : "path",
+        "name" : "slot",
+        "required" : true,
+        "schema" : {
+          "type" : "integer"
+        },
+        "style" : "simple"
+      },
+      "cipherkey" : {
+        "description" : "Cipherkey to encrypt password secret.",
+        "explode" : true,
+        "in" : "query",
+        "name" : "cipherkey",
+        "required" : false,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "form"
+      }
+    },
+    "responses" : {
+      "Unauthorized" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Not authorized to access this resource"
+      },
+      "Forbidden" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Access forbidden for this resource"
+      },
+      "BadRequest" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The request is incomplete or malformed"
+      },
+      "InternalServerError" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Something unexpected happened on the server"
+      },
+      "NotFound" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The resource was not found"
+      }
+    },
+    "schemas" : {
+      "Media" : {
+        "properties" : {
+          "uuid" : {
+            "example" : "d713f534-1240-4d5e-ae66-f79936c88bb5",
+            "type" : "string"
+          },
+          "label" : {
+            "example" : "CtrlX External Storage",
+            "type" : "string"
+          },
+          "mounted" : {
+            "type" : "boolean"
+          },
+          "format" : {
+            "$ref" : "#/components/schemas/MediaFormat"
+          },
+          "size" : {
+            "description" : "Partition size in bytes",
+            "example" : 85899345920,
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "filesystemSize" : {
+            "description" : "File system size in bytes",
+            "example" : 85899345920,
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "used" : {
+            "description" : "Used storage in bytes",
+            "example" : 4592,
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "assignment" : {
+            "$ref" : "#/components/schemas/MediaAssignment"
+          },
+          "device" : {
+            "description" : "The name of the device in /dev",
+            "example" : "sda1",
+            "type" : "string"
+          },
+          "internal" : {
+            "description" : "Media is the internal media",
+            "example" : true,
+            "type" : "boolean"
+          },
+          "mountPoint" : {
+            "description" : "Contains the mount point for the removable media device. The mount points for internal devices are removed",
+            "example" : "/media/8a3973d6-7c2d-4ca9-acae-a144720974b8",
+            "type" : "string"
+          },
+          "parent" : {
+            "description" : "The name of the parent device",
+            "example" : "sda",
+            "type" : "string"
+          },
+          "offset" : {
+            "description" : "Offset of the partition in sectors",
+            "example" : 2048,
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "canBeFormatted" : {
+            "description" : "Indicates if the partition can be formatted. Because of some system restrictions only the first 4 partitons can be formatted.",
+            "example" : true,
+            "readOnly" : true,
+            "type" : "boolean"
+          },
+          "volatile" : {
+            "default" : false,
+            "description" : "If true, the media will be mounted as volatile, meaning it will not persist after reboot.",
+            "type" : "boolean"
+          }
+        },
+        "required" : [ "mounted", "uuid" ],
+        "type" : "object"
+      },
+      "Task" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task_1"
+        }, {
+          "properties" : {
+            "result" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          },
+          "type" : "object"
+        } ]
+      },
+      "TaskMount" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task"
+        }, {
+          "description" : "Task to mount removable media partition",
+          "properties" : {
+            "action" : {
+              "enum" : [ "mount" ],
+              "type" : "string"
+            },
+            "parameters" : {
+              "$ref" : "#/components/schemas/TaskMountParameters"
+            }
+          },
+          "type" : "object"
+        } ]
+      },
+      "TaskMountNetworkShare" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task"
+        }, {
+          "description" : "Task to mount network share",
+          "properties" : {
+            "action" : {
+              "enum" : [ "mountNetworkShare" ],
+              "type" : "string"
+            },
+            "parameters" : {
+              "$ref" : "#/components/schemas/TaskMountNetworkShareParameters"
+            }
+          },
+          "type" : "object"
+        } ]
+      },
+      "TaskMountNfs" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task"
+        }, {
+          "description" : "Task to mount removable media partition",
+          "properties" : {
+            "action" : {
+              "enum" : [ "mountNfs" ],
+              "type" : "string"
+            },
+            "parameters" : {
+              "$ref" : "#/components/schemas/TaskMountNfsParameters"
+            }
+          },
+          "type" : "object"
+        } ]
+      },
+      "TaskMountSmb" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task"
+        }, {
+          "description" : "Task to mount samba share",
+          "properties" : {
+            "action" : {
+              "enum" : [ "mountSmb" ],
+              "type" : "string"
+            },
+            "parameters" : {
+              "$ref" : "#/components/schemas/TaskMountSmbParameters"
+            }
+          },
+          "type" : "object"
+        } ]
+      },
+      "TaskUnmount" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task"
+        }, {
+          "description" : "Task to unmount removable media partition",
+          "properties" : {
+            "action" : {
+              "enum" : [ "unmount" ],
+              "type" : "string"
+            },
+            "parameters" : {
+              "$ref" : "#/components/schemas/TaskMountParameters"
+            }
+          },
+          "type" : "object"
+        } ]
+      },
+      "TaskFormat" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task"
+        }, {
+          "description" : "Task to format a removable media partition",
+          "properties" : {
+            "action" : {
+              "enum" : [ "format" ],
+              "type" : "string"
+            },
+            "parameters" : {
+              "$ref" : "#/components/schemas/TaskFormatParameters"
+            }
+          },
+          "type" : "object"
+        } ]
+      },
+      "TaskCreateStorageExtension" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task"
+        }, {
+          "description" : "Task to create an internal extension storage",
+          "properties" : {
+            "action" : {
+              "enum" : [ "createStorageExtension" ],
+              "type" : "string"
+            },
+            "parameters" : {
+              "$ref" : "#/components/schemas/TaskCreateStorageExtensionParameters"
+            }
+          },
+          "type" : "object"
+        } ]
+      },
+      "TaskChangePartitionSchema" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task"
+        }, {
+          "description" : "Task to change the partition schema of the removable media. All partitions will be deleted!",
+          "properties" : {
+            "action" : {
+              "enum" : [ "changePartitionLayout" ],
+              "type" : "string"
+            },
+            "parameters" : {
+              "$ref" : "#/components/schemas/TaskChangePartitionSchemaParameters"
+            }
+          },
+          "type" : "object"
+        } ]
+      },
+      "TaskCreatePartition" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task"
+        }, {
+          "description" : "Task to create a partition on a removable media",
+          "properties" : {
+            "action" : {
+              "enum" : [ "createPartition" ],
+              "type" : "string"
+            },
+            "parameters" : {
+              "$ref" : "#/components/schemas/TaskCreatePartitionParameters"
+            }
+          },
+          "type" : "object"
+        } ]
+      },
+      "TaskDeletePartition" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task"
+        }, {
+          "description" : "Task to delete a partition on a removable media",
+          "properties" : {
+            "action" : {
+              "enum" : [ "deletePartition" ],
+              "type" : "string"
+            },
+            "parameters" : {
+              "$ref" : "#/components/schemas/TaskDeletePartitionParameters"
+            }
+          },
+          "type" : "object"
+        } ]
+      },
+      "OneOfTasks" : {
+        "discriminator" : {
+          "mapping" : {
+            "mount" : "#/components/schemas/TaskMount.yaml#/TaskMount",
+            "mountNetworkShare" : "#/components/schemas/TaskMountNetworkShare.yaml#/TaskMountNetworkShare",
+            "mountNfs" : "#/components/schemas/TaskMountNfs.yaml#/TaskMountNfs",
+            "mountSmb" : "#/components/schemas/TaskMountSmb.yaml#/TaskMountSmb",
+            "unmount" : "#/components/schemas/TaskUnmount.yaml#/TaskUnmount",
+            "format" : "#/components/schemas/TaskFormat.yaml#/TaskFormat",
+            "createStorageExtension" : "#/components/schemas/TaskCreateStorageExtension.yaml#/TaskCreateStorageExtension",
+            "changePartitionLayout" : "#/components/schemas/TaskChangePartitionSchema.yaml#/TaskChangePartitionSchema",
+            "createPartition" : "#/components/schemas/TaskCreatePartition.yaml#/TaskCreatePartition",
+            "deletePartition" : "#/components/schemas/TaskDeletePartition.yaml#/TaskDeletePartition"
+          },
+          "propertyName" : "action"
+        },
+        "oneOf" : [ {
+          "$ref" : "#/components/schemas/Task"
+        }, {
+          "$ref" : "#/components/schemas/TaskMount"
+        }, {
+          "$ref" : "#/components/schemas/TaskMountNetworkShare"
+        }, {
+          "$ref" : "#/components/schemas/TaskMountNfs"
+        }, {
+          "$ref" : "#/components/schemas/TaskMountSmb"
+        }, {
+          "$ref" : "#/components/schemas/TaskUnmount"
+        }, {
+          "$ref" : "#/components/schemas/TaskFormat"
+        }, {
+          "$ref" : "#/components/schemas/TaskCreateStorageExtension"
+        }, {
+          "$ref" : "#/components/schemas/TaskChangePartitionSchema"
+        }, {
+          "$ref" : "#/components/schemas/TaskCreatePartition"
+        }, {
+          "$ref" : "#/components/schemas/TaskDeletePartition"
+        } ]
+      },
+      "KeySlot" : {
+        "description" : "A key slot can be used to set individual passphrases for an encrypted device. It has an index and enabled-flag to indicate its current status.",
+        "properties" : {
+          "slot" : {
+            "description" : "The index of a key slot of an encryted device. The slot index can be 0 to 4 and can be set with individual user passphrases to decrypt the device.",
+            "example" : 0,
+            "type" : "integer"
+          },
+          "enabled" : {
+            "description" : "Enabled `true` indicates that a passphrase is already set for the specific slot.",
+            "example" : true,
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "KeySlots" : {
+        "description" : "Array of key slots",
+        "items" : {
+          "$ref" : "#/components/schemas/KeySlot"
+        },
+        "type" : "array"
+      },
+      "Device" : {
+        "description" : "Describes the removable media device",
+        "properties" : {
+          "name" : {
+            "description" : "Name of device in /dev folder",
+            "example" : "sda",
+            "type" : "string"
+          },
+          "schema" : {
+            "description" : "Partition schema of device",
+            "enum" : [ "gpt", "mbr" ],
+            "example" : "mbr",
+            "type" : "string"
+          },
+          "size" : {
+            "description" : "Size of device",
+            "example" : 12345678,
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "sectorSize" : {
+            "description" : "Sector size of device",
+            "example" : 512,
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "vendor" : {
+            "description" : "Vendor of the removable media device",
+            "type" : "string"
+          },
+          "model" : {
+            "description" : "Model of the removable media device",
+            "type" : "string"
+          },
+          "partitions" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Media"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "Mount" : {
+        "oneOf" : [ {
+          "$ref" : "#/components/schemas/TaskMountParameters"
+        }, {
+          "$ref" : "#/components/schemas/TaskMountNfsParameters"
+        }, {
+          "$ref" : "#/components/schemas/TaskMountSmbParameters"
+        } ],
+        "type" : "object"
+      },
+      "Problem" : {
+        "description" : "This document defines a \"problem detail\" as a way  to carry machine-readable details of errors in a  HTTP response to avoid the need to define new error  response formats for HTTP APIs.\n",
+        "properties" : {
+          "type" : {
+            "default" : "about:blank",
+            "description" : "A URI reference [RFC3986] that identifies the problem type. \nThis specification encourages that, when dereferenced, \nit provide human-readable documentation for the problem type \n(e.g., using HTML [W3C.REC-html5-20141028]). When this member \nis not present, its value is assumed to be \"about:blank\".\n",
+            "example" : "https://example.com/probs/out-of-credit",
+            "format" : "uri",
+            "type" : "string"
+          },
+          "title" : {
+            "description" : "A short, human-readable summary of the problem type. \nIt SHOULD NOT change from occurrence to occurrence of the problem, \nexcept for purposes of localization (e.g., using proactive content \nnegotiation; see [RFC7231], Section 3.4).\nIf the response is a diagnostics message, it contains \nthe text associated with the mainDiagnosisCode.\n",
+            "example" : "You do not have enough credit.",
+            "type" : "string"
+          },
+          "status" : {
+            "description" : "The HTTP status code ([RFC7231], Section 6) generated by the \norigin server for this occurrence of the problem.\n",
+            "example" : 403,
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "detail" : {
+            "description" : "A human-readable explanation specific to this occurrence of the problem.\nIf the response is a diagnostics message, it contains the text associated with\nthe detailedDiagnosisCode.\n",
+            "example" : "Your current balance is 30, but that costs 50.",
+            "type" : "string"
+          },
+          "instance" : {
+            "description" : "A URI reference that identifies the specific occurrence of the problem.\nIt may or may not yield further information if dereferenced.\n",
+            "example" : "/account/12345/msgs/abc",
+            "type" : "string"
+          },
+          "code" : {
+            "deprecated" : true,
+            "description" : "An error code issued by the system that caused the original problem.\nThis code can be used to track down the root cause of the error.\n",
+            "example" : "F360001",
+            "type" : "string"
+          },
+          "mainDiagnosisCode" : {
+            "description" : "The main diagnosis code is issued by the system that caused the problem.\nThis code can be used to track down the root cause and source of the error.\nIt can be used to search in the documentation for a solution.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "080F0100",
+            "type" : "string"
+          },
+          "detailedDiagnosisCode" : {
+            "description" : "The detailed diagnosis code issued by the system that caused the problem.\nThis code can be used to track down the detailed cause and source of the error.\nIt can be used to search in the documentation for a solution.\nThe detailed diagnosis code gives additional information about the cause of the error.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "00666001",
+            "type" : "string"
+          },
+          "dynamicDescription" : {
+            "description" : "A dynamic description gives detailed information about the occurrence of a problem.\nIt can change between different occurrences of the same error.\n",
+            "example" : "value = -4.5",
+            "type" : "string"
+          },
+          "severity" : {
+            "description" : " Severity of a problem as defined RFC5424 of the Syslog standard, see https://tools.ietf.org/html/rfc5424",
+            "enum" : [ "Emergency", "Alert", "Critical", "Error", "Warning", "Notice", "Informational", "Debug" ],
+            "example" : "Error",
+            "type" : "string"
+          },
+          "links" : {
+            "description" : "Collection of links to fix the problem. E.g. links to online user manual,\nto an online community (using tags) or a developer chat (e.g. Slack).\n",
+            "items" : {
+              "example" : "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001",
+              "format" : "uri",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "moreInfo" : {
+            "additionalProperties" : true,
+            "description" : "The moreInfo field allows you to add additional information that might be necessary to debug or trace down the cause of an error.\nIt might also contain information what is needed to resolve the problem.\nThere are loosely specified fields for specific problems that can be used in these situations, e.g.:\n- On a 403 Forbidden error: The moreInfo can contain a field \"requiredPermissions\" with the required permissions seperated by comma\n- On a 402 Payment required: The moreInfo can contain a field \"requiredLicenses\" with the required licenses seperated by comma\n",
+            "example" : {
+              "trace" : "ExampleClass.cpp#452 Null pointer exception",
+              "class" : "ExampleClass"
+            },
+            "type" : "object"
+          },
+          "cause" : {
+            "description" : "Sometimes a problem might be caused by problems that occure in other components or are the root cause of a problem. In this\ncase the related problems can be added as a cause. Since it might be possible that multiple components have problems on a single\naction, cause is an array. E.g. Loading failed because several components where not able to load the configuration.\n",
+            "items" : {
+              "$ref" : "#/components/schemas/Problem"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "title", "type" ],
+        "type" : "object",
+        "x-version" : "1.0.0"
+      },
+      "NetworkShare" : {
+        "discriminator" : {
+          "mapping" : {
+            "nfs" : "#/components/schemas/NfsShare",
+            "smb" : "#/components/schemas/SmbShare"
+          },
+          "propertyName" : "networkShareType"
+        },
+        "oneOf" : [ {
+          "$ref" : "#/components/schemas/NfsShare"
+        }, {
+          "$ref" : "#/components/schemas/SmbShare"
+        } ]
+      },
+      "AddKey" : {
+        "properties" : {
+          "existingPassphrase" : {
+            "description" : "An existing passphrase that has already been set to the device to authenticate the request.",
+            "example" : "MyExistingPassphrase",
+            "type" : "string"
+          },
+          "newPassphrase" : {
+            "description" : "A new passphrase that should be added to the device.",
+            "example" : "MyNewPassphrase",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "RemoveKey" : {
+        "properties" : {
+          "existingPassphrase" : {
+            "description" : "An existing passphrase that has already been set to the device to authenticate the request.",
+            "example" : "MyExistingPassphrase",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "MediaFormat" : {
+        "enum" : [ "fat32", "ext4", "crypto_LUKS", "nfs", "smb" ],
+        "example" : "fat32",
+        "type" : "string"
+      },
+      "MediaAssignment" : {
+        "description" : "There are in principle 2 different modes how a media device can be mounted and used in the system. Either as permanent storage-extension to increase and extend the availabel disk space for the device. Or as temporary data-exchange which allows to copy data from and to the media device.",
+        "enum" : [ "storage-extension", "data-exchange" ],
+        "example" : "data-exchange",
+        "type" : "string"
+      },
+      "TaskMountParameters" : {
+        "properties" : {
+          "media" : {
+            "description" : "UUID of the media (partition)",
+            "example" : "d713f534-1240-4d5e-ae66-f79936c88bb5",
+            "type" : "string"
+          },
+          "device" : {
+            "description" : "Device path of the media - if uuid is set, the uuid is used first!",
+            "example" : "sda1",
+            "type" : "string"
+          },
+          "assignment" : {
+            "$ref" : "#/components/schemas/MediaAssignment"
+          },
+          "volatile" : {
+            "default" : false,
+            "description" : "If true, the media will be mounted as volatile, meaning it will not persist after reboot.",
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "TaskMountNetworkShareParameters" : {
+        "properties" : {
+          "networkShareId" : {
+            "description" : "Id of the network share",
+            "example" : "MyNfsShare",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "TaskMountNfsParameters" : {
+        "properties" : {
+          "server" : {
+            "description" : "Ip address or dns name of server",
+            "example" : "192.168.1.2",
+            "type" : "string"
+          },
+          "share" : {
+            "description" : "Exported folder to share",
+            "example" : "/folder-to-share",
+            "type" : "string"
+          },
+          "protocol" : {
+            "default" : "tcp",
+            "description" : "Protocol to communicate with nfs server",
+            "enum" : [ "tcp", "sctp" ],
+            "type" : "string"
+          },
+          "port" : {
+            "description" : "Port of the nfs server to connect to. If not set, the system default port will be used",
+            "format" : "int32",
+            "maximum" : 65535,
+            "minimum" : 1025,
+            "type" : "integer"
+          },
+          "volatile" : {
+            "default" : false,
+            "description" : "If true, the media will be mounted as volatile, meaning it will not persist after reboot.",
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "TaskMountSmbParameters" : {
+        "properties" : {
+          "server" : {
+            "description" : "Ip address or dns name of server",
+            "example" : "192.168.1.2",
+            "type" : "string"
+          },
+          "share" : {
+            "description" : "Exported folder to share",
+            "example" : "/folder-to-share",
+            "type" : "string"
+          },
+          "version" : {
+            "description" : "Protocol version to communicate with smb server. If version is not contained in request,\nthe highest matching protocol between server and client is used: checked protocols (may change in the future):\n- 1.0\n- 2.0\n- 2.1\n- 3.0\n- 3.0.2\n- 3.1.1\n",
+            "example" : "3.0.2",
+            "type" : "string"
+          },
+          "username" : {
+            "description" : "Username to connect to the smb server",
+            "example" : "myName",
+            "type" : "string"
+          },
+          "password" : {
+            "description" : "Password of username to connect to the smb server",
+            "example" : "myPassword",
+            "type" : "string",
+            "writeOnly" : true
+          },
+          "encryptedPassword" : {
+            "description" : "encrypted password",
+            "example" : "asd1234aSFD&LHKQSDF)(!\"ยง\")",
+            "type" : "string"
+          },
+          "domain" : {
+            "description" : "Domain of username to connect to the smb server",
+            "example" : "WORKGROUP",
+            "type" : "string"
+          },
+          "volatile" : {
+            "default" : false,
+            "description" : "If true, the media will be mounted as volatile, meaning it will not persist after reboot.",
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "TaskFormatParameters" : {
+        "properties" : {
+          "media" : {
+            "description" : "UUID of the media (partition)",
+            "example" : "d713f534-1240-4d5e-ae66-f79936c88bb5",
+            "type" : "string"
+          },
+          "device" : {
+            "description" : "Device path of the media - if uuid is set, the uuid is used first!",
+            "example" : "sda1",
+            "type" : "string"
+          },
+          "format" : {
+            "description" : "Format of media - supported values fat32 and ext4",
+            "example" : "fat32",
+            "type" : "string"
+          },
+          "label" : {
+            "description" : "Label of the media",
+            "example" : "mylabel",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "TaskCreateStorageExtensionParameters" : {
+        "properties" : {
+          "device" : {
+            "description" : "Device to create partition table and format for storage extension",
+            "example" : "sdb",
+            "type" : "string"
+          },
+          "passphrase" : {
+            "description" : "Optional passphrase set as additional recovery key of encrypted device",
+            "example" : "myInitialPassphrase",
+            "type" : "string"
+          }
+        },
+        "required" : [ "device" ],
+        "type" : "object"
+      },
+      "TaskChangePartitionSchemaParameters" : {
+        "properties" : {
+          "device" : {
+            "description" : "Name of the device",
+            "example" : "sda",
+            "type" : "string"
+          },
+          "schema" : {
+            "enum" : [ "gpt", "mbr" ],
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "TaskCreatePartitionParameters" : {
+        "properties" : {
+          "device" : {
+            "description" : "Name of parent device",
+            "example" : "sda",
+            "type" : "string"
+          },
+          "type" : {
+            "description" : "Type of the partition according to https://linuxconfig.org/list-of-filesystem-partition-type-codes",
+            "example" : "0C",
+            "type" : "string"
+          },
+          "size" : {
+            "description" : "Size of the partition. If zero, the rest of the device is used.",
+            "example" : "100M",
+            "type" : "string"
+          },
+          "offset" : {
+            "description" : "Offset of the partition. If zero, the value suggested by fdisk is used.",
+            "example" : 2048,
+            "format" : "int64",
+            "minimum" : 2048,
+            "type" : "integer"
+          }
+        },
+        "type" : "object"
+      },
+      "TaskDeletePartitionParameters" : {
+        "properties" : {
+          "device" : {
+            "description" : "Name of the partition to delete",
+            "example" : "sda1",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "NfsShare" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/NetworkShareCommon"
+        }, {
+          "properties" : {
+            "networkShareType" : {
+              "enum" : [ "nfs" ],
+              "type" : "string"
+            },
+            "server" : {
+              "description" : "Ip address or dns name of server",
+              "example" : "192.168.1.2",
+              "type" : "string"
+            },
+            "share" : {
+              "description" : "Exported folder to share",
+              "example" : "/folder-to-share",
+              "type" : "string"
+            },
+            "protocol" : {
+              "default" : "tcp",
+              "description" : "Protocol to communicate with nfs server",
+              "enum" : [ "tcp", "sctp" ],
+              "type" : "string"
+            },
+            "port" : {
+              "description" : "Port of the nfs server to connect to. If not set, the system default port will be used",
+              "format" : "int32",
+              "maximum" : 65535,
+              "minimum" : 1025,
+              "type" : "integer"
+            }
+          },
+          "required" : [ "networkShareType" ],
+          "type" : "object"
+        } ]
+      },
+      "NetworkShareCommon" : {
+        "properties" : {
+          "id" : {
+            "description" : "Id of the network share",
+            "example" : "MyNetworkShare",
+            "maxLength" : 128,
+            "pattern" : "^[a-zA-Z0-9_.-~]+$",
+            "type" : "string"
+          },
+          "mountPoint" : {
+            "description" : "Contains the mount point for the network share.",
+            "example" : "/media/8a3973d6-7c2d-4ca9-acae-a144720974b8",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "mounted" : {
+            "description" : "Indicates whether the network share is currently mounted",
+            "readOnly" : true,
+            "type" : "boolean"
+          },
+          "volatile" : {
+            "default" : false,
+            "description" : "If true, the media will be mounted as volatile, meaning it will not persist after reboot.",
+            "type" : "boolean"
+          }
+        },
+        "required" : [ "id" ],
+        "type" : "object"
+      },
+      "SmbShare" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/NetworkShareCommon"
+        }, {
+          "properties" : {
+            "networkShareType" : {
+              "enum" : [ "smb" ],
+              "type" : "string"
+            },
+            "server" : {
+              "description" : "Ip address or dns name of server",
+              "example" : "192.168.1.2",
+              "type" : "string"
+            },
+            "share" : {
+              "description" : "Exported folder to share",
+              "example" : "/folder-to-share",
+              "type" : "string"
+            },
+            "version" : {
+              "description" : "Protocol version to communicate with smb server. If version is not contained in request,\nthe highest matching protocol between server and client is used: checked protocols (may change in the future):\n- 1.0\n- 2.0\n- 2.1\n- 3.0\n- 3.0.2\n- 3.1.1\n",
+              "example" : "3.0.2",
+              "type" : "string"
+            },
+            "username" : {
+              "description" : "Username to connect to the smb server",
+              "example" : "myName",
+              "type" : "string"
+            },
+            "password" : {
+              "description" : "Password of username to connect to the smb server",
+              "example" : "myPassword",
+              "type" : "string",
+              "writeOnly" : true
+            },
+            "encryptedPassword" : {
+              "description" : "encrypted password",
+              "example" : "asd1234aSFD&LHKQSDF)(!\"ยง\")",
+              "type" : "string"
+            },
+            "domain" : {
+              "description" : "Domain of username to connect to the smb server",
+              "example" : "WORKGROUP",
+              "type" : "string"
+            }
+          },
+          "required" : [ "networkShareType" ],
+          "type" : "object"
+        } ]
+      },
+      "Task_1" : {
+        "discriminator" : {
+          "propertyName" : "action"
+        },
+        "properties" : {
+          "id" : {
+            "description" : "A server generated ID used to identify the task. This ID is unique.",
+            "example" : "123",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "state" : {
+            "description" : "The state of the task.",
+            "enum" : [ "pending", "failed", "done", "running" ],
+            "example" : "running",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "action" : {
+            "description" : "The action name executed by this task. This has to be inherited and overwritten by the application.",
+            "type" : "string"
+          },
+          "progress" : {
+            "description" : "Optional progress of the task in percentage.",
+            "example" : 10,
+            "maximum" : 100,
+            "minimum" : 0,
+            "readOnly" : true,
+            "type" : "integer"
+          },
+          "eta" : {
+            "description" : "Optional ETA in RFC 3339 format.",
+            "example" : "2019-01-01T12:00:27.87+00:20",
+            "format" : "dateTime",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "parameters" : {
+            "additionalProperties" : true,
+            "description" : "Optional map of additional parameters required by the request. Should be defined when inherited by an application.",
+            "type" : "object"
+          },
+          "result" : {
+            "additionalProperties" : true,
+            "description" : "Optional map reflecting the result of the task. May be empty until task completition. Should be defined when inherited by an application.",
+            "readOnly" : true,
+            "type" : "object"
+          }
+        },
+        "required" : [ "action", "id", "state" ],
+        "type" : "object"
+      }
+    },
+    "securitySchemes" : {
+      "UsernamePassword" : {
+        "description" : "Enter username and password",
+        "flows" : {
+          "password" : {
+            "scopes" : {
+              "dummy" : "Dummy scope (scopes not used)"
+            },
+            "tokenUrl" : "/identity-manager/api/v1/auth/token"
+          }
+        },
+        "type" : "oauth2"
+      },
+      "Bearer" : {
+        "description" : "Alternatively&colon; Enter bearer token (without prefix 'Bearer')",
+        "scheme" : "bearer",
+        "type" : "http"
+      }
+    }
+  }
+}

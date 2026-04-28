@@ -1,0 +1,1264 @@
+{
+  "openapi" : "3.0.2",
+  "info" : {
+    "contact" : {
+      "email" : "support@boschrexroth.com",
+      "name" : "Bosch Rexroth AG",
+      "url" : "https://www.boschrexroth.com"
+    },
+    "description" : "<p> This is an API for device management in ctrlX WORKS. </p> <p>Usage&colon;</p> <ul> <li>Start ctrlX WORKS with a port param (e.g. 'ctrlx-works.exe --port=4242').</li> <li>The ctrlX WORKS application is started in server mode (icon in the systray).</li> <li>Try out those GET, PUT, ... operations you're interested in.</li> </ul>",
+    "title" : "ctrlX WORKS - Devices API",
+    "version" : "1.3.0"
+  },
+  "servers" : [ {
+    "url" : "/works/api/v1/"
+  } ],
+  "tags" : [ {
+    "description" : "Here you can view ctrlX CORE devices. You can also add, edit, start, stop and delete ctrlX COREvirtual devices.",
+    "name" : "Devices"
+  }, {
+    "description" : "Here you can manage the image version for ctrlX COREvirtual.",
+    "name" : "Devices Images"
+  }, {
+    "description" : "Here you can modify common ctrlX COREvirtual settings (e.g. storage location).",
+    "name" : "Devices Settings"
+  } ],
+  "paths" : {
+    "/controls" : {
+      "get" : {
+        "operationId" : "getControls",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/Control"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "type" : "about:blank",
+                  "title" : "Loading configuration failed",
+                  "status" : 400,
+                  "instance" : "/solutions/configuration",
+                  "mainDiagnosisCode" : "080F0400",
+                  "severity" : "Warning",
+                  "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=080F0400" ],
+                  "cause" : [ {
+                    "type" : "about:blank",
+                    "title" : "Error in system configuration",
+                    "detail" : "Creation and deletion of motion objects is only allowed in CONFIGURATION state",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/motion/cmd/opstate",
+                    "mainDiagnosisCode" : "090F2020",
+                    "detailedDiagnosisCode" : "0C560203",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C560203" ]
+                  }, {
+                    "type" : "about:blank",
+                    "title" : "Error in PLC configuration",
+                    "detail" : "Loading the configuration in the “RUN” state is not permitted",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/plc/cmd/run",
+                    "mainDiagnosisCode" : "0A0F0020",
+                    "detailedDiagnosisCode" : "0C280100",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C280100" ]
+                  } ]
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          }
+        },
+        "summary" : "Returns a list of all 'ctrlX CORE' and 'ctrlX COREvirtual'.",
+        "tags" : [ "Devices" ]
+      },
+      "post" : {
+        "operationId" : "addControl",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "virtualControl" : {
+                  "$ref" : "#/components/examples/addControlRequest"
+                }
+              },
+              "schema" : {
+                "$ref" : "#/components/schemas/Control"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "virtualControl" : {
+                    "$ref" : "#/components/examples/addControlResponse"
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Control"
+                }
+              }
+            },
+            "description" : "The created virtual control"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "type" : "about:blank",
+                  "title" : "Loading configuration failed",
+                  "status" : 400,
+                  "instance" : "/solutions/configuration",
+                  "mainDiagnosisCode" : "080F0400",
+                  "severity" : "Warning",
+                  "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=080F0400" ],
+                  "cause" : [ {
+                    "type" : "about:blank",
+                    "title" : "Error in system configuration",
+                    "detail" : "Creation and deletion of motion objects is only allowed in CONFIGURATION state",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/motion/cmd/opstate",
+                    "mainDiagnosisCode" : "090F2020",
+                    "detailedDiagnosisCode" : "0C560203",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C560203" ]
+                  }, {
+                    "type" : "about:blank",
+                    "title" : "Error in PLC configuration",
+                    "detail" : "Loading the configuration in the “RUN” state is not permitted",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/plc/cmd/run",
+                    "mainDiagnosisCode" : "0A0F0020",
+                    "detailedDiagnosisCode" : "0C280100",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C280100" ]
+                  } ]
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          }
+        },
+        "summary" : "Add a new ctrlX COREvirtual on this machine or add an existing ctrlX CORE to the devices table.",
+        "tags" : [ "Devices" ]
+      }
+    },
+    "/controls/{linkLocalIpV6Address}" : {
+      "delete" : {
+        "operationId" : "deleteControl",
+        "parameters" : [ {
+          "description" : "The unique Link-Local-IP-Address as the identifier",
+          "explode" : false,
+          "in" : "path",
+          "name" : "linkLocalIpV6Address",
+          "required" : true,
+          "schema" : {
+            "example" : "[fe80::dcad:beff:fe00:1]",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "ok"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "type" : "about:blank",
+                  "title" : "Loading configuration failed",
+                  "status" : 400,
+                  "instance" : "/solutions/configuration",
+                  "mainDiagnosisCode" : "080F0400",
+                  "severity" : "Warning",
+                  "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=080F0400" ],
+                  "cause" : [ {
+                    "type" : "about:blank",
+                    "title" : "Error in system configuration",
+                    "detail" : "Creation and deletion of motion objects is only allowed in CONFIGURATION state",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/motion/cmd/opstate",
+                    "mainDiagnosisCode" : "090F2020",
+                    "detailedDiagnosisCode" : "0C560203",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C560203" ]
+                  }, {
+                    "type" : "about:blank",
+                    "title" : "Error in PLC configuration",
+                    "detail" : "Loading the configuration in the “RUN” state is not permitted",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/plc/cmd/run",
+                    "mainDiagnosisCode" : "0A0F0020",
+                    "detailedDiagnosisCode" : "0C280100",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C280100" ]
+                  } ]
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          }
+        },
+        "summary" : "Delete the ctrlX COREvirtual",
+        "tags" : [ "Devices" ]
+      },
+      "get" : {
+        "operationId" : "getControl",
+        "parameters" : [ {
+          "description" : "The unique Link-Local-IP-Address as the identifier",
+          "explode" : false,
+          "in" : "path",
+          "name" : "linkLocalIpV6Address",
+          "required" : true,
+          "schema" : {
+            "example" : "[fe80::dcad:beff:fe00:1]",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Control"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "type" : "about:blank",
+                  "title" : "Loading configuration failed",
+                  "status" : 400,
+                  "instance" : "/solutions/configuration",
+                  "mainDiagnosisCode" : "080F0400",
+                  "severity" : "Warning",
+                  "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=080F0400" ],
+                  "cause" : [ {
+                    "type" : "about:blank",
+                    "title" : "Error in system configuration",
+                    "detail" : "Creation and deletion of motion objects is only allowed in CONFIGURATION state",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/motion/cmd/opstate",
+                    "mainDiagnosisCode" : "090F2020",
+                    "detailedDiagnosisCode" : "0C560203",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C560203" ]
+                  }, {
+                    "type" : "about:blank",
+                    "title" : "Error in PLC configuration",
+                    "detail" : "Loading the configuration in the “RUN” state is not permitted",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/plc/cmd/run",
+                    "mainDiagnosisCode" : "0A0F0020",
+                    "detailedDiagnosisCode" : "0C280100",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C280100" ]
+                  } ]
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          }
+        },
+        "summary" : "Get the ctrlX COREvirtual's properties",
+        "tags" : [ "Devices" ]
+      },
+      "put" : {
+        "operationId" : "updateControl",
+        "parameters" : [ {
+          "description" : "The unique Link-Local-IP-Address as the identifier",
+          "explode" : false,
+          "in" : "path",
+          "name" : "linkLocalIpV6Address",
+          "required" : true,
+          "schema" : {
+            "example" : "[fe80::dcad:beff:fe00:1]",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "string"
+              }
+            }
+          },
+          "description" : "Data for the creation",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "Data for the creation"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "type" : "about:blank",
+                  "title" : "Loading configuration failed",
+                  "status" : 400,
+                  "instance" : "/solutions/configuration",
+                  "mainDiagnosisCode" : "080F0400",
+                  "severity" : "Warning",
+                  "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=080F0400" ],
+                  "cause" : [ {
+                    "type" : "about:blank",
+                    "title" : "Error in system configuration",
+                    "detail" : "Creation and deletion of motion objects is only allowed in CONFIGURATION state",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/motion/cmd/opstate",
+                    "mainDiagnosisCode" : "090F2020",
+                    "detailedDiagnosisCode" : "0C560203",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C560203" ]
+                  }, {
+                    "type" : "about:blank",
+                    "title" : "Error in PLC configuration",
+                    "detail" : "Loading the configuration in the “RUN” state is not permitted",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/plc/cmd/run",
+                    "mainDiagnosisCode" : "0A0F0020",
+                    "detailedDiagnosisCode" : "0C280100",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C280100" ]
+                  } ]
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          }
+        },
+        "summary" : "Updates the ctrlX COREvirtual's properties",
+        "tags" : [ "Devices" ]
+      }
+    },
+    "/controls/{linkLocalIpV6Address}/ipaddresses" : {
+      "get" : {
+        "operationId" : "getControlIpAddresses",
+        "parameters" : [ {
+          "description" : "The unique Link-Local-IP-Address as the identifier",
+          "explode" : false,
+          "in" : "path",
+          "name" : "linkLocalIpV6Address",
+          "required" : true,
+          "schema" : {
+            "example" : "[fe80::dcad:beff:fe00:1]",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "type" : "about:blank",
+                  "title" : "Loading configuration failed",
+                  "status" : 400,
+                  "instance" : "/solutions/configuration",
+                  "mainDiagnosisCode" : "080F0400",
+                  "severity" : "Warning",
+                  "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=080F0400" ],
+                  "cause" : [ {
+                    "type" : "about:blank",
+                    "title" : "Error in system configuration",
+                    "detail" : "Creation and deletion of motion objects is only allowed in CONFIGURATION state",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/motion/cmd/opstate",
+                    "mainDiagnosisCode" : "090F2020",
+                    "detailedDiagnosisCode" : "0C560203",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C560203" ]
+                  }, {
+                    "type" : "about:blank",
+                    "title" : "Error in PLC configuration",
+                    "detail" : "Loading the configuration in the “RUN” state is not permitted",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/plc/cmd/run",
+                    "mainDiagnosisCode" : "0A0F0020",
+                    "detailedDiagnosisCode" : "0C280100",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C280100" ]
+                  } ]
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          }
+        },
+        "summary" : "Gets the list of configured device ip addresses if a control is online",
+        "tags" : [ "Devices" ]
+      }
+    },
+    "/controls/{linkLocalIpV6Address}/start" : {
+      "put" : {
+        "operationId" : "startControl",
+        "parameters" : [ {
+          "description" : "The unique Link-Local-IP-Address as the identifier",
+          "explode" : false,
+          "in" : "path",
+          "name" : "linkLocalIpV6Address",
+          "required" : true,
+          "schema" : {
+            "example" : "[fe80::dcad:beff:fe00:1]",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "text/plain" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "Control is booting"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "type" : "about:blank",
+                  "title" : "Loading configuration failed",
+                  "status" : 400,
+                  "instance" : "/solutions/configuration",
+                  "mainDiagnosisCode" : "080F0400",
+                  "severity" : "Warning",
+                  "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=080F0400" ],
+                  "cause" : [ {
+                    "type" : "about:blank",
+                    "title" : "Error in system configuration",
+                    "detail" : "Creation and deletion of motion objects is only allowed in CONFIGURATION state",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/motion/cmd/opstate",
+                    "mainDiagnosisCode" : "090F2020",
+                    "detailedDiagnosisCode" : "0C560203",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C560203" ]
+                  }, {
+                    "type" : "about:blank",
+                    "title" : "Error in PLC configuration",
+                    "detail" : "Loading the configuration in the “RUN” state is not permitted",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/plc/cmd/run",
+                    "mainDiagnosisCode" : "0A0F0020",
+                    "detailedDiagnosisCode" : "0C280100",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C280100" ]
+                  } ]
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          }
+        },
+        "summary" : "Start the ctrlX COREvirtual",
+        "tags" : [ "Devices" ]
+      }
+    },
+    "/controls/{linkLocalIpV6Address}/stop" : {
+      "put" : {
+        "operationId" : "stopControl",
+        "parameters" : [ {
+          "description" : "The unique Link-Local-IP-Address as the identifier",
+          "explode" : false,
+          "in" : "path",
+          "name" : "linkLocalIpV6Address",
+          "required" : true,
+          "schema" : {
+            "example" : "[fe80::dcad:beff:fe00:1]",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "text/plain" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "Control has been stopped"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "type" : "about:blank",
+                  "title" : "Loading configuration failed",
+                  "status" : 400,
+                  "instance" : "/solutions/configuration",
+                  "mainDiagnosisCode" : "080F0400",
+                  "severity" : "Warning",
+                  "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=080F0400" ],
+                  "cause" : [ {
+                    "type" : "about:blank",
+                    "title" : "Error in system configuration",
+                    "detail" : "Creation and deletion of motion objects is only allowed in CONFIGURATION state",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/motion/cmd/opstate",
+                    "mainDiagnosisCode" : "090F2020",
+                    "detailedDiagnosisCode" : "0C560203",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C560203" ]
+                  }, {
+                    "type" : "about:blank",
+                    "title" : "Error in PLC configuration",
+                    "detail" : "Loading the configuration in the “RUN” state is not permitted",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/plc/cmd/run",
+                    "mainDiagnosisCode" : "0A0F0020",
+                    "detailedDiagnosisCode" : "0C280100",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C280100" ]
+                  } ]
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          }
+        },
+        "summary" : "Stop the ctrlX COREvirtual",
+        "tags" : [ "Devices" ]
+      }
+    },
+    "/controls/settings" : {
+      "get" : {
+        "operationId" : "getSettings",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Settings"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "type" : "about:blank",
+                  "title" : "Loading configuration failed",
+                  "status" : 400,
+                  "instance" : "/solutions/configuration",
+                  "mainDiagnosisCode" : "080F0400",
+                  "severity" : "Warning",
+                  "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=080F0400" ],
+                  "cause" : [ {
+                    "type" : "about:blank",
+                    "title" : "Error in system configuration",
+                    "detail" : "Creation and deletion of motion objects is only allowed in CONFIGURATION state",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/motion/cmd/opstate",
+                    "mainDiagnosisCode" : "090F2020",
+                    "detailedDiagnosisCode" : "0C560203",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C560203" ]
+                  }, {
+                    "type" : "about:blank",
+                    "title" : "Error in PLC configuration",
+                    "detail" : "Loading the configuration in the “RUN” state is not permitted",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/plc/cmd/run",
+                    "mainDiagnosisCode" : "0A0F0020",
+                    "detailedDiagnosisCode" : "0C280100",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C280100" ]
+                  } ]
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          }
+        },
+        "summary" : "Get the common ctrlX COREvirtual settings",
+        "tags" : [ "Devices Settings" ]
+      },
+      "put" : {
+        "operationId" : "updateSettings",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Settings"
+              }
+            }
+          },
+          "description" : "Data for the creation",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "text/plain" : {
+                "schema" : {
+                  "type" : "boolean"
+                }
+              }
+            },
+            "description" : "Data for the creation"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "type" : "about:blank",
+                  "title" : "Loading configuration failed",
+                  "status" : 400,
+                  "instance" : "/solutions/configuration",
+                  "mainDiagnosisCode" : "080F0400",
+                  "severity" : "Warning",
+                  "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=080F0400" ],
+                  "cause" : [ {
+                    "type" : "about:blank",
+                    "title" : "Error in system configuration",
+                    "detail" : "Creation and deletion of motion objects is only allowed in CONFIGURATION state",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/motion/cmd/opstate",
+                    "mainDiagnosisCode" : "090F2020",
+                    "detailedDiagnosisCode" : "0C560203",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C560203" ]
+                  }, {
+                    "type" : "about:blank",
+                    "title" : "Error in PLC configuration",
+                    "detail" : "Loading the configuration in the “RUN” state is not permitted",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/plc/cmd/run",
+                    "mainDiagnosisCode" : "0A0F0020",
+                    "detailedDiagnosisCode" : "0C280100",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C280100" ]
+                  } ]
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          }
+        },
+        "summary" : "Update the common ctrlX COREvirtual",
+        "tags" : [ "Devices Settings" ]
+      }
+    },
+    "/controls/images" : {
+      "get" : {
+        "operationId" : "getImages",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/Image"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "type" : "about:blank",
+                  "title" : "Loading configuration failed",
+                  "status" : 400,
+                  "instance" : "/solutions/configuration",
+                  "mainDiagnosisCode" : "080F0400",
+                  "severity" : "Warning",
+                  "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=080F0400" ],
+                  "cause" : [ {
+                    "type" : "about:blank",
+                    "title" : "Error in system configuration",
+                    "detail" : "Creation and deletion of motion objects is only allowed in CONFIGURATION state",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/motion/cmd/opstate",
+                    "mainDiagnosisCode" : "090F2020",
+                    "detailedDiagnosisCode" : "0C560203",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C560203" ]
+                  }, {
+                    "type" : "about:blank",
+                    "title" : "Error in PLC configuration",
+                    "detail" : "Loading the configuration in the “RUN” state is not permitted",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/plc/cmd/run",
+                    "mainDiagnosisCode" : "0A0F0020",
+                    "detailedDiagnosisCode" : "0C280100",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C280100" ]
+                  } ]
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          }
+        },
+        "summary" : "Get the available images for ctrlX COREvirtuals",
+        "tags" : [ "Devices Images" ]
+      },
+      "post" : {
+        "operationId" : "UploadImage",
+        "requestBody" : {
+          "content" : {
+            "application/octet-stream" : {
+              "schema" : {
+                "format" : "binary",
+                "type" : "string"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Image folder created"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "type" : "about:blank",
+                  "title" : "Loading configuration failed",
+                  "status" : 400,
+                  "instance" : "/solutions/configuration",
+                  "mainDiagnosisCode" : "080F0400",
+                  "severity" : "Warning",
+                  "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=080F0400" ],
+                  "cause" : [ {
+                    "type" : "about:blank",
+                    "title" : "Error in system configuration",
+                    "detail" : "Creation and deletion of motion objects is only allowed in CONFIGURATION state",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/motion/cmd/opstate",
+                    "mainDiagnosisCode" : "090F2020",
+                    "detailedDiagnosisCode" : "0C560203",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C560203" ]
+                  }, {
+                    "type" : "about:blank",
+                    "title" : "Error in PLC configuration",
+                    "detail" : "Loading the configuration in the “RUN” state is not permitted",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/plc/cmd/run",
+                    "mainDiagnosisCode" : "0A0F0020",
+                    "detailedDiagnosisCode" : "0C280100",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C280100" ]
+                  } ]
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "type" : "about:blank",
+                  "title" : "Http server error",
+                  "detail" : "Internal server error (500)",
+                  "status" : 500,
+                  "instance" : "scheduler/admin",
+                  "mainDiagnosisCode" : "080F0200",
+                  "detailedDiagnosisCode" : "0C7A0200",
+                  "severity" : "Error",
+                  "moreInfo" : {
+                    "trace" : "ExampleClass.cpp#452 Null pointer exception"
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Creates a image folder with the content of the transferred image zip archive.",
+        "tags" : [ "Devices Images" ]
+      }
+    },
+    "/controls/images/{version}" : {
+      "delete" : {
+        "operationId" : "deleteImage",
+        "parameters" : [ {
+          "description" : "The unique version of the image",
+          "explode" : false,
+          "in" : "path",
+          "name" : "version",
+          "required" : true,
+          "schema" : {
+            "example" : "1.16.0",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "text/plain" : {
+                "schema" : {
+                  "type" : "boolean"
+                }
+              }
+            },
+            "description" : "ok"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "type" : "about:blank",
+                  "title" : "Loading configuration failed",
+                  "status" : 400,
+                  "instance" : "/solutions/configuration",
+                  "mainDiagnosisCode" : "080F0400",
+                  "severity" : "Warning",
+                  "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=080F0400" ],
+                  "cause" : [ {
+                    "type" : "about:blank",
+                    "title" : "Error in system configuration",
+                    "detail" : "Creation and deletion of motion objects is only allowed in CONFIGURATION state",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/motion/cmd/opstate",
+                    "mainDiagnosisCode" : "090F2020",
+                    "detailedDiagnosisCode" : "0C560203",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C560203" ]
+                  }, {
+                    "type" : "about:blank",
+                    "title" : "Error in PLC configuration",
+                    "detail" : "Loading the configuration in the “RUN” state is not permitted",
+                    "status" : 400,
+                    "instance" : "/automation/api/v2/nodes/plc/cmd/run",
+                    "mainDiagnosisCode" : "0A0F0020",
+                    "detailedDiagnosisCode" : "0C280100",
+                    "severity" : "Warning",
+                    "links" : [ "https://docs.automation.boschrexroth.com/cdphelp?tkeyword=0C280100" ]
+                  } ]
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          }
+        },
+        "summary" : "Deletes the image folder",
+        "tags" : [ "Devices Images" ]
+      }
+    }
+  },
+  "components" : {
+    "examples" : {
+      "addControlRequest" : {
+        "value" : {
+          "name" : "VirtualControl-1",
+          "type" : "coreVirtual",
+          "networkMode" : "tapWindows"
+        }
+      },
+      "addControlResponse" : {
+        "value" : {
+          "baseImageVersion" : "0.9.0-rc00378",
+          "linkLocalIpV6Address" : "[fe80::dcad:beff:fe00:1]",
+          "macAddress" : "DE-AD-BE-00-00-01",
+          "name" : "VirtualControl-1",
+          "networkAdapter" : "VirtualControl-DE-AD-BE-00-00-01",
+          "networkMode" : "tapWindows",
+          "portForwarding" : "8022:22,8443:443,8740:11740",
+          "type" : "ctrlX CORE Virtual",
+          "userImage" : "31cngcpb.user.qcow2"
+        }
+      }
+    },
+    "responses" : {
+      "BadRequest" : {
+        "$ref" : "./Common/responses/BadRequest.yaml#/BadRequest"
+      },
+      "InternalServerError" : {
+        "$ref" : "./Common/responses/InternalServerError.yaml#/InternalServerError"
+      }
+    },
+    "schemas" : {
+      "AccelerationModes" : {
+        "description" : "The hardware acceleration mode (haxm is obsolete)",
+        "enum" : [ "haxm", "whpx", "none" ],
+        "example" : "whpx",
+        "type" : "string"
+      },
+      "Control" : {
+        "example" : {
+          "networkMode" : "tapWindows",
+          "networkAdapter" : "VirtualControl-DE-AD-BE-00-00-01",
+          "portForwarding" : "7022:22,7443:443",
+          "pinned" : true,
+          "editable" : true,
+          "stateMessage" : "Communication timeout!",
+          "cpuCoreCount" : 0,
+          "type" : "coreVirtual",
+          "homePageUrl" : "https://[fe80::dcad:beff:fe00:1]/",
+          "portProxyAdapterName" : "portProxyAdapterName",
+          "userImage" : "31cngcpb.user.qcow2",
+          "portProxyIpV4" : "192.168.1.40\"",
+          "accelerationMode" : "haxm",
+          "linkLocalIpV6Address" : "linkLocalIpV6Address",
+          "name" : "VirtualControl-1",
+          "baseImageVersion" : "1.0.0",
+          "ipAddresses" : [ "192.168.1.1", "10.52.12.42" ],
+          "state" : "offline",
+          "ram" : 6
+        },
+        "properties" : {
+          "name" : {
+            "description" : "Name of the control",
+            "example" : "VirtualControl-1",
+            "maxLength" : 64,
+            "minLength" : 1,
+            "pattern" : "^[a-zA-Z]+[\\w\\-\\_\\.]*$",
+            "type" : "string"
+          },
+          "type" : {
+            "description" : "The type of a control",
+            "enum" : [ "core", "coreVirtual" ],
+            "example" : "coreVirtual",
+            "type" : "string"
+          },
+          "linkLocalIpV6Address" : {
+            "description" : "The link local IpV6 Address",
+            "type" : "string"
+          },
+          "editable" : {
+            "description" : "Returns true if the control is a ctrlX COREvirtual (start, edit, stop, delete is possible)",
+            "type" : "boolean"
+          },
+          "baseImageVersion" : {
+            "description" : "The image version",
+            "example" : "1.0.0",
+            "type" : "string"
+          },
+          "userImage" : {
+            "description" : "The user image file name",
+            "example" : "31cngcpb.user.qcow2",
+            "type" : "string"
+          },
+          "networkAdapter" : {
+            "description" : "The network adapter",
+            "example" : "VirtualControl-DE-AD-BE-00-00-01",
+            "type" : "string"
+          },
+          "networkMode" : {
+            "description" : "The mode of network communication",
+            "enum" : [ "tapWindows", "portForwarding" ],
+            "example" : "tapWindows",
+            "type" : "string"
+          },
+          "portForwarding" : {
+            "description" : "The definition of forwarding virtual control ports to local machine ports 'localPort:controlPort'. (Example SSH,HTTPS,PLC '8022:22,8443:443,8740:11740')",
+            "example" : "7022:22,7443:443",
+            "maxLength" : 64,
+            "minLength" : 1,
+            "pattern" : "[0-9]{1,5}:[0-9]{1,5}(,[0-9]{1,5}:[0-9]{1,5})*$",
+            "type" : "string"
+          },
+          "portProxyIpV4" : {
+            "description" : "IpV4 address to forward ports to port proxy (external access to virtual control)",
+            "example" : "192.168.1.40\"",
+            "type" : "string"
+          },
+          "portProxyAdapterName" : {
+            "description" : "Name of the adapter (external access to virtual control)",
+            "type" : "string"
+          },
+          "state" : {
+            "description" : "The state of a control",
+            "enum" : [ "offline", "booting", "online", "shutdown", "no-response" ],
+            "example" : "offline",
+            "type" : "string"
+          },
+          "stateMessage" : {
+            "description" : "Last communication error message to the control",
+            "example" : "Communication timeout!",
+            "type" : "string"
+          },
+          "pinned" : {
+            "description" : "Returns true if the control will remain in the list if it is offline",
+            "type" : "boolean"
+          },
+          "ipAddresses" : {
+            "description" : "List of configured ip addresses",
+            "example" : [ "192.168.1.1", "10.52.12.42" ],
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "homePageUrl" : {
+            "description" : "Returns the url to the device homepage",
+            "example" : "https://[fe80::dcad:beff:fe00:1]/",
+            "type" : "string"
+          },
+          "accelerationMode" : {
+            "description" : "The mode hardware acceleration",
+            "enum" : [ "haxm", "whpx", "none" ],
+            "example" : "haxm",
+            "type" : "string"
+          },
+          "cpuCoreCount" : {
+            "description" : "Returns the count of cpu cores",
+            "type" : "integer"
+          },
+          "ram" : {
+            "description" : "Returns the RAM in GB",
+            "type" : "integer"
+          }
+        },
+        "required" : [ "editable", "linkLocalIpV6Address", "name", "type" ]
+      },
+      "Controls" : {
+        "items" : {
+          "$ref" : "./schemas/Control.yaml#/Control"
+        },
+        "type" : "array"
+      },
+      "ControlStates" : {
+        "description" : "The state of a control",
+        "enum" : [ "offline", "booting", "online", "shutdown", "no-response" ],
+        "example" : "offline",
+        "type" : "string"
+      },
+      "ControlTypes" : {
+        "description" : "The type of a control",
+        "enum" : [ "core", "coreVirtual" ],
+        "example" : "coreVirtual",
+        "type" : "string"
+      },
+      "Image" : {
+        "example" : {
+          "baseSize" : 1582,
+          "userSize" : 688,
+          "version" : "1.20.0"
+        },
+        "properties" : {
+          "version" : {
+            "description" : "Version of the image",
+            "example" : "1.20.0",
+            "type" : "string"
+          },
+          "baseSize" : {
+            "description" : "Size of the base image in KB",
+            "example" : 1582,
+            "type" : "integer"
+          },
+          "userSize" : {
+            "description" : "Size of all user images in KB",
+            "example" : 688,
+            "type" : "integer"
+          }
+        },
+        "required" : [ "version" ]
+      },
+      "Images" : {
+        "items" : {
+          "$ref" : "./schemas/Image.yaml#/Image"
+        },
+        "type" : "array"
+      },
+      "Settings" : {
+        "example" : {
+          "showEmulationWindow" : true,
+          "healthRequestTimeout" : 0,
+          "storageLocation" : "storageLocation"
+        },
+        "properties" : {
+          "showEmulationWindow" : {
+            "type" : "boolean"
+          },
+          "healthRequestTimeout" : {
+            "type" : "integer"
+          },
+          "storageLocation" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "showEmulationWindow" ],
+        "type" : "object"
+      },
+      "Problem" : {
+        "description" : "This document defines a \"problem detail\" as a way  to carry machine-readable details of errors in a  HTTP response to avoid the need to define new error  response formats for HTTP APIs.\n",
+        "properties" : {
+          "type" : {
+            "default" : "about:blank",
+            "description" : "A URI reference [RFC3986] that identifies the problem type. \nThis specification encourages that, when dereferenced, \nit provide human-readable documentation for the problem type \n(e.g., using HTML [W3C.REC-html5-20141028]). When this member \nis not present, its value is assumed to be \"about:blank\".\n",
+            "example" : "https://example.com/probs/out-of-credit",
+            "format" : "uri",
+            "type" : "string"
+          },
+          "title" : {
+            "description" : "A short, human-readable summary of the problem type. \nIt SHOULD NOT change from occurrence to occurrence of the problem, \nexcept for purposes of localization (e.g., using proactive content \nnegotiation; see [RFC7231], Section 3.4).\nIf the response is a diagnostics message, it contains \nthe text associated with the mainDiagnosisCode.\n",
+            "example" : "You do not have enough credit.",
+            "type" : "string"
+          },
+          "status" : {
+            "description" : "The HTTP status code ([RFC7231], Section 6) generated by the \norigin server for this occurrence of the problem.\n",
+            "example" : 403,
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "detail" : {
+            "description" : "A human-readable explanation specific to this occurrence of the problem.\nIf the response is a diagnostics message, it contains the text associated with\nthe detailedDiagnosisCode.\n",
+            "example" : "Your current balance is 30, but that costs 50.",
+            "type" : "string"
+          },
+          "instance" : {
+            "description" : "A URI reference that identifies the specific occurrence of the problem.\nIt may or may not yield further information if dereferenced.\n",
+            "example" : "/account/12345/msgs/abc",
+            "type" : "string"
+          },
+          "code" : {
+            "deprecated" : true,
+            "description" : "An error code issued by the system that caused the original problem.\nThis code can be used to track down the root cause of the error.\n",
+            "example" : "F360001",
+            "type" : "string"
+          },
+          "mainDiagnosisCode" : {
+            "description" : "The main diagnosis code is issued by the system that caused the problem.\nThis code can be used to track down the root cause and source of the error.\nIt can be used to search in the documentation for a solution.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "080F0100",
+            "type" : "string"
+          },
+          "detailedDiagnosisCode" : {
+            "description" : "The detailed diagnosis code issued by the system that caused the problem.\nThis code can be used to track down the detailed cause and source of the error.\nIt can be used to search in the documentation for a solution.\nThe detailed diagnosis code gives additional information about the cause of the error.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "00666001",
+            "type" : "string"
+          },
+          "dynamicDescription" : {
+            "description" : "A dynamic description gives detailed information about the occurrence of a problem.\nIt can change between different occurrences of the same error.\n",
+            "example" : "value = -4.5",
+            "type" : "string"
+          },
+          "severity" : {
+            "description" : " Severity of a problem as defined RFC5424 of the Syslog standard, see https://tools.ietf.org/html/rfc5424",
+            "enum" : [ "Emergency", "Alert", "Critical", "Error", "Warning", "Notice", "Informational", "Debug" ],
+            "example" : "Error",
+            "type" : "string"
+          },
+          "links" : {
+            "description" : "Collection of links to fix the problem. E.g. links to online user manual,\nto an online community (using tags) or a developer chat (e.g. Slack).\n",
+            "items" : {
+              "example" : "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001",
+              "format" : "uri",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "moreInfo" : {
+            "additionalProperties" : true,
+            "description" : "The moreInfo field allows you to add additional information that might be necessary to debug or trace down the cause of an error.\nIt might also contain information what is needed to resolve the problem.\nThere are loosely specified fields for specific problems that can be used in these situations, e.g.:\n- On a 403 Forbidden error: The moreInfo can contain a field \"requiredPermissions\" with the required permissions seperated by comma\n- On a 402 Payment required: The moreInfo can contain a field \"requiredLicenses\" with the required licenses seperated by comma\n",
+            "example" : {
+              "trace" : "ExampleClass.cpp#452 Null pointer exception",
+              "class" : "ExampleClass"
+            },
+            "type" : "object"
+          },
+          "cause" : {
+            "description" : "Sometimes a problem might be caused by problems that occure in other components or are the root cause of a problem. In this\ncase the related problems can be added as a cause. Since it might be possible that multiple components have problems on a single\naction, cause is an array. E.g. Loading failed because several components where not able to load the configuration.\n",
+            "items" : {
+              "$ref" : "#/components/schemas/Problem"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "title", "type" ],
+        "type" : "object",
+        "x-version" : "1.0.0"
+      }
+    }
+  }
+}

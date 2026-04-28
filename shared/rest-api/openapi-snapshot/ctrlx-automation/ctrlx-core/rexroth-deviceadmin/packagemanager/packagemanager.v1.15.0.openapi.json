@@ -1,0 +1,4960 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "contact" : {
+      "email" : "support@boschrexroth.com",
+      "name" : "Bosch Rexroth AG",
+      "url" : "https://www.boschrexroth.com"
+    },
+    "description" : "Provides package management related functionalities of ctrlX OS.",
+    "title" : "ctrlX OS - Apps Management API",
+    "version" : "1.15.0"
+  },
+  "servers" : [ {
+    "url" : "/package-manager/api/v1"
+  }, {
+    "url" : "https://{host}/package-manager/api/v1",
+    "variables" : {
+      "host" : {
+        "default" : "localhost:443",
+        "description" : "Hostname or ip address of the ctrlX OS system"
+      }
+    }
+  } ],
+  "security" : [ {
+    "UsernamePassword" : [ ]
+  }, {
+    "Bearer" : [ ]
+  } ],
+  "tags" : [ {
+    "description" : "Provides batch upload methods",
+    "name" : "Batch"
+  }, {
+    "description" : "Upload UEFI firmware",
+    "name" : "Firmware"
+  }, {
+    "description" : "Provides general information about package manager",
+    "name" : "Information"
+  }, {
+    "description" : "Get manifest of installed packages",
+    "name" : "Manifests"
+  }, {
+    "description" : "Get information about installed packages on the system",
+    "name" : "Packages"
+  }, {
+    "description" : "Settings for app and package management",
+    "name" : "Settings"
+  }, {
+    "description" : "Get information about available packages on the cloud store",
+    "name" : "Store"
+  }, {
+    "description" : "Contains information about running tasks for asynchronous request handling, e.g. Install, Uninstall ...",
+    "name" : "Tasks"
+  } ],
+  "paths" : {
+    "/packages" : {
+      "get" : {
+        "description" : "Get the list of installed packages",
+        "operationId" : "getPackages",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/InstalledPackage"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "List of installed packages"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get the list of installed packages",
+        "tags" : [ "Packages" ]
+      },
+      "post" : {
+        "description" : "Upload and Install an app",
+        "operationId" : "installPackageFromUpload",
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UploadFile"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "202" : {
+            "description" : "Accepted",
+            "headers" : {
+              "Location" : {
+                "explode" : false,
+                "schema" : {
+                  "example" : "/tasks/123",
+                  "type" : "string"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Upload and Install an app",
+        "tags" : [ "Packages" ]
+      }
+    },
+    "/packages/{packageId}" : {
+      "get" : {
+        "description" : "Returns information about an installed package",
+        "operationId" : "getPackageById",
+        "parameters" : [ {
+          "description" : "The package Id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "packageId",
+          "required" : true,
+          "schema" : {
+            "example" : "snap_vlc_v3.0.1-1-3-gd3dasf0",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "RQL filter",
+          "example" : "and(eq(name,idp),limit(10,0))",
+          "explode" : true,
+          "in" : "query",
+          "name" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/InstalledPackage"
+                }
+              }
+            },
+            "description" : "Returns information about a package"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Returns information about an installed package",
+        "tags" : [ "Packages" ]
+      }
+    },
+    "/packages/{packageId}/icon" : {
+      "get" : {
+        "description" : "Receive the icon for the corresponding package",
+        "operationId" : "getPackageIcon",
+        "parameters" : [ {
+          "description" : "The package Id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "packageId",
+          "required" : true,
+          "schema" : {
+            "example" : "snap_vlc_v3.0.1-1-3-gd3dasf0",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "image/*" : {
+                "schema" : {
+                  "format" : "binary",
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "Icon as Image"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Receive the icon for the corresponding package",
+        "tags" : [ "Packages" ]
+      }
+    },
+    "/packages/{packageId}/file" : {
+      "get" : {
+        "description" : "Get the binary of a package",
+        "operationId" : "getPackageFile",
+        "parameters" : [ {
+          "description" : "The package Id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "packageId",
+          "required" : true,
+          "schema" : {
+            "example" : "snap_vlc_v3.0.1-1-3-gd3dasf0",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/octet-stream" : {
+                "schema" : {
+                  "format" : "binary",
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "Binary of the package"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get the binary of a package",
+        "tags" : [ "Packages" ]
+      }
+    },
+    "/packages/{packageId}/details" : {
+      "get" : {
+        "description" : "Receive package type specific information",
+        "operationId" : "getPackageDetailsById",
+        "parameters" : [ {
+          "description" : "The package Id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "packageId",
+          "required" : true,
+          "schema" : {
+            "example" : "snap_vlc_v3.0.1-1-3-gd3dasf0",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Snap"
+                }
+              }
+            },
+            "description" : "Package type specific information"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Receive package type specific information",
+        "tags" : [ "Packages" ]
+      }
+    },
+    "/packages/{packageId}/manifest" : {
+      "get" : {
+        "description" : "Get the package manifest",
+        "operationId" : "getPackageManifestById",
+        "parameters" : [ {
+          "description" : "The package Id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "packageId",
+          "required" : true,
+          "schema" : {
+            "example" : "snap_vlc_v3.0.1-1-3-gd3dasf0",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Language as ISO 639-1 language code (e.g. en, de ...). If header and query parameter are set, the query parameter takes precedence over the header parameter",
+          "example" : "de",
+          "explode" : true,
+          "in" : "query",
+          "name" : "language",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Language as ISO 639-1 language code (e.g. en, de ...). If header and query parameter are set, the query parameter takes precedence over the header parameter",
+          "example" : "de",
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept-Language",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PackageManifest"
+                }
+              }
+            },
+            "description" : "Package manifest"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get the package manifest",
+        "tags" : [ "Packages" ]
+      }
+    },
+    "/packages/{packageId}/snapshot" : {
+      "get" : {
+        "description" : "Get the data (snapshot) of a package",
+        "operationId" : "getPackageSnapshot",
+        "parameters" : [ {
+          "description" : "The package Id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "packageId",
+          "required" : true,
+          "schema" : {
+            "example" : "snap_vlc_v3.0.1-1-3-gd3dasf0",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/x-tar" : {
+                "schema" : {
+                  "format" : "binary",
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "Data (snapshot) of the package"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get a snapshot of the data of a package.",
+        "tags" : [ "Packages" ]
+      },
+      "post" : {
+        "description" : "Replace the data of a package with the data provided in the snapshot",
+        "operationId" : "replacePackageSnapshot",
+        "parameters" : [ {
+          "description" : "The package Id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "packageId",
+          "required" : true,
+          "schema" : {
+            "example" : "snap_vlc_v3.0.1-1-3-gd3dasf0",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SnapshotFile"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "202" : {
+            "description" : "Accepted",
+            "headers" : {
+              "Location" : {
+                "explode" : false,
+                "schema" : {
+                  "example" : "/tasks/123",
+                  "type" : "string"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request conflicts with the current state of the resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Replace the data (snapshot) of a package",
+        "tags" : [ "Packages" ]
+      }
+    },
+    "/batch-upload" : {
+      "get" : {
+        "description" : "Get a list of all batch uploads",
+        "operationId" : "getBatches",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/BatchState"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "Ok"
+          }
+        },
+        "summary" : "Get a list of all batch uploads",
+        "tags" : [ "Batch" ]
+      },
+      "post" : {
+        "description" : "Uploads multiple apps into a temporary directory for installation. The files will be removed after one hour.",
+        "operationId" : "batchUpload",
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/BatchUpload"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/BatchState"
+                }
+              }
+            },
+            "description" : "Batch upload created",
+            "headers" : {
+              "Location" : {
+                "explode" : false,
+                "schema" : {
+                  "description" : "Location of the batch upload",
+                  "example" : "/batch-upload/123",
+                  "type" : "string"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          }
+        },
+        "summary" : "Uploads multiple apps into a temporary directory for installation. The files will be removed after one hour.",
+        "tags" : [ "Batch" ]
+      }
+    },
+    "/batch-upload/{batchId}" : {
+      "delete" : {
+        "description" : "Remove the content of the batch upload",
+        "operationId" : "deleteBatch",
+        "parameters" : [ {
+          "description" : "The batch id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "batchId",
+          "required" : true,
+          "schema" : {
+            "example" : "1234",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Batch uploads folder deleted"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          }
+        },
+        "summary" : "Remove the content of the batch upload",
+        "tags" : [ "Batch" ]
+      },
+      "get" : {
+        "description" : "Get the content of the batch upload",
+        "operationId" : "getBatch",
+        "parameters" : [ {
+          "description" : "The batch id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "batchId",
+          "required" : true,
+          "schema" : {
+            "example" : "1234",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/BatchState"
+                }
+              }
+            },
+            "description" : "Package manifest"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          }
+        },
+        "summary" : "Get the content of the batch upload",
+        "tags" : [ "Batch" ]
+      }
+    },
+    "/batch-upload/{batchId}/{batchFile}" : {
+      "delete" : {
+        "description" : "Remove one batch file from batch upload",
+        "operationId" : "deleteBatchFile",
+        "parameters" : [ {
+          "description" : "The batch id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "batchId",
+          "required" : true,
+          "schema" : {
+            "example" : "1234",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The batch file",
+          "explode" : false,
+          "in" : "path",
+          "name" : "batchFile",
+          "required" : true,
+          "schema" : {
+            "example" : "Device Admin XCR-V-0114.0.app",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Batch uploads folder deleted"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          }
+        },
+        "summary" : "Remove one batch file from batch upload",
+        "tags" : [ "Batch" ]
+      },
+      "get" : {
+        "description" : "Get information of the batch file",
+        "operationId" : "getBatchFile",
+        "parameters" : [ {
+          "description" : "The batch id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "batchId",
+          "required" : true,
+          "schema" : {
+            "example" : "1234",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The batch file",
+          "explode" : false,
+          "in" : "path",
+          "name" : "batchFile",
+          "required" : true,
+          "schema" : {
+            "example" : "Device Admin XCR-V-0114.0.app",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/BatchFile"
+                }
+              }
+            },
+            "description" : "Package manifest"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          }
+        },
+        "summary" : "Get information of the batch file",
+        "tags" : [ "Batch" ]
+      }
+    },
+    "/batch-upload/{batchId}/{batchFile}/manifest" : {
+      "get" : {
+        "description" : "Get manifest of the batch file",
+        "operationId" : "getBatchFileManifest",
+        "parameters" : [ {
+          "description" : "The batch id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "batchId",
+          "required" : true,
+          "schema" : {
+            "example" : "1234",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The batch file",
+          "explode" : false,
+          "in" : "path",
+          "name" : "batchFile",
+          "required" : true,
+          "schema" : {
+            "example" : "Device Admin XCR-V-0114.0.app",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PackageManifest"
+                }
+              }
+            },
+            "description" : "Package manifest"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          }
+        },
+        "summary" : "Get manifest of the batch file",
+        "tags" : [ "Batch" ]
+      }
+    },
+    "/manifests" : {
+      "get" : {
+        "description" : "Get the manifests of all installed packages",
+        "operationId" : "getManifests",
+        "parameters" : [ {
+          "description" : "Language as ISO 639-1 language code (e.g. en, de ...). If header and query parameter are set, the query parameter takes precedence over the header parameter",
+          "example" : "de",
+          "explode" : true,
+          "in" : "query",
+          "name" : "language",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Language as ISO 639-1 language code (e.g. en, de ...). If header and query parameter are set, the query parameter takes precedence over the header parameter",
+          "example" : "de",
+          "explode" : false,
+          "in" : "header",
+          "name" : "Accept-Language",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/PackageManifest"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "Package manifest"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get the manifests of all installed packages",
+        "tags" : [ "Manifests" ]
+      }
+    },
+    "/tasks" : {
+      "get" : {
+        "description" : "Receive a list of tasks",
+        "operationId" : "getTasks",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Tasks"
+                }
+              }
+            },
+            "description" : "List of tasks"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Receive a list of tasks",
+        "tags" : [ "Tasks" ]
+      },
+      "post" : {
+        "description" : "Create a new task",
+        "operationId" : "createTask",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "install" : {
+                  "$ref" : "#/components/examples/installTaskRequest"
+                },
+                "update" : {
+                  "$ref" : "#/components/examples/updateTaskRequest"
+                },
+                "uninstall" : {
+                  "$ref" : "#/components/examples/uninstallTaskRequest"
+                },
+                "enable" : {
+                  "$ref" : "#/components/examples/enableTaskRequest"
+                },
+                "disable" : {
+                  "$ref" : "#/components/examples/disableTaskRequest"
+                },
+                "start" : {
+                  "$ref" : "#/components/examples/startTaskRequest"
+                },
+                "stop" : {
+                  "$ref" : "#/components/examples/stopTaskRequest"
+                },
+                "restart" : {
+                  "$ref" : "#/components/examples/restartTaskRequest"
+                },
+                "remodel" : {
+                  "$ref" : "#/components/examples/remodelTaskRequest"
+                }
+              },
+              "schema" : {
+                "$ref" : "#/components/schemas/OneOfTasks"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "install" : {
+                    "$ref" : "#/components/examples/installTaskResponse"
+                  },
+                  "update" : {
+                    "$ref" : "#/components/examples/updateTaskResponse"
+                  },
+                  "uninstall" : {
+                    "$ref" : "#/components/examples/uninstallTaskResponse"
+                  },
+                  "enable" : {
+                    "$ref" : "#/components/examples/enableTaskResponse"
+                  },
+                  "disable" : {
+                    "$ref" : "#/components/examples/disableTaskResponse"
+                  },
+                  "start" : {
+                    "$ref" : "#/components/examples/startTaskResponse"
+                  },
+                  "stop" : {
+                    "$ref" : "#/components/examples/stopTaskResponse"
+                  },
+                  "restart" : {
+                    "$ref" : "#/components/examples/restartTaskResponse"
+                  },
+                  "remodel" : {
+                    "$ref" : "#/components/examples/remodelTaskResponse"
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/OneOfTasks"
+                }
+              }
+            },
+            "description" : "Task created",
+            "headers" : {
+              "Location" : {
+                "explode" : false,
+                "schema" : {
+                  "description" : "Location of the created task",
+                  "example" : "/tasks/123",
+                  "type" : "string"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          },
+          "503" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Service unavailable"
+          }
+        },
+        "summary" : "Create a new task",
+        "tags" : [ "Tasks" ]
+      }
+    },
+    "/tasks/{taskId}" : {
+      "get" : {
+        "description" : "Receive information about a task",
+        "operationId" : "getTask",
+        "parameters" : [ {
+          "description" : "task id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "taskId",
+          "required" : true,
+          "schema" : {
+            "example" : "123",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "install" : {
+                    "$ref" : "#/components/examples/installTaskResponse"
+                  },
+                  "update" : {
+                    "$ref" : "#/components/examples/updateTaskResponse"
+                  },
+                  "uninstall" : {
+                    "$ref" : "#/components/examples/uninstallTaskResponse"
+                  },
+                  "enable" : {
+                    "$ref" : "#/components/examples/enableTaskResponse"
+                  },
+                  "disable" : {
+                    "$ref" : "#/components/examples/disableTaskResponse"
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/OneOfTasks"
+                }
+              }
+            },
+            "description" : "Done - Task information"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Receive information about a task",
+        "tags" : [ "Tasks" ]
+      }
+    },
+    "/snapstore/state" : {
+      "get" : {
+        "description" : "Returns the state of the store like reachability and roundtrip time",
+        "operationId" : "getStoreState",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StoreState"
+                }
+              }
+            },
+            "description" : "State of the store"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Returns the state of the store like reachability and roundtrip time",
+        "tags" : [ "Store" ]
+      }
+    },
+    "/snapstore/updates" : {
+      "get" : {
+        "description" : "Get the list of updatable packages",
+        "operationId" : "getAvailableUpdates",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/AvailablePackage"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "List of updatable packages"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get the list of updatable packages",
+        "tags" : [ "Store" ]
+      }
+    },
+    "/snapstore/packages" : {
+      "get" : {
+        "description" : "Find store snaps with the give query parameter",
+        "operationId" : "findStorePackages",
+        "parameters" : [ {
+          "description" : "Search for specific package in store",
+          "example" : "rexroth-",
+          "explode" : true,
+          "in" : "query",
+          "name" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/AvailablePackage"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "List of available packages that match the query in the store"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Find store snaps with the give query parameter",
+        "tags" : [ "Store" ]
+      }
+    },
+    "/snapstore/packages/{packageId}" : {
+      "get" : {
+        "description" : "Get the details of a single package in the store",
+        "operationId" : "getStorePackageById",
+        "parameters" : [ {
+          "description" : "The package Id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "packageId",
+          "required" : true,
+          "schema" : {
+            "example" : "snap_vlc_v3.0.1-1-3-gd3dasf0",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AvailablePackage"
+                }
+              }
+            },
+            "description" : "Details of a single package"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get the details of a single package in the store",
+        "tags" : [ "Store" ]
+      }
+    },
+    "/snapstore/packages/{packageId}/manifest" : {
+      "get" : {
+        "description" : "Get the manifest of a single package in the store",
+        "operationId" : "getStorePackageManifest",
+        "parameters" : [ {
+          "description" : "The package Id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "packageId",
+          "required" : true,
+          "schema" : {
+            "example" : "snap_vlc_v3.0.1-1-3-gd3dasf0",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PackageManifest"
+                }
+              }
+            },
+            "description" : "Manifest of a single package"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          }
+        },
+        "summary" : "Get the manifest of a single package in the store",
+        "tags" : [ "Store" ]
+      }
+    },
+    "/settings" : {
+      "get" : {
+        "description" : "Get the settings for apps and packages",
+        "operationId" : "getSettings",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Settings"
+                }
+              }
+            },
+            "description" : "The settings for apps and packages"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get the settings for apps and packages",
+        "tags" : [ "Settings" ]
+      },
+      "put" : {
+        "description" : "Update the current settings for apps and packages",
+        "operationId" : "updateSettings",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Settings"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "204" : {
+            "description" : "Ok"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Update the current settings for apps and packages",
+        "tags" : [ "Settings" ]
+      }
+    },
+    "/information" : {
+      "get" : {
+        "description" : "Provide general information about package manager state",
+        "operationId" : "getInformation",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Information"
+                }
+              }
+            },
+            "description" : "General information about the package-manager state"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          }
+        },
+        "summary" : "Provide general information about package manager state",
+        "tags" : [ "Information" ]
+      }
+    },
+    "/uefi-firmware" : {
+      "post" : {
+        "description" : "Upload UEFI firmware in UEFI capsule format",
+        "operationId" : "addUefiFirmware",
+        "requestBody" : {
+          "content" : {
+            "application/octet-stream" : {
+              "schema" : {
+                "format" : "binary",
+                "type" : "string"
+              }
+            }
+          },
+          "description" : "Uploads an UEFI firmware in UEFI capsule format to the ctrlX OS Device. The update can be executed using the corresponding task.\nThe UEFI firmware file will be deleted after a execution of the firmware update or if the device has been restarted. In the later case the file has to be uploaded again to execute the firmware update.\n",
+          "required" : true
+        },
+        "responses" : {
+          "204" : {
+            "description" : "UEFI firmware uploaded successfully"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "415" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request content format is not supported"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          },
+          "501" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The functionality is not implemented"
+          }
+        },
+        "tags" : [ "Firmware" ]
+      }
+    }
+  },
+  "components" : {
+    "examples" : {
+      "installTaskRequest" : {
+        "value" : {
+          "action" : "install",
+          "parameters" : {
+            "id" : "rexroth-firewall",
+            "version" : "v1.0.0",
+            "location" : "repository://control_repository"
+          }
+        }
+      },
+      "installTaskResponse" : {
+        "value" : {
+          "id" : "123",
+          "state" : "running",
+          "progress" : 10,
+          "eta" : "2019-01-01T12:00:27.87+00:20",
+          "action" : "install",
+          "parameters" : {
+            "id" : "rexroth-firewall",
+            "version" : "v1.0.0",
+            "location" : "repository://control_repository"
+          },
+          "result" : { }
+        }
+      },
+      "updateTaskRequest" : {
+        "value" : {
+          "action" : "update",
+          "parameters" : {
+            "id" : "rexroth-firewall",
+            "version" : "v1.0.0",
+            "location" : "repository://control_repository"
+          }
+        }
+      },
+      "updateTaskResponse" : {
+        "value" : {
+          "id" : "123",
+          "state" : "running",
+          "progress" : 10,
+          "eta" : "2019-01-01T12:00:27.87+00:20",
+          "action" : "update",
+          "parameters" : {
+            "id" : "rexroth-firewall",
+            "version" : "v1.0.0",
+            "location" : "repository://control_repository"
+          },
+          "result" : { }
+        }
+      },
+      "uninstallTaskRequest" : {
+        "value" : {
+          "action" : "uninstall",
+          "parameters" : {
+            "id" : "rexroth-firewall"
+          }
+        }
+      },
+      "uninstallTaskResponse" : {
+        "value" : {
+          "id" : "123",
+          "state" : "running",
+          "progress" : 10,
+          "eta" : "2019-01-01T12:00:27.87+00:20",
+          "action" : "uninstall",
+          "parameters" : {
+            "id" : "rexroth-firewall"
+          },
+          "result" : { }
+        }
+      },
+      "enableTaskRequest" : {
+        "value" : {
+          "action" : "enable",
+          "parameters" : {
+            "id" : "rexroth-automationcore"
+          }
+        }
+      },
+      "enableTaskResponse" : {
+        "value" : {
+          "id" : "123",
+          "state" : "running",
+          "progress" : 10,
+          "eta" : "2019-01-01T12:00:27.87+00:20",
+          "action" : "enable",
+          "parameters" : {
+            "id" : "rexroth-automationcore"
+          },
+          "result" : { }
+        }
+      },
+      "disableTaskRequest" : {
+        "value" : {
+          "action" : "disable",
+          "parameters" : {
+            "id" : "rexroth-automationcore"
+          }
+        }
+      },
+      "disableTaskResponse" : {
+        "value" : {
+          "id" : "123",
+          "state" : "running",
+          "progress" : 10,
+          "eta" : "2019-01-01T12:00:27.87+00:20",
+          "action" : "disable",
+          "parameters" : {
+            "id" : "rexroth-automationcore"
+          },
+          "result" : { }
+        }
+      },
+      "remodelTaskRequest" : {
+        "value" : {
+          "action" : "remodel"
+        }
+      },
+      "remodelTaskResponse" : {
+        "value" : {
+          "id" : "123",
+          "state" : "running",
+          "process" : 10,
+          "eta" : "2019-01-01T12:00:27.87+00:20",
+          "action" : "remodel"
+        }
+      },
+      "startTaskRequest" : {
+        "value" : {
+          "action" : "start",
+          "parameters" : {
+            "service" : "customer-app.daemon",
+            "enable" : "true"
+          }
+        }
+      },
+      "startTaskResponse" : {
+        "value" : {
+          "id" : "123",
+          "state" : "running",
+          "process" : 10,
+          "eta" : "2019-01-01T12:00:27.87+00:20",
+          "action" : "start",
+          "parameters" : {
+            "service" : "customer-app.daemon",
+            "enable" : "true"
+          },
+          "result" : { }
+        }
+      },
+      "stopTaskRequest" : {
+        "value" : {
+          "action" : "stop",
+          "parameters" : {
+            "service" : "customer-app.daemon",
+            "disable" : "true"
+          }
+        }
+      },
+      "stopTaskResponse" : {
+        "value" : {
+          "id" : "123",
+          "state" : "running",
+          "process" : 10,
+          "eta" : "2019-01-01T12:00:27.87+00:20",
+          "action" : "stop",
+          "parameters" : {
+            "service" : "customer-app.daemon",
+            "disable" : "true"
+          },
+          "result" : { }
+        }
+      },
+      "restartTaskRequest" : {
+        "value" : {
+          "action" : "restart",
+          "parameters" : {
+            "service" : "customer-app.daemon",
+            "reload" : "true"
+          }
+        }
+      },
+      "restartTaskResponse" : {
+        "value" : {
+          "id" : "123",
+          "state" : "running",
+          "process" : 10,
+          "eta" : "2019-01-01T12:00:27.87+00:20",
+          "action" : "start",
+          "parameters" : {
+            "service" : "customer-app.daemon",
+            "reload" : "true"
+          },
+          "result" : { }
+        }
+      }
+    },
+    "parameters" : {
+      "batchId" : {
+        "description" : "The batch id",
+        "explode" : false,
+        "in" : "path",
+        "name" : "batchId",
+        "required" : true,
+        "schema" : {
+          "example" : "1234",
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "batchFile" : {
+        "description" : "The batch file",
+        "explode" : false,
+        "in" : "path",
+        "name" : "batchFile",
+        "required" : true,
+        "schema" : {
+          "example" : "Device Admin XCR-V-0114.0.app",
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "packageId" : {
+        "description" : "The package Id",
+        "explode" : false,
+        "in" : "path",
+        "name" : "packageId",
+        "required" : true,
+        "schema" : {
+          "example" : "snap_vlc_v3.0.1-1-3-gd3dasf0",
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "repositoryId" : {
+        "description" : "the repository id",
+        "explode" : false,
+        "in" : "path",
+        "name" : "repositoryId",
+        "required" : true,
+        "schema" : {
+          "example" : "MainRepo",
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "taskId" : {
+        "description" : "task id",
+        "explode" : false,
+        "in" : "path",
+        "name" : "taskId",
+        "required" : true,
+        "schema" : {
+          "example" : "123",
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "sort" : {
+        "description" : "Sort the ressource by the given field.\nMultiple fields can be chained by adding the query parameter multiple times.\nFormat is fieldname prefixed with + (ascending) or (descending) -. E.g. +id or -id.\nIf no prefix is given it defaults to +.\n",
+        "explode" : true,
+        "in" : "query",
+        "name" : "sort",
+        "required" : false,
+        "schema" : {
+          "items" : {
+            "type" : "string"
+          },
+          "type" : "array"
+        },
+        "style" : "form"
+      },
+      "page" : {
+        "description" : "Page index.\n",
+        "explode" : true,
+        "in" : "query",
+        "name" : "page",
+        "required" : false,
+        "schema" : {
+          "type" : "integer"
+        },
+        "style" : "form"
+      },
+      "limit" : {
+        "description" : "Maximum number of elements per page.\n",
+        "explode" : true,
+        "in" : "query",
+        "name" : "limit",
+        "required" : false,
+        "schema" : {
+          "type" : "integer"
+        },
+        "style" : "form"
+      },
+      "query" : {
+        "description" : "RQL filter",
+        "example" : "and(eq(name,idp),limit(10,0))",
+        "explode" : true,
+        "in" : "query",
+        "name" : "query",
+        "required" : false,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "form"
+      },
+      "queryLanguage" : {
+        "description" : "Language as ISO 639-1 language code (e.g. en, de ...). If header and query parameter are set, the query parameter takes precedence over the header parameter",
+        "example" : "de",
+        "explode" : true,
+        "in" : "query",
+        "name" : "language",
+        "required" : false,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "form"
+      },
+      "headerLanguage" : {
+        "description" : "Language as ISO 639-1 language code (e.g. en, de ...). If header and query parameter are set, the query parameter takes precedence over the header parameter",
+        "example" : "de",
+        "explode" : false,
+        "in" : "header",
+        "name" : "Accept-Language",
+        "required" : false,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "simple"
+      }
+    },
+    "responses" : {
+      "Unauthorized" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Not authorized to access this resource"
+      },
+      "Forbidden" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Access forbidden for this resource"
+      },
+      "BadRequest" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The request is incomplete or malformed"
+      },
+      "InternalServerError" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Something unexpected happened on the server"
+      },
+      "NotFound" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The resource was not found"
+      },
+      "Conflict" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The request conflicts with the current state of the resource"
+      },
+      "NotImplemented" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The functionality is not implemented"
+      },
+      "UnsupportedMediaType" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The request content format is not supported"
+      }
+    },
+    "schemas" : {
+      "Category" : {
+        "properties" : {
+          "id" : {
+            "description" : "Identifier of the category in the backend.",
+            "example" : 0,
+            "readOnly" : true,
+            "type" : "integer"
+          },
+          "name" : {
+            "description" : "Name of the Category",
+            "example" : "Snaps",
+            "type" : "string"
+          },
+          "type" : {
+            "$ref" : "#/components/schemas/PackageTypes"
+          }
+        },
+        "type" : "object"
+      },
+      "Categories" : {
+        "items" : {
+          "$ref" : "#/components/schemas/Category"
+        },
+        "type" : "array"
+      },
+      "MenuItem" : {
+        "example" : {
+          "permissions" : [ "solutions.r", "solutions.rw" ],
+          "icon" : "Bosch-Ic-settings",
+          "link" : "/solutions",
+          "description" : "Manage solutions on the control",
+          "id" : "solutions",
+          "title" : "Solutions",
+          "category" : "1_system",
+          "items" : [ ],
+          "target" : "_blank"
+        },
+        "properties" : {
+          "id" : {
+            "description" : "The id of the menu item",
+            "example" : "solutions",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "icon" : {
+            "description" : "The icon to be displayed",
+            "example" : "Bosch-Ic-settings",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "title" : {
+            "description" : "The title to be displayed",
+            "example" : "Solutions",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "The description to be displayed as tooltip or on an overview tile",
+            "example" : "Manage solutions on the control",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "link" : {
+            "description" : "The relative link to the resource",
+            "example" : "/solutions",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "target" : {
+            "description" : "Specifies where to show the link",
+            "example" : "_blank",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "permissions" : {
+            "description" : "List of permissions",
+            "example" : [ "solutions.r", "solutions.rw" ],
+            "items" : {
+              "type" : "string"
+            },
+            "readOnly" : true,
+            "type" : "array"
+          },
+          "category" : {
+            "description" : "Defines grouping for settings and system menu items",
+            "example" : "1_system",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "items" : {
+            "description" : "List of menu items",
+            "example" : [ ],
+            "items" : {
+              "$ref" : "#/components/schemas/MenuItem"
+            },
+            "readOnly" : true,
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "Package" : {
+        "properties" : {
+          "id" : {
+            "description" : "Package id concated from type, name and version",
+            "example" : "snap_rexroth-deviceadmin",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "name" : {
+            "description" : "Name of the package",
+            "example" : "rexroth-deviceadmin",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "Optional description of the package",
+            "example" : "A cross-platform web browser.",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "summary" : {
+            "description" : "Optional short description of the package",
+            "example" : "Web browser.",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "icon" : {
+            "description" : "Optional link to icon for representing package",
+            "example" : "http://www.oursite.com/image_icon.jpg",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "vendor" : {
+            "description" : "The vendor string of the package",
+            "example" : "Mozilla Corporation",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "link" : {
+            "description" : "Link to the product description or documentation",
+            "example" : "https://www.mozilla.org/de/firefox/",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "type" : {
+            "$ref" : "#/components/schemas/PackageTypes"
+          },
+          "installed" : {
+            "description" : "Flag that describes if the package is installed on the current system",
+            "example" : true,
+            "readOnly" : true,
+            "type" : "boolean"
+          },
+          "title" : {
+            "description" : "Title of the package",
+            "example" : "Device Admin",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "appType" : {
+            "description" : "The app type",
+            "enum" : [ "kernel", "core", "os", "base", "gadget", "snapd", "app" ],
+            "example" : "kernel",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "updateBehavior" : {
+            "$ref" : "#/components/schemas/UpdateBehavior"
+          },
+          "base" : {
+            "description" : "The base app of the current app",
+            "example" : "bare",
+            "readOnly" : true,
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "UploadFile" : {
+        "properties" : {
+          "file" : {
+            "format" : "binary",
+            "type" : "string"
+          },
+          "update" : {
+            "example" : false,
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "SnapshotFile" : {
+        "properties" : {
+          "file" : {
+            "format" : "binary",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "BatchState" : {
+        "example" : {
+          "creationTime" : "2021-10-04T12:52:00",
+          "files" : [ {
+            "result" : "",
+            "filename" : "filename",
+            "state" : "pending"
+          }, {
+            "result" : "",
+            "filename" : "filename",
+            "state" : "pending"
+          } ],
+          "id" : "Hakljaswe1",
+          "state" : "done"
+        },
+        "properties" : {
+          "id" : {
+            "description" : "Identifier of the batch upload",
+            "example" : "Hakljaswe1",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "state" : {
+            "description" : "State of the batch upload",
+            "enum" : [ "done", "running" ],
+            "example" : "done",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "creationTime" : {
+            "description" : "Creation time of the batch upload",
+            "example" : "2021-10-04T12:52:00",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "files" : {
+            "items" : {
+              "$ref" : "#/components/schemas/BatchFile"
+            },
+            "readOnly" : true,
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "BatchUpload" : {
+        "properties" : {
+          "files" : {
+            "items" : {
+              "format" : "binary",
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "BatchFile" : {
+        "example" : {
+          "result" : "",
+          "filename" : "filename",
+          "state" : "pending"
+        },
+        "properties" : {
+          "filename" : {
+            "description" : "Filename of uploaded file",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "state" : {
+            "description" : "The state of the uploaded file",
+            "enum" : [ "pending", "failed", "done", "running" ],
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "result" : {
+            "oneOf" : [ {
+              "$ref" : "#/components/schemas/AvailablePackage"
+            }, {
+              "$ref" : "#/components/schemas/Problem"
+            } ],
+            "readOnly" : true
+          }
+        },
+        "type" : "object"
+      },
+      "PackageManifest" : {
+        "example" : {
+          "licenses" : [ {
+            "name" : "SWL-XCx-FRW-FIREWALLxxxxx-NNNN",
+            "description" : "Unlock the firewall functionality",
+            "title" : "ctrlX OS - Firewall License",
+            "required" : true
+          }, {
+            "name" : "SWL-XCx-FRW-FIREWALLxxxxx-NNNN",
+            "description" : "Unlock the firewall functionality",
+            "title" : "ctrlX OS - Firewall License",
+            "required" : true
+          } ],
+          "configuration" : {
+            "appDirectories" : [ {
+              "copyOnLoad" : true,
+              "permissions" : [ "edit_oem_scripts", "edit_system_scripts" ],
+              "name" : "my-app",
+              "icon" : "bosch-ic-robot",
+              "description" : "My app",
+              "writeProtected" : false,
+              "scopes" : [ "scopes", "scopes" ]
+            }, {
+              "copyOnLoad" : true,
+              "permissions" : [ "edit_oem_scripts", "edit_system_scripts" ],
+              "name" : "my-app",
+              "icon" : "bosch-ic-robot",
+              "description" : "My app",
+              "writeProtected" : false,
+              "scopes" : [ "scopes", "scopes" ]
+            } ],
+            "appPrivateFiles" : [ "^my-app/tmp/", "^my-app/tmp" ]
+          },
+          "documentation" : [ {
+            "name" : "Package Manager API",
+            "description" : "Provides package management related functionalities on ctrlX OS devices.",
+            "type" : "api",
+            "url" : "/doc/api/package-manager"
+          }, {
+            "name" : "Package Manager API",
+            "description" : "Provides package management related functionalities on ctrlX OS devices.",
+            "type" : "api",
+            "url" : "/doc/api/package-manager"
+          } ],
+          "scopes-declaration" : [ {
+            "identifier" : "identifier",
+            "name" : "name",
+            "description" : "description",
+            "scopes" : [ null, null ]
+          }, {
+            "identifier" : "identifier",
+            "name" : "name",
+            "description" : "description",
+            "scopes" : [ null, null ]
+          } ],
+          "id" : "snap_vlc_v3.0.1-1-3-gd3dasf0",
+          "menus" : {
+            "settings" : [ {
+              "permissions" : [ "solutions.r", "solutions.rw" ],
+              "icon" : "Bosch-Ic-settings",
+              "link" : "/solutions",
+              "description" : "Manage solutions on the control",
+              "id" : "solutions",
+              "title" : "Solutions",
+              "category" : "1_system",
+              "items" : [ ],
+              "target" : "_blank"
+            }, {
+              "permissions" : [ "solutions.r", "solutions.rw" ],
+              "icon" : "Bosch-Ic-settings",
+              "link" : "/solutions",
+              "description" : "Manage solutions on the control",
+              "id" : "solutions",
+              "title" : "Solutions",
+              "category" : "1_system",
+              "items" : [ ],
+              "target" : "_blank"
+            } ],
+            "overview" : [ {
+              "permissions" : [ "solutions.r", "solutions.rw" ],
+              "icon" : "Bosch-Ic-settings",
+              "link" : "/solutions",
+              "description" : "Manage solutions on the control",
+              "id" : "solutions",
+              "title" : "Solutions",
+              "category" : "1_system",
+              "items" : [ ],
+              "target" : "_blank"
+            }, {
+              "permissions" : [ "solutions.r", "solutions.rw" ],
+              "icon" : "Bosch-Ic-settings",
+              "link" : "/solutions",
+              "description" : "Manage solutions on the control",
+              "id" : "solutions",
+              "title" : "Solutions",
+              "category" : "1_system",
+              "items" : [ ],
+              "target" : "_blank"
+            } ],
+            "system" : [ {
+              "permissions" : [ "solutions.r", "solutions.rw" ],
+              "icon" : "Bosch-Ic-settings",
+              "link" : "/solutions",
+              "description" : "Manage solutions on the control",
+              "id" : "solutions",
+              "title" : "Solutions",
+              "category" : "1_system",
+              "items" : [ ],
+              "target" : "_blank"
+            }, {
+              "permissions" : [ "solutions.r", "solutions.rw" ],
+              "icon" : "Bosch-Ic-settings",
+              "link" : "/solutions",
+              "description" : "Manage solutions on the control",
+              "id" : "solutions",
+              "title" : "Solutions",
+              "category" : "1_system",
+              "items" : [ ],
+              "target" : "_blank"
+            } ],
+            "sidebar" : [ {
+              "permissions" : [ "solutions.r", "solutions.rw" ],
+              "icon" : "Bosch-Ic-settings",
+              "link" : "/solutions",
+              "description" : "Manage solutions on the control",
+              "id" : "solutions",
+              "title" : "Solutions",
+              "category" : "1_system",
+              "items" : [ ],
+              "target" : "_blank"
+            }, {
+              "permissions" : [ "solutions.r", "solutions.rw" ],
+              "icon" : "Bosch-Ic-settings",
+              "link" : "/solutions",
+              "description" : "Manage solutions on the control",
+              "id" : "solutions",
+              "title" : "Solutions",
+              "category" : "1_system",
+              "items" : [ ],
+              "target" : "_blank"
+            } ]
+          },
+          "services" : {
+            "proxyMapping" : [ {
+              "name" : "rexroth-solutions.web",
+              "binding" : ":5000",
+              "url" : "/solutions"
+            }, {
+              "name" : "rexroth-solutions.web",
+              "binding" : ":5000",
+              "url" : "/solutions"
+            } ]
+          },
+          "uiExtensions" : {
+            "header" : [ {
+              "src" : "/automationcore/widgets.js",
+              "tag" : "rexroth-messages-notification",
+              "order" : 1
+            }, {
+              "src" : "/automationcore/widgets.js",
+              "tag" : "rexroth-messages-notification",
+              "order" : 1
+            } ],
+            "dashboard" : [ null, null ]
+          },
+          "commands" : {
+            "activeConfiguration" : {
+              "load" : [ {
+                "execution" : {
+                  "method" : "POST",
+                  "url" : "/automation/api/v1/motion/cfg/save-all"
+                },
+                "subject" : "motion settings",
+                "id" : "motion",
+                "after" : [ "scheduler", "trace" ],
+                "url" : "/automation/api/v1/motion/cfg/save-all"
+              }, {
+                "execution" : {
+                  "method" : "POST",
+                  "url" : "/automation/api/v1/motion/cfg/save-all"
+                },
+                "subject" : "motion settings",
+                "id" : "motion",
+                "after" : [ "scheduler", "trace" ],
+                "url" : "/automation/api/v1/motion/cfg/save-all"
+              } ],
+              "save" : [ {
+                "execution" : {
+                  "method" : "POST",
+                  "url" : "/automation/api/v1/motion/cfg/save-all"
+                },
+                "subject" : "motion settings",
+                "id" : "motion",
+                "after" : [ "scheduler", "trace" ],
+                "url" : "/automation/api/v1/motion/cfg/save-all"
+              }, {
+                "execution" : {
+                  "method" : "POST",
+                  "url" : "/automation/api/v1/motion/cfg/save-all"
+                },
+                "subject" : "motion settings",
+                "id" : "motion",
+                "after" : [ "scheduler", "trace" ],
+                "url" : "/automation/api/v1/motion/cfg/save-all"
+              } ]
+            }
+          },
+          "required" : true,
+          "apps" : {
+            "rexroth-setup" : {
+              "settings" : [ {
+                "name" : "myAppSetting",
+                "description" : "Description of myAppSetting",
+                "type" : "json",
+                "url" : "/myapp/api/v1/my-app-setting"
+              }, {
+                "name" : "myAppSetting",
+                "description" : "Description of myAppSetting",
+                "type" : "json",
+                "url" : "/myapp/api/v1/my-app-setting"
+              } ]
+            },
+            "rexroth-remoteagent" : {
+              "commands" : [ "CREATE_BACKUP", "RESTORE_BACKUP" ]
+            }
+          },
+          "dependencies" : {
+            "dependsOn" : {
+              "key" : "dependsOn"
+            }
+          }
+        },
+        "properties" : {
+          "id" : {
+            "description" : "Package id",
+            "example" : "snap_vlc_v3.0.1-1-3-gd3dasf0",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "menus" : {
+            "$ref" : "#/components/schemas/PackageManifest_menus"
+          },
+          "uiExtensions" : {
+            "$ref" : "#/components/schemas/PackageManifest_uiExtensions"
+          },
+          "services" : {
+            "$ref" : "#/components/schemas/PackageManifest_services"
+          },
+          "commands" : {
+            "$ref" : "#/components/schemas/PackageManifest_commands"
+          },
+          "documentation" : {
+            "description" : "Package documentation (API references, ...)",
+            "items" : {
+              "$ref" : "#/components/schemas/Document"
+            },
+            "type" : "array"
+          },
+          "configuration" : {
+            "$ref" : "#/components/schemas/PackageManifest_configuration"
+          },
+          "required" : {
+            "default" : false,
+            "description" : "App is required and cannot be removed from system",
+            "example" : true,
+            "type" : "boolean"
+          },
+          "apps" : {
+            "$ref" : "#/components/schemas/Apps"
+          },
+          "licenses" : {
+            "description" : "Contains license informations for specific rexroth apps",
+            "items" : {
+              "$ref" : "#/components/schemas/License"
+            },
+            "readOnly" : true,
+            "type" : "array"
+          },
+          "dependencies" : {
+            "$ref" : "#/components/schemas/Dependencies"
+          },
+          "scopes-declaration" : {
+            "description" : "Contains a list of all available scopes for the current app",
+            "items" : {
+              "$ref" : "#/components/schemas/ScopeDeclaration"
+            },
+            "readOnly" : true,
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "ProxyMapping" : {
+        "example" : {
+          "name" : "rexroth-solutions.web",
+          "binding" : ":5000",
+          "url" : "/solutions"
+        },
+        "properties" : {
+          "name" : {
+            "description" : "The name of the mapping",
+            "example" : "rexroth-solutions.web",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "url" : {
+            "description" : "Relative path that the service is requesting",
+            "example" : "/solutions",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "binding" : {
+            "description" : "The network socket or unix socket",
+            "example" : ":5000",
+            "readOnly" : true,
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "InstalledPackage" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Package"
+        }, {
+          "$ref" : "#/components/schemas/InstalledPackage_allOf"
+        } ]
+      },
+      "AvailablePackage" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Package"
+        }, {
+          "$ref" : "#/components/schemas/AvailablePackage_allOf"
+        } ]
+      },
+      "Release" : {
+        "properties" : {
+          "version" : {
+            "example" : "v1.0.0",
+            "type" : "string"
+          },
+          "location" : {
+            "example" : "repository://control_repository",
+            "type" : "string"
+          },
+          "base" : {
+            "example" : "bare",
+            "type" : "string"
+          },
+          "issuer" : {
+            "description" : "Issuer of release",
+            "example" : "Canonical",
+            "type" : "string"
+          },
+          "signed" : {
+            "example" : true,
+            "type" : "boolean"
+          }
+        },
+        "required" : [ "location", "version" ],
+        "type" : "object"
+      },
+      "Snap" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Package"
+        }, {
+          "$ref" : "#/components/schemas/Snap_allOf"
+        } ]
+      },
+      "PackageTypes" : {
+        "description" : "List of available package component types",
+        "enum" : [ "snap", "osgiBundle" ],
+        "example" : "snap",
+        "readOnly" : true,
+        "type" : "string"
+      },
+      "UpdateBehavior" : {
+        "default" : "none",
+        "description" : "The update behavior of a package",
+        "enum" : [ "forcedReboot", "requiredReboot", "logout", "none" ],
+        "example" : "none",
+        "readOnly" : true,
+        "type" : "string"
+      },
+      "Task" : {
+        "discriminator" : {
+          "propertyName" : "action"
+        },
+        "properties" : {
+          "id" : {
+            "description" : "A server generated ID used to identify the task. This ID is unique.",
+            "example" : "123",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "state" : {
+            "description" : "The state of the task.",
+            "enum" : [ "pending", "failed", "done", "running" ],
+            "example" : "running",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "action" : {
+            "description" : "The action name executed by this task. This has to be inherited and overwritten by the application.",
+            "type" : "string"
+          },
+          "progress" : {
+            "description" : "Optional progress of the task in percentage.",
+            "example" : 10,
+            "maximum" : 100,
+            "minimum" : 0,
+            "readOnly" : true,
+            "type" : "integer"
+          },
+          "eta" : {
+            "description" : "Optional ETA in RFC 3339 format.",
+            "example" : "2019-01-01T12:00:27.87+00:20",
+            "format" : "dateTime",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "parameters" : {
+            "additionalProperties" : true,
+            "description" : "Optional map of additional parameters required by the request. Should be defined when inherited by an application.",
+            "type" : "object"
+          },
+          "result" : {
+            "additionalProperties" : true,
+            "description" : "Optional map reflecting the result of the task. May be empty until task completition. Should be defined when inherited by an application.",
+            "readOnly" : true,
+            "type" : "object"
+          }
+        },
+        "required" : [ "action", "id", "state" ],
+        "type" : "object"
+      },
+      "TaskReduced" : {
+        "description" : "Reduced tasks object (result if no user is logged in)",
+        "properties" : {
+          "id" : {
+            "description" : "The temporary id of a task",
+            "example" : "123",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "state" : {
+            "enum" : [ "pending", "failed", "done", "running" ],
+            "example" : "running",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "progress" : {
+            "description" : "Progress of the task",
+            "example" : 10,
+            "maximum" : 100,
+            "minimum" : 0,
+            "readOnly" : true,
+            "type" : "integer"
+          },
+          "properties" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "description" : "Additional properties of the task object set by the service executing the task",
+            "readOnly" : true,
+            "type" : "object"
+          },
+          "result" : {
+            "$ref" : "#/components/schemas/Problem"
+          }
+        },
+        "type" : "object"
+      },
+      "TaskInstall" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task_2"
+        }, {
+          "$ref" : "#/components/schemas/TaskInstall_allOf"
+        } ],
+        "description" : "Install an app on the system"
+      },
+      "TaskUpdate" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task_2"
+        }, {
+          "$ref" : "#/components/schemas/TaskUpdate_allOf"
+        } ],
+        "description" : "Update an app on the system"
+      },
+      "TaskUninstall" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task_2"
+        }, {
+          "$ref" : "#/components/schemas/TaskUninstall_allOf"
+        } ],
+        "description" : "Uninstall an app from the system"
+      },
+      "TaskEnable" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task_2"
+        }, {
+          "$ref" : "#/components/schemas/TaskEnable_allOf"
+        } ],
+        "description" : "Enable an app of the app"
+      },
+      "TaskDisable" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task_2"
+        }, {
+          "$ref" : "#/components/schemas/TaskDisable_allOf"
+        } ],
+        "description" : "Disable an app of the app"
+      },
+      "TaskStart" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task_2"
+        }, {
+          "$ref" : "#/components/schemas/TaskStart_allOf"
+        } ],
+        "description" : "Start an app or deamon on the system"
+      },
+      "TaskStop" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task_2"
+        }, {
+          "$ref" : "#/components/schemas/TaskStop_allOf"
+        } ],
+        "description" : "Stop an app or deamon on the system"
+      },
+      "TaskRestart" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task_2"
+        }, {
+          "$ref" : "#/components/schemas/TaskRestart_allOf"
+        } ],
+        "description" : "Restart an app or deamon on the system"
+      },
+      "TaskBatch" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task_2"
+        }, {
+          "$ref" : "#/components/schemas/TaskBatch_allOf"
+        } ],
+        "description" : "Install all Files from Batch"
+      },
+      "TaskRemodel" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task_2"
+        }, {
+          "$ref" : "#/components/schemas/TaskRemodel_allOf"
+        } ],
+        "description" : "Start the remodelling process of the device.\nRemodelling upgrades the base of a device e.g. from core20 to core22\n"
+      },
+      "TaskUefiUpdate" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task_2"
+        }, {
+          "$ref" : "#/components/schemas/TaskUefiUpdate_allOf"
+        } ],
+        "description" : "Start the uefi update\n"
+      },
+      "OneOfTasks" : {
+        "discriminator" : {
+          "mapping" : {
+            "install" : "#/components/schemas/TaskInstall",
+            "update" : "#/components/schemas/TaskUpdate",
+            "uninstall" : "#/components/schemas/TaskUninstall",
+            "enable" : "#/components/schemas/TaskEnable",
+            "disable" : "#/components/schemas/TaskDisable",
+            "start" : "#/components/schemas/TaskStart",
+            "stop" : "#/components/schemas/TaskStop",
+            "restart" : "#/components/schemas/TaskRestart",
+            "batch" : "#/components/schemas/TaskBatch",
+            "remodel" : "#/components/schemas/TaskRemodel",
+            "uefi-update" : "#/components/schemas/TaskUefiUpdate"
+          },
+          "propertyName" : "action"
+        },
+        "oneOf" : [ {
+          "$ref" : "#/components/schemas/Task"
+        }, {
+          "$ref" : "#/components/schemas/TaskInstall"
+        }, {
+          "$ref" : "#/components/schemas/TaskUpdate"
+        }, {
+          "$ref" : "#/components/schemas/TaskUninstall"
+        }, {
+          "$ref" : "#/components/schemas/TaskEnable"
+        }, {
+          "$ref" : "#/components/schemas/TaskDisable"
+        }, {
+          "$ref" : "#/components/schemas/TaskStart"
+        }, {
+          "$ref" : "#/components/schemas/TaskStop"
+        }, {
+          "$ref" : "#/components/schemas/TaskRestart"
+        }, {
+          "$ref" : "#/components/schemas/TaskBatch"
+        }, {
+          "$ref" : "#/components/schemas/TaskRemodel"
+        }, {
+          "$ref" : "#/components/schemas/TaskUefiUpdate"
+        } ]
+      },
+      "ReducedTasks" : {
+        "items" : {
+          "$ref" : "#/components/schemas/TaskReduced"
+        },
+        "type" : "array"
+      },
+      "Tasks" : {
+        "items" : {
+          "$ref" : "#/components/schemas/OneOfTasks"
+        },
+        "type" : "array"
+      },
+      "Problem" : {
+        "description" : "This document defines a \"problem detail\" as a way  to carry machine-readable details of errors in a  HTTP response to avoid the need to define new error  response formats for HTTP APIs.\n",
+        "properties" : {
+          "type" : {
+            "default" : "about:blank",
+            "description" : "A URI reference [RFC3986] that identifies the problem type. \nThis specification encourages that, when dereferenced, \nit provide human-readable documentation for the problem type \n(e.g., using HTML [W3C.REC-html5-20141028]). When this member \nis not present, its value is assumed to be \"about:blank\".\n",
+            "example" : "https://example.com/probs/out-of-credit",
+            "format" : "uri",
+            "type" : "string"
+          },
+          "title" : {
+            "description" : "A short, human-readable summary of the problem type. \nIt SHOULD NOT change from occurrence to occurrence of the problem, \nexcept for purposes of localization (e.g., using proactive content \nnegotiation; see [RFC7231], Section 3.4).\nIf the response is a diagnostics message, it contains \nthe text associated with the mainDiagnosisCode.\n",
+            "example" : "You do not have enough credit.",
+            "type" : "string"
+          },
+          "status" : {
+            "description" : "The HTTP status code ([RFC7231], Section 6) generated by the \norigin server for this occurrence of the problem.\n",
+            "example" : 403,
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "detail" : {
+            "description" : "A human-readable explanation specific to this occurrence of the problem.\nIf the response is a diagnostics message, it contains the text associated with\nthe detailedDiagnosisCode.\n",
+            "example" : "Your current balance is 30, but that costs 50.",
+            "type" : "string"
+          },
+          "instance" : {
+            "description" : "A URI reference that identifies the specific occurrence of the problem.\nIt may or may not yield further information if dereferenced.\n",
+            "example" : "/account/12345/msgs/abc",
+            "type" : "string"
+          },
+          "code" : {
+            "deprecated" : true,
+            "description" : "An error code issued by the system that caused the original problem.\nThis code can be used to track down the root cause of the error.\n",
+            "example" : "F360001",
+            "type" : "string"
+          },
+          "mainDiagnosisCode" : {
+            "description" : "The main diagnosis code is issued by the system that caused the problem.\nThis code can be used to track down the root cause and source of the error.\nIt can be used to search in the documentation for a solution.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "080F0100",
+            "type" : "string"
+          },
+          "detailedDiagnosisCode" : {
+            "description" : "The detailed diagnosis code issued by the system that caused the problem.\nThis code can be used to track down the detailed cause and source of the error.\nIt can be used to search in the documentation for a solution.\nThe detailed diagnosis code gives additional information about the cause of the error.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "00666001",
+            "type" : "string"
+          },
+          "dynamicDescription" : {
+            "description" : "A dynamic description gives detailed information about the occurrence of a problem.\nIt can change between different occurrences of the same error.\n",
+            "example" : "value = -4.5",
+            "type" : "string"
+          },
+          "severity" : {
+            "description" : " Severity of a problem as defined RFC5424 of the Syslog standard, see https://tools.ietf.org/html/rfc5424",
+            "enum" : [ "Emergency", "Alert", "Critical", "Error", "Warning", "Notice", "Informational", "Debug" ],
+            "example" : "Error",
+            "type" : "string"
+          },
+          "links" : {
+            "description" : "Collection of links to fix the problem. E.g. links to online user manual,\nto an online community (using tags) or a developer chat (e.g. Slack).\n",
+            "items" : {
+              "example" : "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001",
+              "format" : "uri",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "moreInfo" : {
+            "additionalProperties" : true,
+            "description" : "The moreInfo field allows you to add additional information that might be necessary to debug or trace down the cause of an error.\nIt might also contain information what is needed to resolve the problem.\nThere are loosely specified fields for specific problems that can be used in these situations, e.g.:\n- On a 403 Forbidden error: The moreInfo can contain a field \"requiredPermissions\" with the required permissions seperated by comma\n- On a 402 Payment required: The moreInfo can contain a field \"requiredLicenses\" with the required licenses seperated by comma\n",
+            "example" : {
+              "trace" : "ExampleClass.cpp#452 Null pointer exception",
+              "class" : "ExampleClass"
+            },
+            "type" : "object"
+          },
+          "cause" : {
+            "description" : "Sometimes a problem might be caused by problems that occure in other components or are the root cause of a problem. In this\ncase the related problems can be added as a cause. Since it might be possible that multiple components have problems on a single\naction, cause is an array. E.g. Loading failed because several components where not able to load the configuration.\n",
+            "items" : {
+              "$ref" : "#/components/schemas/Problem"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "title", "type" ],
+        "type" : "object",
+        "x-version" : "1.0.0"
+      },
+      "Settings" : {
+        "description" : "Settings for app and package management",
+        "example" : {
+          "allowUnknownApps" : false,
+          "purgeVersions" : true
+        },
+        "properties" : {
+          "allowUnknownApps" : {
+            "description" : "Allow the installation of apps and packages from unknown source. This is required for installation over Offline Store.",
+            "example" : false,
+            "type" : "boolean"
+          },
+          "purgeVersions" : {
+            "description" : "Remove old versions after successful update",
+            "example" : true,
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "StoreState" : {
+        "example" : {
+          "roundTripTime" : 1500,
+          "reachable" : true
+        },
+        "properties" : {
+          "reachable" : {
+            "description" : "Flag indicating if the store is reachable",
+            "example" : true,
+            "type" : "boolean"
+          },
+          "roundTripTime" : {
+            "description" : "Roundtrip time for a request to the store in ms",
+            "example" : 1500,
+            "type" : "integer"
+          }
+        },
+        "required" : [ "reachable", "roundTripTime" ],
+        "type" : "object"
+      },
+      "Information" : {
+        "example" : {
+          "uefi" : {
+            "updatable" : true,
+            "currentVersion" : "currentVersion"
+          },
+          "remodelable" : true
+        },
+        "properties" : {
+          "remodelable" : {
+            "description" : "Checks if all preconditions are fulfilled. Preconditions are: right core version is installed, gadget contains model assertion,\nserial assertion is available and all apps defined in model assertion are installed with the future base version.\n",
+            "readOnly" : true,
+            "type" : "boolean"
+          },
+          "uefi" : {
+            "$ref" : "#/components/schemas/Uefi"
+          }
+        },
+        "type" : "object"
+      },
+      "Uefi" : {
+        "description" : "Contains uefi update information",
+        "example" : {
+          "updatable" : true,
+          "currentVersion" : "currentVersion"
+        },
+        "properties" : {
+          "updatable" : {
+            "description" : "Checks if an uefi update is available",
+            "readOnly" : true,
+            "type" : "boolean"
+          },
+          "currentVersion" : {
+            "description" : "Current installed bios version",
+            "readOnly" : true,
+            "type" : "string"
+          }
+        },
+        "readOnly" : true,
+        "type" : "object"
+      },
+      "MenuItems" : {
+        "description" : "List of menu items",
+        "example" : [ ],
+        "items" : {
+          "$ref" : "#/components/schemas/MenuItem"
+        },
+        "readOnly" : true,
+        "type" : "array"
+      },
+      "Apps" : {
+        "description" : "Contains configurations for specific apps",
+        "example" : {
+          "rexroth-setup" : {
+            "settings" : [ {
+              "name" : "myAppSetting",
+              "description" : "Description of myAppSetting",
+              "type" : "json",
+              "url" : "/myapp/api/v1/my-app-setting"
+            }, {
+              "name" : "myAppSetting",
+              "description" : "Description of myAppSetting",
+              "type" : "json",
+              "url" : "/myapp/api/v1/my-app-setting"
+            } ]
+          },
+          "rexroth-remoteagent" : {
+            "commands" : [ "CREATE_BACKUP", "RESTORE_BACKUP" ]
+          }
+        },
+        "properties" : {
+          "rexroth-remoteagent" : {
+            "$ref" : "#/components/schemas/Rexroth-Remoteagent"
+          },
+          "rexroth-setup" : {
+            "$ref" : "#/components/schemas/Rexroth-Setup"
+          }
+        },
+        "type" : "object"
+      },
+      "Rexroth-Remoteagent" : {
+        "description" : "Provides information for ctrlX Remote Agent regarding the current app, e.g. supported commands.",
+        "example" : {
+          "commands" : [ "CREATE_BACKUP", "RESTORE_BACKUP" ]
+        },
+        "properties" : {
+          "commands" : {
+            "description" : "Supported ctrlX Device Portal commands that are handled by this app and are forwarded by ctrlX Remote Agent.",
+            "example" : [ "CREATE_BACKUP", "RESTORE_BACKUP" ],
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "Commands" : {
+        "description" : "Supported ctrlX Device Portal commands that are handled by this app and are forwarded by ctrlX Remote Agent.",
+        "example" : [ "CREATE_BACKUP", "RESTORE_BACKUP" ],
+        "items" : {
+          "type" : "string"
+        },
+        "type" : "array"
+      },
+      "Rexroth-Setup" : {
+        "description" : "Provides information for ctrlX Setup regarding the current app, e.g. settings to be saved and restored.",
+        "example" : {
+          "settings" : [ {
+            "name" : "myAppSetting",
+            "description" : "Description of myAppSetting",
+            "type" : "json",
+            "url" : "/myapp/api/v1/my-app-setting"
+          }, {
+            "name" : "myAppSetting",
+            "description" : "Description of myAppSetting",
+            "type" : "json",
+            "url" : "/myapp/api/v1/my-app-setting"
+          } ]
+        },
+        "properties" : {
+          "settings" : {
+            "description" : "App settings to be saved and restored by ctrlX Setup",
+            "items" : {
+              "$ref" : "#/components/schemas/SetupSetting"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "Licenses" : {
+        "description" : "Contains license informations for specific rexroth apps",
+        "items" : {
+          "$ref" : "#/components/schemas/License"
+        },
+        "readOnly" : true,
+        "type" : "array"
+      },
+      "Dependencies" : {
+        "description" : "Contains app dependencies for current app",
+        "example" : {
+          "dependsOn" : {
+            "key" : "dependsOn"
+          }
+        },
+        "properties" : {
+          "dependsOn" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "type" : "object"
+          }
+        },
+        "readOnly" : true,
+        "type" : "object"
+      },
+      "ScopesDeclaration" : {
+        "description" : "Contains a list of all available scopes for the current app",
+        "items" : {
+          "$ref" : "#/components/schemas/ScopeDeclaration"
+        },
+        "readOnly" : true,
+        "type" : "array"
+      },
+      "ScopeDeclaration" : {
+        "description" : "Declaration of one scopes",
+        "example" : {
+          "identifier" : "identifier",
+          "name" : "name",
+          "description" : "description",
+          "scopes" : [ null, null ]
+        },
+        "properties" : {
+          "identifier" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "scopes" : {
+            "items" : {
+              "$ref" : "#/components/schemas/ScopeDeclaration"
+            },
+            "type" : "array"
+          }
+        },
+        "readOnly" : true,
+        "type" : "object"
+      },
+      "WebComponent" : {
+        "example" : {
+          "src" : "/automationcore/widgets.js",
+          "tag" : "rexroth-messages-notification",
+          "order" : 1
+        },
+        "properties" : {
+          "order" : {
+            "description" : "The sort order of the component.",
+            "example" : 1,
+            "readOnly" : true,
+            "type" : "integer"
+          },
+          "src" : {
+            "description" : "The url of the web component's implementation file.",
+            "example" : "/automationcore/widgets.js",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "tag" : {
+            "description" : "The tag name that creates a new instance of the web component.",
+            "example" : "rexroth-messages-notification",
+            "readOnly" : true,
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "DashboardWidget" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/DashboardWidgetExtensions"
+        }, {
+          "$ref" : "#/components/schemas/WebComponent"
+        } ]
+      },
+      "Command" : {
+        "example" : {
+          "execution" : {
+            "method" : "POST",
+            "url" : "/automation/api/v1/motion/cfg/save-all"
+          },
+          "subject" : "motion settings",
+          "id" : "motion",
+          "after" : [ "scheduler", "trace" ],
+          "url" : "/automation/api/v1/motion/cfg/save-all"
+        },
+        "properties" : {
+          "id" : {
+            "description" : "Serves as the identifier of this command; must be unique within the enclosing scope.",
+            "example" : "motion",
+            "type" : "string"
+          },
+          "subject" : {
+            "description" : "Denotes what will be saved or loaded; used to inform users, e.g. in messages like \"Loading motion settings\"\nor \"Cannot load motion settings\".\n",
+            "example" : "motion settings",
+            "type" : "string"
+          },
+          "after" : {
+            "description" : "Defines a list of command identifiers whose commands if present will always be executed before this command.\n",
+            "example" : [ "scheduler", "trace" ],
+            "items" : {
+              "type" : "string"
+            },
+            "readOnly" : true,
+            "type" : "array"
+          },
+          "url" : {
+            "description" : "The URL used in POST requests to process the command.\nURLs starting with a slash are interpreted to be relative to https://<host>.\nThe execution and url elements are mutually exclusive, that is exactly one of them is required.\n",
+            "example" : "/automation/api/v1/motion/cfg/save-all",
+            "type" : "string"
+          },
+          "execution" : {
+            "$ref" : "#/components/schemas/Command_execution"
+          }
+        },
+        "required" : [ "id", "subject" ],
+        "type" : "object"
+      },
+      "Document" : {
+        "example" : {
+          "name" : "Package Manager API",
+          "description" : "Provides package management related functionalities on ctrlX OS devices.",
+          "type" : "api",
+          "url" : "/doc/api/package-manager"
+        },
+        "properties" : {
+          "type" : {
+            "description" : "The type or category of the document",
+            "enum" : [ "api" ],
+            "example" : "api",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "name" : {
+            "description" : "The name of the document",
+            "example" : "Package Manager API",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "url" : {
+            "description" : "The path to the document resource",
+            "example" : "/doc/api/package-manager",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "Short description of the purpose of the document",
+            "example" : "Provides package management related functionalities on ctrlX OS devices.",
+            "readOnly" : true,
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "AppDirectory" : {
+        "description" : "Describes an app directory stored as part of a configuration.",
+        "example" : {
+          "copyOnLoad" : true,
+          "permissions" : [ "edit_oem_scripts", "edit_system_scripts" ],
+          "name" : "my-app",
+          "icon" : "bosch-ic-robot",
+          "description" : "My app",
+          "writeProtected" : false,
+          "scopes" : [ "scopes", "scopes" ]
+        },
+        "properties" : {
+          "name" : {
+            "description" : "Path of the app directory in the configuration.",
+            "example" : "my-app",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "Short description of the directory content (visible in the Solutions UI).",
+            "example" : "My app",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "icon" : {
+            "description" : "An optional icon representing the app.",
+            "example" : "bosch-ic-robot",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "permissions" : {
+            "deprecated" : true,
+            "description" : "Permissions are deprecated and no longer have effect.\n",
+            "example" : [ "edit_oem_scripts", "edit_system_scripts" ],
+            "items" : {
+              "type" : "string"
+            },
+            "readOnly" : true,
+            "type" : "array"
+          },
+          "scopes" : {
+            "deprecated" : true,
+            "description" : "Scopes are deprecated and no longer have effect.",
+            "items" : {
+              "type" : "string"
+            },
+            "readOnly" : true,
+            "type" : "array"
+          },
+          "copyOnLoad" : {
+            "default" : false,
+            "description" : "If true, the copy operation is done by the Solutions app; otherwise, by the app itself.\n",
+            "example" : true,
+            "readOnly" : true,
+            "type" : "boolean"
+          },
+          "writeProtected" : {
+            "default" : true,
+            "description" : "If true, the directory is protected against changes through WebDAV or the Solutions UI.\n",
+            "example" : false,
+            "nullable" : true,
+            "readOnly" : true,
+            "type" : "boolean"
+          }
+        },
+        "required" : [ "name" ],
+        "type" : "object"
+      },
+      "SnapApplication" : {
+        "properties" : {
+          "snap" : {
+            "description" : "Snap providing the app (optional)",
+            "example" : "example-snap",
+            "type" : "string"
+          },
+          "name" : {
+            "description" : "Name of the app, i.e. the name of the executable.",
+            "example" : "moon-buggy",
+            "type" : "string"
+          },
+          "aliases" : {
+            "description" : "A list of alias names for this app (optional).",
+            "items" : {
+              "example" : "sun-buggy",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "common-id" : {
+            "description" : "A common ID associated with this app (optional)",
+            "type" : "string"
+          },
+          "daemon" : {
+            "$ref" : "#/components/schemas/SnapDaemonType"
+          },
+          "desktop-file" : {
+            "description" : "Path to desktop file for this app (optional)",
+            "type" : "string"
+          },
+          "enabled" : {
+            "description" : "True if service is enabled (optional)",
+            "example" : true,
+            "type" : "boolean"
+          },
+          "active" : {
+            "description" : "True if service is active (optional)",
+            "example" : true,
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "Task_2" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task"
+        }, {
+          "$ref" : "#/components/schemas/Task_2_allOf"
+        } ],
+        "description" : "Common packagemanager task"
+      },
+      "SetupSetting" : {
+        "example" : {
+          "name" : "myAppSetting",
+          "description" : "Description of myAppSetting",
+          "type" : "json",
+          "url" : "/myapp/api/v1/my-app-setting"
+        },
+        "properties" : {
+          "name" : {
+            "description" : "Name of the setting. Must be unique within the app's settings list.\nServes as key in the ctrlx-setup.json file.\nRequired for all types except 'snapshot'.\nNote that the name '$path' is reserved.\n",
+            "example" : "myAppSetting",
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "Short localized description of the setting.",
+            "example" : "Description of myAppSetting",
+            "type" : "string"
+          },
+          "url" : {
+            "description" : "URL used to read (GET) and update (PUT) the setting. A URL starting\nwith a slash is interpreted to be relative to https://<host>.\nRequired for all types except 'snapshot'.\n",
+            "example" : "/myapp/api/v1/my-app-setting",
+            "type" : "string"
+          },
+          "type" : {
+            "default" : "text",
+            "description" : "Type of the setting. One of 'text', 'json', 'file', 'encryptedFile' and 'snapshot'.\nThe default is 'text'.\n",
+            "enum" : [ "text", "json", "file", "encryptedFile", "snapshot" ],
+            "example" : "json",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "License" : {
+        "example" : {
+          "name" : "SWL-XCx-FRW-FIREWALLxxxxx-NNNN",
+          "description" : "Unlock the firewall functionality",
+          "title" : "ctrlX OS - Firewall License",
+          "required" : true
+        },
+        "properties" : {
+          "name" : {
+            "description" : "Identifier of the license",
+            "example" : "SWL-XCx-FRW-FIREWALLxxxxx-NNNN",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "title" : {
+            "description" : "Human readable title of the firewall",
+            "example" : "ctrlX OS - Firewall License",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "Description of the license",
+            "example" : "Unlock the firewall functionality",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "required" : {
+            "description" : "Indicates if an licenses is required to operate the application or unlocks optional functionalities",
+            "readOnly" : true,
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "DashboardWidgetExtensions" : {
+        "properties" : {
+          "title" : {
+            "description" : "The widget's title as shown in the widget catalog.",
+            "example" : "Axes",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "The widget's description as shown in the widget catalog.",
+            "example" : "Shows the status of your axes",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "icon" : {
+            "description" : "The icon to be displayed in the widget catalog.",
+            "example" : "Bosch-Ic-settings",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "image" : {
+            "description" : "The path to the image to be displayed in the widget catalog.",
+            "example" : "/motion/axes.svg",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "initialSize" : {
+            "$ref" : "#/components/schemas/DashboardWidgetSize"
+          },
+          "minSize" : {
+            "$ref" : "#/components/schemas/DashboardWidgetSize"
+          },
+          "maxSize" : {
+            "$ref" : "#/components/schemas/DashboardWidgetSize"
+          },
+          "permissions" : {
+            "description" : "List of permissions to view or interact with the widget.",
+            "example" : [ "rexroth-deviceadmin.package-manager.r", "rexroth-deviceadmin.package-manager.rw" ],
+            "items" : {
+              "type" : "string"
+            },
+            "readOnly" : true,
+            "type" : "array"
+          },
+          "categories" : {
+            "description" : "List of categories the widget is displayed",
+            "example" : [ "System", "Other Category" ],
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "settingsTag" : {
+            "description" : "The tag name of the web component, which provides the settings editor for the widget.",
+            "example" : "rexroth-link-widget-settings",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "noInitialCreation" : {
+            "default" : false,
+            "description" : "If true, the widget isn't created initially.",
+            "example" : true,
+            "readOnly" : true,
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "DashboardWidgetSize" : {
+        "properties" : {
+          "cols" : {
+            "description" : "Number of columns in the dashboard grid.",
+            "example" : 3,
+            "readOnly" : true,
+            "type" : "number"
+          },
+          "rows" : {
+            "description" : "Number of rows in the dashboard grid.",
+            "example" : 3,
+            "readOnly" : true,
+            "type" : "number"
+          }
+        },
+        "type" : "object"
+      },
+      "SnapDaemonType" : {
+        "description" : "The type of daemon this app is. One of \"simple\", \"forking\", \"oneshot\", \"dbus\" or \"notify\" (optional, only applicable for daemons).",
+        "enum" : [ "simple", "forking", "oneshot", "dbus", "notify" ],
+        "example" : "simple",
+        "type" : "string"
+      },
+      "PackageManifest_menus" : {
+        "example" : {
+          "settings" : [ {
+            "permissions" : [ "solutions.r", "solutions.rw" ],
+            "icon" : "Bosch-Ic-settings",
+            "link" : "/solutions",
+            "description" : "Manage solutions on the control",
+            "id" : "solutions",
+            "title" : "Solutions",
+            "category" : "1_system",
+            "items" : [ ],
+            "target" : "_blank"
+          }, {
+            "permissions" : [ "solutions.r", "solutions.rw" ],
+            "icon" : "Bosch-Ic-settings",
+            "link" : "/solutions",
+            "description" : "Manage solutions on the control",
+            "id" : "solutions",
+            "title" : "Solutions",
+            "category" : "1_system",
+            "items" : [ ],
+            "target" : "_blank"
+          } ],
+          "overview" : [ {
+            "permissions" : [ "solutions.r", "solutions.rw" ],
+            "icon" : "Bosch-Ic-settings",
+            "link" : "/solutions",
+            "description" : "Manage solutions on the control",
+            "id" : "solutions",
+            "title" : "Solutions",
+            "category" : "1_system",
+            "items" : [ ],
+            "target" : "_blank"
+          }, {
+            "permissions" : [ "solutions.r", "solutions.rw" ],
+            "icon" : "Bosch-Ic-settings",
+            "link" : "/solutions",
+            "description" : "Manage solutions on the control",
+            "id" : "solutions",
+            "title" : "Solutions",
+            "category" : "1_system",
+            "items" : [ ],
+            "target" : "_blank"
+          } ],
+          "system" : [ {
+            "permissions" : [ "solutions.r", "solutions.rw" ],
+            "icon" : "Bosch-Ic-settings",
+            "link" : "/solutions",
+            "description" : "Manage solutions on the control",
+            "id" : "solutions",
+            "title" : "Solutions",
+            "category" : "1_system",
+            "items" : [ ],
+            "target" : "_blank"
+          }, {
+            "permissions" : [ "solutions.r", "solutions.rw" ],
+            "icon" : "Bosch-Ic-settings",
+            "link" : "/solutions",
+            "description" : "Manage solutions on the control",
+            "id" : "solutions",
+            "title" : "Solutions",
+            "category" : "1_system",
+            "items" : [ ],
+            "target" : "_blank"
+          } ],
+          "sidebar" : [ {
+            "permissions" : [ "solutions.r", "solutions.rw" ],
+            "icon" : "Bosch-Ic-settings",
+            "link" : "/solutions",
+            "description" : "Manage solutions on the control",
+            "id" : "solutions",
+            "title" : "Solutions",
+            "category" : "1_system",
+            "items" : [ ],
+            "target" : "_blank"
+          }, {
+            "permissions" : [ "solutions.r", "solutions.rw" ],
+            "icon" : "Bosch-Ic-settings",
+            "link" : "/solutions",
+            "description" : "Manage solutions on the control",
+            "id" : "solutions",
+            "title" : "Solutions",
+            "category" : "1_system",
+            "items" : [ ],
+            "target" : "_blank"
+          } ]
+        },
+        "properties" : {
+          "sidebar" : {
+            "items" : {
+              "$ref" : "#/components/schemas/MenuItem"
+            },
+            "type" : "array"
+          },
+          "settings" : {
+            "items" : {
+              "$ref" : "#/components/schemas/MenuItem"
+            },
+            "type" : "array"
+          },
+          "system" : {
+            "items" : {
+              "$ref" : "#/components/schemas/MenuItem"
+            },
+            "type" : "array"
+          },
+          "overview" : {
+            "items" : {
+              "$ref" : "#/components/schemas/MenuItem"
+            },
+            "type" : "array"
+          }
+        }
+      },
+      "PackageManifest_uiExtensions" : {
+        "example" : {
+          "header" : [ {
+            "src" : "/automationcore/widgets.js",
+            "tag" : "rexroth-messages-notification",
+            "order" : 1
+          }, {
+            "src" : "/automationcore/widgets.js",
+            "tag" : "rexroth-messages-notification",
+            "order" : 1
+          } ],
+          "dashboard" : [ null, null ]
+        },
+        "properties" : {
+          "header" : {
+            "description" : "Web components that should be displayed in the global header.",
+            "items" : {
+              "$ref" : "#/components/schemas/WebComponent"
+            },
+            "type" : "array"
+          },
+          "dashboard" : {
+            "description" : "Web components that should be displayed in the dashboard.",
+            "items" : {
+              "$ref" : "#/components/schemas/DashboardWidget"
+            },
+            "type" : "array"
+          }
+        }
+      },
+      "PackageManifest_services" : {
+        "example" : {
+          "proxyMapping" : [ {
+            "name" : "rexroth-solutions.web",
+            "binding" : ":5000",
+            "url" : "/solutions"
+          }, {
+            "name" : "rexroth-solutions.web",
+            "binding" : ":5000",
+            "url" : "/solutions"
+          } ]
+        },
+        "properties" : {
+          "proxyMapping" : {
+            "items" : {
+              "$ref" : "#/components/schemas/ProxyMapping"
+            },
+            "type" : "array"
+          }
+        }
+      },
+      "PackageManifest_commands_activeConfiguration" : {
+        "description" : "Commands relating to the active configuration (app.solutions).",
+        "example" : {
+          "load" : [ {
+            "execution" : {
+              "method" : "POST",
+              "url" : "/automation/api/v1/motion/cfg/save-all"
+            },
+            "subject" : "motion settings",
+            "id" : "motion",
+            "after" : [ "scheduler", "trace" ],
+            "url" : "/automation/api/v1/motion/cfg/save-all"
+          }, {
+            "execution" : {
+              "method" : "POST",
+              "url" : "/automation/api/v1/motion/cfg/save-all"
+            },
+            "subject" : "motion settings",
+            "id" : "motion",
+            "after" : [ "scheduler", "trace" ],
+            "url" : "/automation/api/v1/motion/cfg/save-all"
+          } ],
+          "save" : [ {
+            "execution" : {
+              "method" : "POST",
+              "url" : "/automation/api/v1/motion/cfg/save-all"
+            },
+            "subject" : "motion settings",
+            "id" : "motion",
+            "after" : [ "scheduler", "trace" ],
+            "url" : "/automation/api/v1/motion/cfg/save-all"
+          }, {
+            "execution" : {
+              "method" : "POST",
+              "url" : "/automation/api/v1/motion/cfg/save-all"
+            },
+            "subject" : "motion settings",
+            "id" : "motion",
+            "after" : [ "scheduler", "trace" ],
+            "url" : "/automation/api/v1/motion/cfg/save-all"
+          } ]
+        },
+        "properties" : {
+          "save" : {
+            "description" : "The commands to be processed in order to save app runtime data\ninto the file system of the control.\n",
+            "items" : {
+              "$ref" : "#/components/schemas/Command"
+            },
+            "type" : "array"
+          },
+          "load" : {
+            "description" : "The commands to be processed in order to load app runtime data\nfrom the file system of the control.\n",
+            "items" : {
+              "$ref" : "#/components/schemas/Command"
+            },
+            "type" : "array"
+          }
+        }
+      },
+      "PackageManifest_commands" : {
+        "description" : "Allows to specify commands that integrate into framework operations, e.g. for persisting data.\nThe sub-elements define the scopes that support command integration.\n",
+        "example" : {
+          "activeConfiguration" : {
+            "load" : [ {
+              "execution" : {
+                "method" : "POST",
+                "url" : "/automation/api/v1/motion/cfg/save-all"
+              },
+              "subject" : "motion settings",
+              "id" : "motion",
+              "after" : [ "scheduler", "trace" ],
+              "url" : "/automation/api/v1/motion/cfg/save-all"
+            }, {
+              "execution" : {
+                "method" : "POST",
+                "url" : "/automation/api/v1/motion/cfg/save-all"
+              },
+              "subject" : "motion settings",
+              "id" : "motion",
+              "after" : [ "scheduler", "trace" ],
+              "url" : "/automation/api/v1/motion/cfg/save-all"
+            } ],
+            "save" : [ {
+              "execution" : {
+                "method" : "POST",
+                "url" : "/automation/api/v1/motion/cfg/save-all"
+              },
+              "subject" : "motion settings",
+              "id" : "motion",
+              "after" : [ "scheduler", "trace" ],
+              "url" : "/automation/api/v1/motion/cfg/save-all"
+            }, {
+              "execution" : {
+                "method" : "POST",
+                "url" : "/automation/api/v1/motion/cfg/save-all"
+              },
+              "subject" : "motion settings",
+              "id" : "motion",
+              "after" : [ "scheduler", "trace" ],
+              "url" : "/automation/api/v1/motion/cfg/save-all"
+            } ]
+          }
+        },
+        "properties" : {
+          "activeConfiguration" : {
+            "$ref" : "#/components/schemas/PackageManifest_commands_activeConfiguration"
+          }
+        }
+      },
+      "PackageManifest_configuration" : {
+        "description" : "Configuration topics",
+        "example" : {
+          "appDirectories" : [ {
+            "copyOnLoad" : true,
+            "permissions" : [ "edit_oem_scripts", "edit_system_scripts" ],
+            "name" : "my-app",
+            "icon" : "bosch-ic-robot",
+            "description" : "My app",
+            "writeProtected" : false,
+            "scopes" : [ "scopes", "scopes" ]
+          }, {
+            "copyOnLoad" : true,
+            "permissions" : [ "edit_oem_scripts", "edit_system_scripts" ],
+            "name" : "my-app",
+            "icon" : "bosch-ic-robot",
+            "description" : "My app",
+            "writeProtected" : false,
+            "scopes" : [ "scopes", "scopes" ]
+          } ],
+          "appPrivateFiles" : [ "^my-app/tmp/", "^my-app/tmp" ]
+        },
+        "properties" : {
+          "appDirectories" : {
+            "description" : "Describes app directories and specifies access to them inside the configuration",
+            "items" : {
+              "$ref" : "#/components/schemas/AppDirectory"
+            },
+            "type" : "array"
+          },
+          "appPrivateFiles" : {
+            "description" : "Defines files which are ignored on saving and loading.\nThe files are matched case-insensitively using regular expressions following the RE2 syntax (https://golang.org/s/re2syntax).\nExamples:\n\"^my-app/[^/]+\\\\.bak$\" would ignore all files with the extension .bak in the \"my-app\" directory;\n\"^my-app/tmp/\" would ignore the content of \"myapp/tmp/\";\n\"^my-app/tmp\" would ignore all files and directories whose names start with \"myapp/tmp\"\n",
+            "example" : [ "^my-app/tmp/", "^my-app/tmp" ],
+            "items" : {
+              "type" : "string"
+            },
+            "readOnly" : true,
+            "type" : "array"
+          }
+        }
+      },
+      "InstalledPackage_allOf" : {
+        "properties" : {
+          "required" : {
+            "description" : "Indicates if a package is required by the system. A required snap can not be\nremoved from the device. It still can be updated.\n",
+            "example" : true,
+            "readOnly" : true,
+            "type" : "boolean"
+          },
+          "enabled" : {
+            "description" : "Flag that describes if the package is enabled.",
+            "example" : true,
+            "readOnly" : true,
+            "type" : "boolean"
+          },
+          "release" : {
+            "$ref" : "#/components/schemas/Release"
+          }
+        }
+      },
+      "AvailablePackage_allOf" : {
+        "properties" : {
+          "releases" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Release"
+            },
+            "type" : "array"
+          }
+        }
+      },
+      "Snap_allOf_publisher" : {
+        "properties" : {
+          "display-name" : {
+            "description" : "The display name of the publisher.",
+            "example" : "Bosch Rexroth AG",
+            "type" : "string"
+          },
+          "id" : {
+            "description" : "The publisher id.",
+            "example" : "d2MXXfoNnPausYrbpMYWPV7dVnHyksj",
+            "type" : "string"
+          },
+          "username" : {
+            "description" : "The username of the publisher.",
+            "example" : "username",
+            "type" : "string"
+          }
+        }
+      },
+      "Snap_allOf_Release" : {
+        "properties" : {
+          "Location" : {
+            "description" : "The location of the snap.",
+            "example" : "store:///latest/stable/4692",
+            "type" : "string"
+          },
+          "version" : {
+            "description" : "The version of the snap.",
+            "example" : "1.2.3",
+            "type" : "string"
+          }
+        }
+      },
+      "Snap_allOf_health" : {
+        "properties" : {
+          "status" : {
+            "description" : "The health status of the snap.",
+            "example" : "ok",
+            "type" : "string"
+          },
+          "message" : {
+            "description" : "A message describing the health status of the snap.",
+            "example" : "All systems operational",
+            "type" : "string"
+          },
+          "code" : {
+            "description" : "A code representing the health status of the snap.",
+            "example" : "AC1E",
+            "type" : "string"
+          },
+          "timestamp" : {
+            "description" : "The timestamp of the health status in RFC3339 UTC format.",
+            "format" : "date-time",
+            "type" : "string"
+          }
+        }
+      },
+      "Snap_allOf" : {
+        "properties" : {
+          "apps" : {
+            "description" : "JSON array of apps the snap provides. See below for fields.",
+            "items" : {
+              "$ref" : "#/components/schemas/SnapApplication"
+            },
+            "type" : "array"
+          },
+          "broken" : {
+            "description" : "A string describing if this snap is not working.",
+            "example" : "Not Working",
+            "type" : "string"
+          },
+          "channel" : {
+            "description" : "The channel the snap is currently installed from.",
+            "example" : "stable",
+            "type" : "string"
+          },
+          "channels" : {
+            "description" : "JSON array of channels the snap is available in. See below for fields.",
+            "items" : {
+              "example" : "stable",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "common-ids" : {
+            "description" : "JSON array of common-ids the snap provides. See below for fields.",
+            "items" : {
+              "example" : "snapd",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "confinement" : {
+            "description" : "The confinement level the snap is currently installed with.",
+            "example" : "strict",
+            "type" : "string"
+          },
+          "contact" : {
+            "description" : "The contact email address for the snap.",
+            "example" : "anyone@yourcompany.com",
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "A description of the app.",
+            "example" : "A secure, minimal transactional OS for devices and containers.",
+            "type" : "string"
+          },
+          "developer" : {
+            "description" : "The developer of the snap.",
+            "example" : "Bosch Rexroth AG",
+            "type" : "string"
+          },
+          "devmode" : {
+            "description" : "True if the snap is currently installed in development mode.",
+            "example" : true,
+            "type" : "boolean"
+          },
+          "enabled" : {
+            "description" : "True if the snap is currently enabled.",
+            "example" : true,
+            "type" : "boolean"
+          },
+          "icon" : {
+            "description" : "A URL to an icon for the snap.",
+            "example" : "http://www.oursite.com/image_icon.jpg",
+            "type" : "string"
+          },
+          "id" : {
+            "description" : "The snap id.",
+            "example" : "snap_rexroth-deviceadmin",
+            "type" : "string"
+          },
+          "install-date" : {
+            "description" : "The date and time when the snap was installed in RFC3339 UTC format.",
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "installed" : {
+            "description" : "True if the snap is currently installed.",
+            "example" : true,
+            "type" : "boolean"
+          },
+          "installed-size" : {
+            "description" : "How much space (in bytes) the snap itself (not its data) uses.",
+            "example" : 67784704,
+            "type" : "integer"
+          },
+          "jailmode" : {
+            "description" : "True if the app is currently installed in jail mode.",
+            "example" : true,
+            "type" : "boolean"
+          },
+          "license" : {
+            "description" : "The license of the snap.",
+            "example" : "Proprietary",
+            "type" : "string"
+          },
+          "name" : {
+            "description" : "The snap name.",
+            "example" : "rexroth-deviceadmin",
+            "type" : "string"
+          },
+          "private" : {
+            "description" : "True if the snap is private.",
+            "example" : false,
+            "type" : "boolean"
+          },
+          "publisher" : {
+            "$ref" : "#/components/schemas/Snap_allOf_publisher"
+          },
+          "Release" : {
+            "$ref" : "#/components/schemas/Snap_allOf_Release"
+          },
+          "required" : {
+            "description" : "True if the snap is required.",
+            "example" : false,
+            "type" : "boolean"
+          },
+          "resource" : {
+            "description" : "A URL to a resource for the snap.",
+            "example" : "http://www.oursite.com/image_icon.jpg",
+            "type" : "string"
+          },
+          "revision" : {
+            "description" : "The revision of the snap.",
+            "example" : 4692,
+            "type" : "integer"
+          },
+          "status" : {
+            "description" : "The status of the snap.",
+            "example" : "active",
+            "type" : "string"
+          },
+          "summary" : {
+            "description" : "A short description of the app.",
+            "example" : "The ubuntu-core OS snap",
+            "type" : "string"
+          },
+          "title" : {
+            "description" : "The title of the snap.",
+            "example" : "Device Admin",
+            "type" : "string"
+          },
+          "tracking-channel" : {
+            "description" : "The channel updates will be installed from.",
+            "example" : "stable",
+            "type" : "string"
+          },
+          "trymode" : {
+            "description" : "True if the app was installed in try mode.",
+            "example" : false,
+            "type" : "boolean"
+          },
+          "type" : {
+            "description" : "The type of the snap.",
+            "example" : "snap",
+            "type" : "string"
+          },
+          "updateBehavior" : {
+            "description" : "The update behavior of the snap.",
+            "example" : "logout",
+            "type" : "string"
+          },
+          "vendor" : {
+            "description" : "The vendor of the snap.",
+            "example" : "Bosch Rexroth AG",
+            "type" : "string"
+          },
+          "version" : {
+            "description" : "The version of the snap.",
+            "example" : "1.2.3",
+            "type" : "string"
+          },
+          "health" : {
+            "$ref" : "#/components/schemas/Snap_allOf_health"
+          }
+        }
+      },
+      "TaskInstall_allOf_parameters" : {
+        "properties" : {
+          "id" : {
+            "description" : "id of the package (app) that should be installed from the given location. The id consists of the type, e.g. snap, and the technology-specific primary identifier, e.g. snap name.",
+            "example" : "snap_rexroth-firewall",
+            "type" : "string"
+          },
+          "location" : {
+            "description" : "location of the snap to install",
+            "type" : "string"
+          },
+          "version" : {
+            "example" : "v1.0.0",
+            "type" : "string"
+          }
+        }
+      },
+      "TaskInstall_allOf" : {
+        "properties" : {
+          "action" : {
+            "enum" : [ "install" ],
+            "type" : "string"
+          },
+          "parameters" : {
+            "$ref" : "#/components/schemas/TaskInstall_allOf_parameters"
+          }
+        }
+      },
+      "TaskUpdate_allOf_parameters" : {
+        "properties" : {
+          "id" : {
+            "description" : "id of the installed package (app) that should be updated from the given location. The id consists of the type, e.g. snap, and the technology-specific primary identifier, e.g. snap name.",
+            "example" : "snap_rexroth-firewall",
+            "type" : "string"
+          },
+          "location" : {
+            "description" : "location of the snap to install",
+            "type" : "string"
+          },
+          "version" : {
+            "example" : "v1.0.0",
+            "type" : "string"
+          }
+        }
+      },
+      "TaskUpdate_allOf" : {
+        "properties" : {
+          "action" : {
+            "enum" : [ "update" ],
+            "type" : "string"
+          },
+          "parameters" : {
+            "$ref" : "#/components/schemas/TaskUpdate_allOf_parameters"
+          }
+        }
+      },
+      "TaskUninstall_allOf_parameters" : {
+        "properties" : {
+          "id" : {
+            "description" : "id of the installed package (app) that should be uninstalled. The id consists of the type, e.g. snap, and the technology-specific primary identifier, e.g. snap name.",
+            "example" : "snap_rexroth-firewall",
+            "type" : "string"
+          }
+        }
+      },
+      "TaskUninstall_allOf" : {
+        "properties" : {
+          "action" : {
+            "enum" : [ "uninstall" ],
+            "type" : "string"
+          },
+          "parameters" : {
+            "$ref" : "#/components/schemas/TaskUninstall_allOf_parameters"
+          }
+        }
+      },
+      "TaskEnable_allOf_parameters" : {
+        "properties" : {
+          "id" : {
+            "description" : "id of the installed package (app) that should be enabled. The id consists of the type, e.g. snap, and the technology-specific primary identifier, e.g. snap name.",
+            "example" : "snap_rexroth-automationcore",
+            "type" : "string"
+          }
+        }
+      },
+      "TaskEnable_allOf" : {
+        "properties" : {
+          "action" : {
+            "enum" : [ "enable" ],
+            "type" : "string"
+          },
+          "parameters" : {
+            "$ref" : "#/components/schemas/TaskEnable_allOf_parameters"
+          }
+        }
+      },
+      "TaskDisable_allOf_parameters" : {
+        "properties" : {
+          "id" : {
+            "description" : "id of the installed package (app) that should be disabled. The id consists of the type, e.g. snap, and the technology-specific primary identifier, e.g. snap name.",
+            "example" : "snap_rexroth-automationcore",
+            "type" : "string"
+          }
+        }
+      },
+      "TaskDisable_allOf" : {
+        "properties" : {
+          "action" : {
+            "enum" : [ "disable" ],
+            "type" : "string"
+          },
+          "parameters" : {
+            "$ref" : "#/components/schemas/TaskDisable_allOf_parameters"
+          }
+        }
+      },
+      "TaskStart_allOf_parameters" : {
+        "properties" : {
+          "service" : {
+            "description" : "Service name of app or app name to start",
+            "example" : "ctrlx-mysnap.service",
+            "type" : "string"
+          },
+          "enable" : {
+            "description" : "Enable state for service - keep service enabled after reboot",
+            "example" : "true",
+            "type" : "string"
+          }
+        }
+      },
+      "TaskStart_allOf" : {
+        "properties" : {
+          "action" : {
+            "enum" : [ "start" ],
+            "type" : "string"
+          },
+          "parameters" : {
+            "$ref" : "#/components/schemas/TaskStart_allOf_parameters"
+          }
+        }
+      },
+      "TaskStop_allOf_parameters" : {
+        "properties" : {
+          "service" : {
+            "description" : "Service name of app or app name to stop",
+            "example" : "ctrlx-mysnap.service",
+            "type" : "string"
+          },
+          "disable" : {
+            "description" : "Disable state for service - keep service disabled after reboot",
+            "example" : "true",
+            "type" : "string"
+          }
+        }
+      },
+      "TaskStop_allOf" : {
+        "properties" : {
+          "action" : {
+            "enum" : [ "stop" ],
+            "type" : "string"
+          },
+          "parameters" : {
+            "$ref" : "#/components/schemas/TaskStop_allOf_parameters"
+          }
+        }
+      },
+      "TaskRestart_allOf_parameters" : {
+        "properties" : {
+          "service" : {
+            "description" : "Service name of app or app name to restart",
+            "example" : "ctrlx-mysnap.service",
+            "type" : "string"
+          },
+          "reload" : {
+            "description" : "Try to reload service if supported, otherwise restart service",
+            "example" : "true",
+            "type" : "string"
+          }
+        }
+      },
+      "TaskRestart_allOf" : {
+        "properties" : {
+          "action" : {
+            "enum" : [ "restart" ],
+            "type" : "string"
+          },
+          "parameters" : {
+            "$ref" : "#/components/schemas/TaskRestart_allOf_parameters"
+          }
+        }
+      },
+      "TaskBatch_allOf_parameters" : {
+        "properties" : {
+          "id" : {
+            "description" : "id of the batch upload",
+            "example" : "Hakljaswe1",
+            "type" : "string"
+          }
+        }
+      },
+      "TaskBatch_allOf" : {
+        "properties" : {
+          "action" : {
+            "enum" : [ "batch" ],
+            "type" : "string"
+          },
+          "parameters" : {
+            "$ref" : "#/components/schemas/TaskBatch_allOf_parameters"
+          }
+        }
+      },
+      "TaskRemodel_allOf" : {
+        "properties" : {
+          "action" : {
+            "enum" : [ "remodel" ],
+            "type" : "string"
+          }
+        }
+      },
+      "TaskUefiUpdate_allOf" : {
+        "properties" : {
+          "action" : {
+            "enum" : [ "uefi-update" ],
+            "type" : "string"
+          }
+        }
+      },
+      "Command_execution" : {
+        "description" : "The execution element is deprecated. Use url element instead.",
+        "example" : {
+          "method" : "POST",
+          "url" : "/automation/api/v1/motion/cfg/save-all"
+        },
+        "properties" : {
+          "method" : {
+            "default" : "POST",
+            "description" : "The HTTP method called for executing this command; one of \"POST\" and \"PUT\"; the default is \"POST\".",
+            "enum" : [ "POST", "PUT" ],
+            "example" : "POST",
+            "type" : "string"
+          },
+          "url" : {
+            "description" : "The URL used for executing this command.",
+            "example" : "/automation/api/v1/motion/cfg/save-all",
+            "type" : "string"
+          }
+        },
+        "required" : [ "url" ]
+      },
+      "Task_2_allOf" : {
+        "properties" : {
+          "properties" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "description" : "Additional properties of the task object set by the service executing the task",
+            "readOnly" : true,
+            "type" : "object"
+          },
+          "result" : {
+            "$ref" : "#/components/schemas/Problem"
+          }
+        }
+      }
+    },
+    "securitySchemes" : {
+      "UsernamePassword" : {
+        "description" : "Enter username and password",
+        "flows" : {
+          "password" : {
+            "scopes" : {
+              "dummy" : "Dummy scope (scopes not used)"
+            },
+            "tokenUrl" : "/identity-manager/api/v1/auth/token"
+          }
+        },
+        "type" : "oauth2"
+      },
+      "Bearer" : {
+        "description" : "Alternatively&colon; Enter bearer token (without prefix 'Bearer')",
+        "scheme" : "bearer",
+        "type" : "http"
+      }
+    }
+  }
+}

@@ -11,10 +11,10 @@
 
 ## Interaction Methods
 
-- SSH for shell access and service inspection
-- Web UI for configuration workflows and visual checks
+- SSH for shell access, service inspection, log review, and deep diagnostics
+- Web UI for default guided configuration workflows and visual checks
 - WebDAV for app data inspection and file transfer where supported
-- REST API for external automation and integration
+- REST API for external automation and integration, using documented authentication flows
 - Data Layer for internal ctrlX communication
 - Playwright for repeatable browser-based UI workflows
 
@@ -42,6 +42,8 @@ Examples:
 - Use REST when a remote system, browser client, CI job, or external tool calls into ctrlX.
 - Use WebDAV for app data access when the app exposes writable or readable directories there.
 - Use Playwright when a UI workflow needs to be verified or demonstrated repeatedly.
+- Prefer Web UI or REST over SSH for persistent device configuration such as network interfaces.
+- Use SSH mainly for inspection, logs, services, and diagnostics unless a workflow explicitly requires shell-level changes.
 
 ## Frequent Pitfalls
 

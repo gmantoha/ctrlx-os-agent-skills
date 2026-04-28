@@ -1,0 +1,2440 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "contact" : {
+      "email" : "support@boschrexroth.com",
+      "name" : "Bosch Rexroth AG",
+      "url" : "https://www.boschrexroth.com"
+    },
+    "description" : "This is an API for firewall management on ctrlX devices",
+    "title" : "ctrlX Firewall - Firewall API",
+    "version" : "1.2.3"
+  },
+  "servers" : [ {
+    "url" : "/firewall/api/v2"
+  }, {
+    "url" : "https://{host}/firewall/api/v2",
+    "variables" : {
+      "host" : {
+        "default" : "[fe80::dcad:beff:fe00:0001]",
+        "description" : "Hostname or ip address of the ctrlX device"
+      }
+    }
+  } ],
+  "security" : [ {
+    "bearerAuth" : [ ]
+  } ],
+  "tags" : [ {
+    "description" : "Contains information about running tasks, e.g. persist your rules...",
+    "name" : "Tasks"
+  }, {
+    "description" : "Specify firewalling (What, Which direction), e.g. filter, route, nat and input, ouput, ..",
+    "name" : "Chains"
+  }, {
+    "description" : "Specifiy families of tables",
+    "name" : "Families"
+  }, {
+    "description" : "Add, edit, remove and get rules",
+    "name" : "Rules"
+  }, {
+    "description" : "Specify firewalling (Where), e.g. ip, ip6, arp, bridge",
+    "name" : "Tables"
+  } ],
+  "paths" : {
+    "/status" : {
+      "get" : {
+        "operationId" : "getStatus",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Status"
+                }
+              }
+            },
+            "description" : "Returns status of the firewall."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Returns the status of the firewall",
+        "tags" : [ "Status" ]
+      }
+    },
+    "/tasks" : {
+      "post" : {
+        "operationId" : "createTask",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Task"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Task"
+                }
+              }
+            },
+            "description" : "Task created",
+            "headers" : {
+              "Location" : {
+                "explode" : false,
+                "schema" : {
+                  "description" : "Location of the created task",
+                  "example" : "/tasks/123",
+                  "type" : "string"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Create a new task",
+        "tags" : [ "Tasks" ]
+      }
+    },
+    "/families" : {
+      "get" : {
+        "operationId" : "getAllFamilies",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Families"
+                }
+              }
+            },
+            "description" : "Returns an array of all supported families."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get all supported families",
+        "tags" : [ "Families" ]
+      }
+    },
+    "/families/{family}/tables" : {
+      "get" : {
+        "operationId" : "getAllTables",
+        "parameters" : [ {
+          "description" : "The type of the table",
+          "explode" : false,
+          "in" : "path",
+          "name" : "family",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/Family"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Tables"
+                }
+              }
+            },
+            "description" : "Returns an array of the tables."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get all tables belonging to a family",
+        "tags" : [ "Tables" ]
+      },
+      "post" : {
+        "operationId" : "addTable",
+        "parameters" : [ {
+          "description" : "The type of the table",
+          "explode" : false,
+          "in" : "path",
+          "name" : "family",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/Family"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Table"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Table"
+                }
+              }
+            },
+            "description" : "Returns the newly created table."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Adds a new table to a specific family",
+        "tags" : [ "Tables" ]
+      }
+    },
+    "/families/{family}/tables/{tableId}" : {
+      "delete" : {
+        "operationId" : "deleteTableById",
+        "parameters" : [ {
+          "description" : "The type of the table",
+          "explode" : false,
+          "in" : "path",
+          "name" : "family",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/Family"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The table id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "tableId",
+          "required" : true,
+          "schema" : {
+            "example" : "nwvLPaxkYan9LqsXiYauvk",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Deleted successfully"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Delete table by its id",
+        "tags" : [ "Tables" ]
+      },
+      "get" : {
+        "operationId" : "getTableById",
+        "parameters" : [ {
+          "description" : "The type of the table",
+          "explode" : false,
+          "in" : "path",
+          "name" : "family",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/Family"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The table id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "tableId",
+          "required" : true,
+          "schema" : {
+            "example" : "nwvLPaxkYan9LqsXiYauvk",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Table"
+                }
+              }
+            },
+            "description" : "Returns a table object."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get table by its id.",
+        "tags" : [ "Tables" ]
+      },
+      "put" : {
+        "operationId" : "replaceTableById",
+        "parameters" : [ {
+          "description" : "The type of the table",
+          "explode" : false,
+          "in" : "path",
+          "name" : "family",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/Family"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The table id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "tableId",
+          "required" : true,
+          "schema" : {
+            "example" : "nwvLPaxkYan9LqsXiYauvk",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Table"
+                }
+              }
+            },
+            "description" : "Successfully replaced table."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Replace table by id",
+        "tags" : [ "Tables" ]
+      }
+    },
+    "/families/{family}/tables/{tableId}/chains" : {
+      "get" : {
+        "operationId" : "getAllChains",
+        "parameters" : [ {
+          "description" : "The type of the table",
+          "explode" : false,
+          "in" : "path",
+          "name" : "family",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/Family"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The table id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "tableId",
+          "required" : true,
+          "schema" : {
+            "example" : "nwvLPaxkYan9LqsXiYauvk",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Chains"
+                }
+              }
+            },
+            "description" : "Returns a chain object."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get all chains of table",
+        "tags" : [ "Chains" ]
+      },
+      "post" : {
+        "operationId" : "addChain",
+        "parameters" : [ {
+          "description" : "The type of the table",
+          "explode" : false,
+          "in" : "path",
+          "name" : "family",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/Family"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The table id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "tableId",
+          "required" : true,
+          "schema" : {
+            "example" : "nwvLPaxkYan9LqsXiYauvk",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Chain"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Chain"
+                }
+              }
+            },
+            "description" : "Chain successfully created."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Add new chain",
+        "tags" : [ "Chains" ]
+      }
+    },
+    "/families/{family}/tables/{tableId}/chains/{chainId}" : {
+      "delete" : {
+        "operationId" : "deleteChainById",
+        "parameters" : [ {
+          "description" : "The type of the table",
+          "explode" : false,
+          "in" : "path",
+          "name" : "family",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/Family"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The table id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "tableId",
+          "required" : true,
+          "schema" : {
+            "example" : "nwvLPaxkYan9LqsXiYauvk",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The chain id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "chainId",
+          "required" : true,
+          "schema" : {
+            "example" : "twvLPxxkYan9LqsXiYauvk",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Deleted successfully"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Delete chain by its id",
+        "tags" : [ "Chains" ]
+      },
+      "get" : {
+        "operationId" : "getChainById",
+        "parameters" : [ {
+          "description" : "The type of the table",
+          "explode" : false,
+          "in" : "path",
+          "name" : "family",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/Family"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The table id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "tableId",
+          "required" : true,
+          "schema" : {
+            "example" : "nwvLPaxkYan9LqsXiYauvk",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The chain id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "chainId",
+          "required" : true,
+          "schema" : {
+            "example" : "twvLPxxkYan9LqsXiYauvk",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Chain"
+                }
+              }
+            },
+            "description" : "Returns a chain object."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get chain by id",
+        "tags" : [ "Chains" ]
+      },
+      "put" : {
+        "operationId" : "replaceChainById",
+        "parameters" : [ {
+          "description" : "The type of the table",
+          "explode" : false,
+          "in" : "path",
+          "name" : "family",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/Family"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The table id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "tableId",
+          "required" : true,
+          "schema" : {
+            "example" : "nwvLPaxkYan9LqsXiYauvk",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The chain id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "chainId",
+          "required" : true,
+          "schema" : {
+            "example" : "twvLPxxkYan9LqsXiYauvk",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Chain"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Chain"
+                }
+              }
+            },
+            "description" : "Successfully replaced chain."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Replace chain by id",
+        "tags" : [ "Chains" ]
+      }
+    },
+    "/families/{family}/tables/{tableId}/chains/{chainId}/rules" : {
+      "get" : {
+        "operationId" : "getAllRules",
+        "parameters" : [ {
+          "description" : "The type of the table",
+          "explode" : false,
+          "in" : "path",
+          "name" : "family",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/Family"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The table id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "tableId",
+          "required" : true,
+          "schema" : {
+            "example" : "nwvLPaxkYan9LqsXiYauvk",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The chain id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "chainId",
+          "required" : true,
+          "schema" : {
+            "example" : "twvLPxxkYan9LqsXiYauvk",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Rules"
+                }
+              }
+            },
+            "description" : "Returns a rule object."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get all rules",
+        "tags" : [ "Rules" ]
+      },
+      "post" : {
+        "operationId" : "addRule",
+        "parameters" : [ {
+          "description" : "The type of the table",
+          "explode" : false,
+          "in" : "path",
+          "name" : "family",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/Family"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The table id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "tableId",
+          "required" : true,
+          "schema" : {
+            "example" : "nwvLPaxkYan9LqsXiYauvk",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The chain id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "chainId",
+          "required" : true,
+          "schema" : {
+            "example" : "twvLPxxkYan9LqsXiYauvk",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Check if the backend accepts the rule without activating it.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "dryrun",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
+          },
+          "style" : "form"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Rule"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Rule"
+                }
+              }
+            },
+            "description" : "Rule successfully created."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Add rule",
+        "tags" : [ "Rules" ]
+      },
+      "put" : {
+        "operationId" : "replaceAllRules",
+        "parameters" : [ {
+          "description" : "The type of the table",
+          "explode" : false,
+          "in" : "path",
+          "name" : "family",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/Family"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The table id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "tableId",
+          "required" : true,
+          "schema" : {
+            "example" : "nwvLPaxkYan9LqsXiYauvk",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The chain id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "chainId",
+          "required" : true,
+          "schema" : {
+            "example" : "twvLPxxkYan9LqsXiYauvk",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Rules"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Rules"
+                }
+              }
+            },
+            "description" : "Successfully replaced rule"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Replace all rules of chain",
+        "tags" : [ "Rules" ]
+      }
+    },
+    "/families/{family}/tables/{tableId}/chains/{chainId}/rules/{ruleId}" : {
+      "delete" : {
+        "operationId" : "deleteRuleById",
+        "parameters" : [ {
+          "description" : "The type of the table",
+          "explode" : false,
+          "in" : "path",
+          "name" : "family",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/Family"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The table id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "tableId",
+          "required" : true,
+          "schema" : {
+            "example" : "nwvLPaxkYan9LqsXiYauvk",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The chain id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "chainId",
+          "required" : true,
+          "schema" : {
+            "example" : "twvLPxxkYan9LqsXiYauvk",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Identify rule by id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "ruleId",
+          "required" : true,
+          "schema" : {
+            "example" : "awvLPxxkYan9LqsXiYauve",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Deleted successfully"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Delete rule by id",
+        "tags" : [ "Rules" ]
+      },
+      "get" : {
+        "operationId" : "getRuleById",
+        "parameters" : [ {
+          "description" : "The type of the table",
+          "explode" : false,
+          "in" : "path",
+          "name" : "family",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/Family"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The table id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "tableId",
+          "required" : true,
+          "schema" : {
+            "example" : "nwvLPaxkYan9LqsXiYauvk",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The chain id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "chainId",
+          "required" : true,
+          "schema" : {
+            "example" : "twvLPxxkYan9LqsXiYauvk",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Identify rule by id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "ruleId",
+          "required" : true,
+          "schema" : {
+            "example" : "awvLPxxkYan9LqsXiYauve",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Rule"
+                }
+              }
+            },
+            "description" : "Returns a rule object."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get rule by id",
+        "tags" : [ "Rules" ]
+      },
+      "put" : {
+        "operationId" : "replaceRuleById",
+        "parameters" : [ {
+          "description" : "The type of the table",
+          "explode" : false,
+          "in" : "path",
+          "name" : "family",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/Family"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The table id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "tableId",
+          "required" : true,
+          "schema" : {
+            "example" : "nwvLPaxkYan9LqsXiYauvk",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The chain id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "chainId",
+          "required" : true,
+          "schema" : {
+            "example" : "twvLPxxkYan9LqsXiYauvk",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Identify rule by id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "ruleId",
+          "required" : true,
+          "schema" : {
+            "example" : "awvLPxxkYan9LqsXiYauve",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Check if the backend accepts the rule without activating it.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "dryrun",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
+          },
+          "style" : "form"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Rule"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Rule"
+                }
+              }
+            },
+            "description" : "Successfully replaced rule"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Replace rule by id",
+        "tags" : [ "Rules" ]
+      }
+    }
+  },
+  "components" : {
+    "parameters" : {
+      "family" : {
+        "description" : "The type of the table",
+        "explode" : false,
+        "in" : "path",
+        "name" : "family",
+        "required" : true,
+        "schema" : {
+          "$ref" : "#/components/schemas/Family"
+        },
+        "style" : "simple"
+      },
+      "tableId" : {
+        "description" : "The table id",
+        "explode" : false,
+        "in" : "path",
+        "name" : "tableId",
+        "required" : true,
+        "schema" : {
+          "example" : "nwvLPaxkYan9LqsXiYauvk",
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "chainId" : {
+        "description" : "The chain id",
+        "explode" : false,
+        "in" : "path",
+        "name" : "chainId",
+        "required" : true,
+        "schema" : {
+          "example" : "twvLPxxkYan9LqsXiYauvk",
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "ruleId" : {
+        "description" : "Identify rule by id",
+        "explode" : false,
+        "in" : "path",
+        "name" : "ruleId",
+        "required" : true,
+        "schema" : {
+          "example" : "awvLPxxkYan9LqsXiYauve",
+          "type" : "string"
+        },
+        "style" : "simple"
+      }
+    },
+    "responses" : {
+      "Unauthorized" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Not authorized to access this resource"
+      },
+      "Forbidden" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Access forbidden for this resource"
+      },
+      "BadRequest" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The request is incomplete or malformed"
+      },
+      "InternalServerError" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Something unexpected happened on the server"
+      },
+      "NotFound" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The resource was not found"
+      }
+    },
+    "schemas" : {
+      "Task" : {
+        "example" : {
+          "eta" : "2019-01-01T12:00:27.87+00:20",
+          "progress" : 10,
+          "action" : "persist",
+          "id" : "123",
+          "state" : "running",
+          "parameters" : {
+            "chain" : "exampleChain"
+          }
+        },
+        "properties" : {
+          "id" : {
+            "description" : "The temporary id of a task",
+            "example" : "123",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "state" : {
+            "enum" : [ "pending", "failed", "done", "running" ],
+            "example" : "running",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "progress" : {
+            "description" : "Progress of the task",
+            "example" : 10,
+            "maximum" : 100,
+            "minimum" : 0,
+            "readOnly" : true,
+            "type" : "integer"
+          },
+          "eta" : {
+            "description" : "ETA in RFC 3339 format",
+            "example" : "2019-01-01T12:00:27.87+00:20",
+            "format" : "dateTime",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "action" : {
+            "enum" : [ "persist", "flush", "undo" ],
+            "type" : "string"
+          },
+          "parameters" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "example" : {
+              "chain" : "exampleChain"
+            },
+            "type" : "object"
+          }
+        },
+        "type" : "object"
+      },
+      "Tasks" : {
+        "items" : {
+          "$ref" : "#/components/schemas/Task"
+        },
+        "type" : "array"
+      },
+      "Family" : {
+        "description" : "The type of the table",
+        "enum" : [ "ip", "ip6", "inet", "arp", "bridge", "netdev" ],
+        "example" : "ip6",
+        "readOnly" : true,
+        "type" : "string"
+      },
+      "Families" : {
+        "items" : {
+          "$ref" : "#/components/schemas/Family"
+        },
+        "type" : "array"
+      },
+      "Table" : {
+        "example" : {
+          "name" : "MyIpGroup",
+          "id" : "id",
+          "family" : "ip"
+        },
+        "properties" : {
+          "id" : {
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "family" : {
+            "enum" : [ "ip", "ip6", "inet", "arp", "bridge", "netdev" ],
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "name" : {
+            "example" : "MyIpGroup",
+            "type" : "string"
+          }
+        },
+        "required" : [ "name" ],
+        "type" : "object"
+      },
+      "Tables" : {
+        "items" : {
+          "$ref" : "#/components/schemas/Table"
+        },
+        "type" : "array"
+      },
+      "Chain" : {
+        "example" : {
+          "hook" : "prerouting",
+          "name" : "MyInputFilter",
+          "tableId" : "awvLHaxkYan9LqsYiYcuvk",
+          "id" : "id",
+          "family" : "ip",
+          "priority" : 1,
+          "type" : "filter",
+          "policy" : "accept"
+        },
+        "properties" : {
+          "family" : {
+            "enum" : [ "ip", "ip6", "inet", "arp", "bridge", "netdev" ],
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "id" : {
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "name" : {
+            "example" : "MyInputFilter",
+            "type" : "string"
+          },
+          "tableId" : {
+            "description" : "The id of the table the chains belongs to.",
+            "example" : "awvLHaxkYan9LqsYiYcuvk",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "priority" : {
+            "example" : 1,
+            "type" : "integer"
+          },
+          "type" : {
+            "enum" : [ "filter", "route", "nat", "non" ],
+            "type" : "string"
+          },
+          "hook" : {
+            "enum" : [ "prerouting", "input", "forward", "output", "postrouting", "ingress" ],
+            "type" : "string"
+          },
+          "policy" : {
+            "enum" : [ "accept", "drop" ],
+            "type" : "string"
+          }
+        },
+        "required" : [ "name", "priority", "type" ],
+        "type" : "object"
+      },
+      "Chains" : {
+        "items" : {
+          "$ref" : "#/components/schemas/Chain"
+        },
+        "type" : "array"
+      },
+      "Rule" : {
+        "example" : {
+          "chainId" : "nwvLPaxkYan9LqsXiYauvk",
+          "name" : "Allow_SSH",
+          "tableId" : "awvLHaxkYan9LqsYiYcuvk",
+          "action" : "accept",
+          "comment" : "This rule makes the device much more secure.",
+          "handle" : 0,
+          "id" : "id",
+          "family" : "ip",
+          "expressions" : [ "", "" ]
+        },
+        "properties" : {
+          "id" : {
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "family" : {
+            "enum" : [ "ip", "ip6", "inet", "arp", "bridge", "netdev" ],
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "name" : {
+            "example" : "Allow_SSH",
+            "type" : "string"
+          },
+          "tableId" : {
+            "description" : "The id of the table the rule belongs to.",
+            "example" : "awvLHaxkYan9LqsYiYcuvk",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "chainId" : {
+            "description" : "The id of the chain the rule belongs to.",
+            "example" : "nwvLPaxkYan9LqsXiYauvk",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "comment" : {
+            "example" : "This rule makes the device much more secure.",
+            "type" : "string"
+          },
+          "handle" : {
+            "readOnly" : true,
+            "type" : "integer"
+          },
+          "action" : {
+            "enum" : [ "accept", "drop", "reject" ],
+            "type" : "string"
+          },
+          "expressions" : {
+            "items" : {
+              "anyOf" : [ {
+                "$ref" : "#/components/schemas/Match"
+              }, {
+                "$ref" : "#/components/schemas/Counter"
+              }, {
+                "$ref" : "#/components/schemas/Nat"
+              }, {
+                "$ref" : "#/components/schemas/Masquerade"
+              }, {
+                "$ref" : "#/components/schemas/Redirect"
+              } ]
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "action" ],
+        "type" : "object"
+      },
+      "Rules" : {
+        "items" : {
+          "$ref" : "#/components/schemas/Rule"
+        },
+        "type" : "array"
+      },
+      "Match" : {
+        "properties" : {
+          "type" : {
+            "enum" : [ "match" ],
+            "type" : "string"
+          },
+          "left" : {
+            "oneOf" : [ {
+              "$ref" : "#/components/schemas/Payload"
+            }, {
+              "$ref" : "#/components/schemas/CT"
+            }, {
+              "$ref" : "#/components/schemas/Meta"
+            } ],
+            "type" : "object"
+          },
+          "right" : {
+            "oneOf" : [ {
+              "$ref" : "#/components/schemas/Range"
+            }, {
+              "$ref" : "#/components/schemas/Prefix"
+            }, {
+              "type" : "string"
+            }, {
+              "type" : "integer"
+            }, {
+              "items" : {
+                "type" : "string"
+              },
+              "type" : "array"
+            } ]
+          },
+          "operation" : {
+            "enum" : [ "==", "!=", "<", ">", "<=", ">=", "in" ],
+            "type" : "string",
+            "x-enum-varnames" : [ "Equal", "NotEqual", "LessThan", "GreaterThan", "LessThanOrEqualTo", "GreaterThanOrEqualTo", "In" ]
+          }
+        },
+        "required" : [ "type" ],
+        "type" : "object"
+      },
+      "Range" : {
+        "properties" : {
+          "type" : {
+            "enum" : [ "range" ],
+            "type" : "string"
+          },
+          "from" : {
+            "example" : "0",
+            "type" : "string"
+          },
+          "to" : {
+            "example" : "3000",
+            "type" : "string"
+          }
+        },
+        "required" : [ "from", "to", "type" ],
+        "type" : "object"
+      },
+      "Payload" : {
+        "properties" : {
+          "type" : {
+            "enum" : [ "payload" ],
+            "type" : "string"
+          },
+          "protocol" : {
+            "example" : "tcp",
+            "type" : "string"
+          },
+          "field" : {
+            "example" : "dport",
+            "type" : "string"
+          }
+        },
+        "required" : [ "type" ],
+        "type" : "object"
+      },
+      "Counter" : {
+        "properties" : {
+          "type" : {
+            "enum" : [ "counter" ],
+            "type" : "string"
+          },
+          "packets" : {
+            "readOnly" : true,
+            "type" : "integer"
+          },
+          "bytes" : {
+            "readOnly" : true,
+            "type" : "integer"
+          }
+        },
+        "required" : [ "bytes", "packets", "type" ],
+        "type" : "object"
+      },
+      "Meta" : {
+        "properties" : {
+          "type" : {
+            "enum" : [ "meta" ],
+            "type" : "string"
+          },
+          "key" : {
+            "example" : "iif",
+            "type" : "string"
+          }
+        },
+        "required" : [ "type" ],
+        "type" : "object"
+      },
+      "CT" : {
+        "properties" : {
+          "type" : {
+            "enum" : [ "ct" ],
+            "type" : "string"
+          },
+          "key" : {
+            "example" : "state",
+            "type" : "string"
+          }
+        },
+        "required" : [ "key", "type" ],
+        "type" : "object"
+      },
+      "Nat" : {
+        "properties" : {
+          "type" : {
+            "enum" : [ "snat", "dnat" ],
+            "type" : "string"
+          },
+          "addr" : {
+            "description" : "Address to translate to.",
+            "example" : "192.168.1.0",
+            "type" : "string"
+          },
+          "family" : {
+            "description" : "Family of addr, either ip or ip6. Required in inet table family.",
+            "example" : "ip6",
+            "type" : "string"
+          },
+          "port" : {
+            "description" : "Port to translate to.",
+            "type" : "string"
+          },
+          "flags" : {
+            "items" : {
+              "description" : "Family of addr, either ip or ip6. Required in inet table family.",
+              "enum" : [ "random", "fully-random", "persistent" ],
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "type" ],
+        "type" : "object"
+      },
+      "Masquerade" : {
+        "properties" : {
+          "type" : {
+            "enum" : [ "masquerade" ],
+            "type" : "string"
+          },
+          "port" : {
+            "description" : "Port to translate to.",
+            "type" : "string"
+          },
+          "flags" : {
+            "items" : {
+              "description" : "Family of addr, either ip or ip6. Required in inet table family.",
+              "enum" : [ "random", "fully-random", "persistent" ],
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "type" ],
+        "type" : "object"
+      },
+      "Prefix" : {
+        "description" : "Construct an IPv4 or IPv6 prefix consisting of address part in addr and prefix length in len.",
+        "properties" : {
+          "type" : {
+            "example" : "prefix",
+            "type" : "string"
+          },
+          "addr" : {
+            "example" : "192.168.1.0",
+            "type" : "string"
+          },
+          "len" : {
+            "example" : 24,
+            "type" : "integer"
+          }
+        },
+        "required" : [ "type" ],
+        "type" : "object"
+      },
+      "Redirect" : {
+        "properties" : {
+          "type" : {
+            "enum" : [ "redirect" ],
+            "type" : "string"
+          },
+          "port" : {
+            "description" : "Port to translate to.",
+            "type" : "string"
+          },
+          "flags" : {
+            "items" : {
+              "description" : "Family of addr, either ip or ip6. Required in inet table family.",
+              "enum" : [ "random", "fully-random", "persistent" ],
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "type" ],
+        "type" : "object"
+      },
+      "Status" : {
+        "example" : {
+          "dirty" : true
+        },
+        "properties" : {
+          "dirty" : {
+            "readOnly" : true,
+            "type" : "boolean"
+          }
+        },
+        "required" : [ "dirty" ],
+        "type" : "object"
+      },
+      "Problem" : {
+        "description" : "This document defines a \"problem detail\" as a way  to carry machine-readable details of errors in a  HTTP response to avoid the need to define new error  response formats for HTTP APIs.\n",
+        "properties" : {
+          "type" : {
+            "default" : "about:blank",
+            "description" : "A URI reference [RFC3986] that identifies the problem type. \nThis specification encourages that, when dereferenced, \nit provide human-readable documentation for the problem type \n(e.g., using HTML [W3C.REC-html5-20141028]). When this member \nis not present, its value is assumed to be \"about:blank\".\n",
+            "example" : "https://example.com/probs/out-of-credit",
+            "format" : "uri",
+            "type" : "string"
+          },
+          "title" : {
+            "description" : "A short, human-readable summary of the problem type. \nIt SHOULD NOT change from occurrence to occurrence of the problem, \nexcept for purposes of localization (e.g., using proactive content \nnegotiation; see [RFC7231], Section 3.4).\n",
+            "example" : "You do not have enough credit.",
+            "type" : "string"
+          },
+          "status" : {
+            "description" : "The HTTP status code ([RFC7231], Section 6) generated by the \norigin server for this occurrence of the problem.\n",
+            "example" : 403,
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "detail" : {
+            "description" : "A human-readable explanation specific to this occurrence of the problem.\n",
+            "example" : "Your current balance is 30, but that costs 50.",
+            "type" : "string"
+          },
+          "instance" : {
+            "description" : "A URI reference that identifies the specific occurrence of the problem.\nIt may or may not yield further information if dereferenced.\n",
+            "example" : "/account/12345/msgs/abc",
+            "type" : "string"
+          },
+          "code" : {
+            "deprecated" : true,
+            "description" : "An error code issued by the system that caused the original problem.\nThis code can be used to track down the root cause of the error.\n",
+            "example" : "F360001",
+            "type" : "string"
+          },
+          "mainDiagnosisCode" : {
+            "description" : "The main diagnosis code is issued by the system that caused the problem.\nThis code can be used to track down the root cause and source of the error.\nIt can be used to search in the documentation for a solution.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "080F0100",
+            "type" : "string"
+          },
+          "detailedDiagnosisCode" : {
+            "description" : "The detailed diagnosis code issued by the system that caused the problem.\nThis code can be used to track down the detailed cause and source of the error.\nIt can be used to search in the documentation for a solution.\nThe detailed diagnosis code gives additional information about the cause of the error.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "00666001",
+            "type" : "string"
+          },
+          "dynamicDescription" : {
+            "description" : "A dynamic description gives detailed information about the occurrence of a problem.\nIt can change between different occurrences of the same error.\n",
+            "example" : "value = -4.5",
+            "type" : "string"
+          },
+          "severity" : {
+            "description" : " Severity of a problem as defined RFC5424 of the Syslog standard, see https://tools.ietf.org/html/rfc5424",
+            "enum" : [ "Emergency", "Alert", "Critical", "Error", "Warning", "Notice", "Informational", "Debug" ],
+            "example" : "Error",
+            "type" : "string"
+          },
+          "links" : {
+            "description" : "Collection of links to fix the problem. E.g. links to online user manual,\nto an online community (using tags) or a developer chat (e.g. Slack).\n",
+            "items" : {
+              "example" : "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001",
+              "format" : "uri",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "moreInfo" : {
+            "additionalProperties" : true,
+            "example" : {
+              "trace" : "ExampleClass.cpp#452 Null pointer exception",
+              "class" : "ExampleClass"
+            },
+            "type" : "object"
+          }
+        },
+        "required" : [ "title", "type" ],
+        "type" : "object",
+        "x-version" : "1.0.0"
+      }
+    },
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "scheme" : "bearer",
+        "type" : "http"
+      }
+    }
+  }
+}

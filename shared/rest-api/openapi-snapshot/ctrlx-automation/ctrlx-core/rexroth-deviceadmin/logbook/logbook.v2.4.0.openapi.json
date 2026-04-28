@@ -1,0 +1,3946 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "contact" : {
+      "email" : "support@boschrexroth.com",
+      "name" : "Bosch Rexroth Support",
+      "url" : "https://www.boschrexroth.com"
+    },
+    "description" : "The ctrlX OS -Logbook API enables you to browse through recoreded diagnostics messages, traces and system messages stored on the ctrlX OS devices. It enables you to confiure remote logging targets, such as a syslog server, and to access specific diagnostics messages in different languages.\n",
+    "title" : "ctrlX OS - Logbook API",
+    "version" : "2.4.0"
+  },
+  "servers" : [ {
+    "description" : "Access the logbook api with relative path",
+    "url" : "/logbook/api/v2"
+  }, {
+    "description" : "Access the logbook api by specifying a host address",
+    "url" : "https://{host}/logbook/api/v2",
+    "variables" : {
+      "host" : {
+        "default" : "localhost"
+      }
+    }
+  } ],
+  "security" : [ {
+    "UsernamePassword" : [ ]
+  }, {
+    "Bearer" : [ ]
+  } ],
+  "tags" : [ {
+    "description" : "gives you access to recorded diagnostics messages, traces and system messages",
+    "name" : "Logbook"
+  }, {
+    "description" : "Logbook specific settings",
+    "name" : "Settings"
+  }, {
+    "description" : "Groups all operations on remote logging",
+    "name" : "Remote Logging"
+  }, {
+    "description" : "Access to diagnostics messages in different languages",
+    "name" : "Diagnostics Database"
+  }, {
+    "description" : "manage log targets",
+    "name" : "Log Targets Management"
+  } ],
+  "paths" : {
+    "/entries" : {
+      "get" : {
+        "description" : "Returns a list of selected logbook entries. You can filter the result by loglevel, unit, entity, messageType or a specified time range. You can also search for specific texts in fields. This operation allows pagination based on the message cursor returned by a previously excuted request.",
+        "operationId" : "listLog-Entries",
+        "parameters" : [ {
+          "description" : "If specified only log entries with matching loglevel(s) are returned",
+          "explode" : true,
+          "in" : "query",
+          "name" : "loglevel",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Loglevels"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        }, {
+          "description" : "If specified only log entries with matching unit name(s) are returned",
+          "explode" : true,
+          "in" : "query",
+          "name" : "unit",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        }, {
+          "description" : "If specified only log entries with matching entity are returned",
+          "explode" : true,
+          "in" : "query",
+          "name" : "entity",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Maximum number of elements in the response.\n",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "The start date for the timespan in which entries are returned. If not specified, oldest available log entries are returned.\n",
+          "explode" : true,
+          "in" : "query",
+          "name" : "start_date",
+          "required" : false,
+          "schema" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "The end date for the timespan in which entries are returned. If omitted, 'now' is used for end_date\n",
+          "explode" : true,
+          "in" : "query",
+          "name" : "end_date",
+          "required" : false,
+          "schema" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Defines the field names, that should be filled in logEntry. If used with 'searchText', then text is searched in 'fields'",
+          "explode" : true,
+          "in" : "query",
+          "name" : "fields",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        }, {
+          "description" : "If search_text contains a non-empty string, then only messages matching search_text are returned.\n",
+          "explode" : true,
+          "in" : "query",
+          "name" : "search_text",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "If specified, only log entries with matching message type(s) are returned. Accepted values can be retrieved from '/fields/messageTypes'.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "messageType",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Start position for log entries",
+          "explode" : true,
+          "in" : "query",
+          "name" : "cursor",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Search direction. Must be used together with cursor. If reverse=false (default), then logbook iterates backwards in time.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "reverse",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Start position for log entries",
+          "explode" : true,
+          "in" : "query",
+          "name" : "timestamp",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/LogEntries"
+                }
+              },
+              "text/csv" : {
+                "schema" : {
+                  "example" : "logLevel;timestamp;...\ninfo;2020-08-06T05:37:47.960179Z;...\n",
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "List of Log Entries"
+          },
+          "204" : {
+            "description" : "The query yields an empty result"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "List selected logbook entries",
+        "tags" : [ "Logbook" ]
+      }
+    },
+    "/query" : {
+      "get" : {
+        "description" : "Returns all messages matching the query object in json notation",
+        "operationId" : "getQueryMessages",
+        "parameters" : [ {
+          "description" : "JSON object containing the query definition. $or, $and and $in are supported for logical operations.",
+          "examples" : {
+            "one_field" : {
+              "summary" : "Filter for a single field",
+              "value" : "{'JOB_TYPE': 'start'}"
+            },
+            "two_fields" : {
+              "summary" : "Filter for two fields combinded with an 'and' operator",
+              "value" : "{ '$and': [{'JOB_TYPE': 'start'], {'_HOSTNAME': 'ctrlX'}]}"
+            },
+            "one_of" : {
+              "summary" : "Filter for any of a set of values",
+              "value" : "{'JOB_TYPE': {'$in': ['start', 'stop'] }}"
+            },
+            "or_operation" : {
+              "summary" : "Filter for two fields combined with an 'or' operator",
+              "value" : "{ '$or': [{'JOB_TYPE' : 'start'} , {'_HOSTNAME' : 'ctrlX'} ] }"
+            },
+            "nested_operation" : {
+              "summary" : "Filter for three fields using both an 'and' and an 'or' operator",
+              "value" : "{'$or': [{'JOB_TYPE':'start'},{'$and': [{'_HOSTNAME':'ctrlX'},{'_UID':'1000'}]}]}"
+            }
+          },
+          "explode" : true,
+          "in" : "query",
+          "name" : "filter",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Maximum number of elements in the response.\n",
+          "explode" : true,
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "The start date for the timespan in which entries are returned. If not specified, oldest available log entries are returned.\n",
+          "explode" : true,
+          "in" : "query",
+          "name" : "start_date",
+          "required" : false,
+          "schema" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "The end date for the timespan in which entries are returned. If omitted, 'now' is used for end_date\n",
+          "explode" : true,
+          "in" : "query",
+          "name" : "end_date",
+          "required" : false,
+          "schema" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Start position for log entries",
+          "explode" : true,
+          "in" : "query",
+          "name" : "cursor",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Search direction. Must be used together with cursor. If reverse=false (default), then logbook iterates backwards in time.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "reverse",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Defines the field names, that should be filled in logEntry. If used with 'searchText', then text is searched in 'fields'",
+          "explode" : true,
+          "in" : "query",
+          "name" : "fields",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        }, {
+          "description" : "JSON object containing texts to be searched for in defined message fields. $or and $and are supported for logical operations.\n",
+          "examples" : {
+            "one_field" : {
+              "summary" : "Search for a text in one field",
+              "value" : "{ 'JOB_TYPE' : 'start' }"
+            },
+            "two_fields" : {
+              "summary" : "Search for a text in several fields. (Matches if any of the fields contains the search text)",
+              "value" : "{ '$or' : [ {'JOB_TYPE' : 'start'}, {'_HOSTNAME':'start'}, {'MESSAGE_TYPE':'start'} ] }"
+            },
+            "three_fields" : {
+              "summary" : "Search for three texts in three different fields. (Matches if all texts exist in specified fields)",
+              "value" : "{ '$and' : [ {'JOB_TYPE':'start'}, {'_HOSTNAME':'myDevice'}, {'R_UNIT':'myUnit'} ] }"
+            },
+            "four_fields" : {
+              "summary" : "Search with nested search criteria.",
+              "value" : "{ '$or' : [ {'JOB_TYPE' : 'start'}, { '$and' : [ {'R_DIAG_MAIN':'080'}, {'$or' : [ {'R_DIAG_DETAIL':'C0'}, {'R_DIAG_DETAIL':'C1'} ] } ] } ] }"
+            }
+          },
+          "explode" : true,
+          "in" : "query",
+          "name" : "search",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/LogEntries"
+                }
+              }
+            },
+            "description" : "List of log entries metching the query"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get log messages using a query object",
+        "tags" : [ "Logbook" ]
+      }
+    },
+    "/entry_count" : {
+      "get" : {
+        "description" : "Returns the number of messages",
+        "operationId" : "getEntryCount",
+        "parameters" : [ {
+          "description" : "The start date for the timespan in which entries are returned. If not specified, oldest available log entries are returned.\n",
+          "explode" : true,
+          "in" : "query",
+          "name" : "start_date",
+          "required" : false,
+          "schema" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "The end date for the timespan in which entries are returned. If omitted, 'now' is used for end_date\n",
+          "explode" : true,
+          "in" : "query",
+          "name" : "end_date",
+          "required" : false,
+          "schema" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "If specified only log entries with matching loglevel(s) are returned",
+          "explode" : true,
+          "in" : "query",
+          "name" : "loglevel",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Loglevels"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        }, {
+          "description" : "If specified only log entries with matching unit name(s) are returned",
+          "explode" : true,
+          "in" : "query",
+          "name" : "unit",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        }, {
+          "description" : "If specified only log entries with matching entity are returned",
+          "explode" : true,
+          "in" : "query",
+          "name" : "entity",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Defines the field names, that should be filled in logEntry. If used with 'searchText', then text is searched in 'fields'",
+          "explode" : true,
+          "in" : "query",
+          "name" : "fields",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        }, {
+          "description" : "If search_text contains a non-empty string, then only messages matching search_text are returned.\n",
+          "explode" : true,
+          "in" : "query",
+          "name" : "search_text",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "If specified, only log entries with matching message type(s) are returned. Accepted values can be retrieved from '/fields/messageTypes'.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "messageType",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        }, {
+          "description" : "JSON object containing the query definition. $or, $and and $in are supported for logical operations.",
+          "examples" : {
+            "one_field" : {
+              "summary" : "Filter for a single field",
+              "value" : "{'JOB_TYPE': 'start'}"
+            },
+            "two_fields" : {
+              "summary" : "Filter for two fields combinded with an 'and' operator",
+              "value" : "{ '$and': [{'JOB_TYPE': 'start'], {'_HOSTNAME': 'ctrlX'}]}"
+            },
+            "one_of" : {
+              "summary" : "Filter for any of a set of values",
+              "value" : "{'JOB_TYPE': {'$in': ['start', 'stop'] }}"
+            },
+            "or_operation" : {
+              "summary" : "Filter for two fields combined with an 'or' operator",
+              "value" : "{ '$or': [{'JOB_TYPE' : 'start'} , {'_HOSTNAME' : 'ctrlX'} ] }"
+            },
+            "nested_operation" : {
+              "summary" : "Filter for three fields using both an 'and' and an 'or' operator",
+              "value" : "{'$or': [{'JOB_TYPE':'start'},{'$and': [{'_HOSTNAME':'ctrlX'},{'_UID':'1000'}]}]}"
+            }
+          },
+          "explode" : true,
+          "in" : "query",
+          "name" : "filter",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "JSON object containing texts to be searched for in defined message fields. $or and $and are supported for logical operations.\n",
+          "examples" : {
+            "one_field" : {
+              "summary" : "Search for a text in one field",
+              "value" : "{ 'JOB_TYPE' : 'start' }"
+            },
+            "two_fields" : {
+              "summary" : "Search for a text in several fields. (Matches if any of the fields contains the search text)",
+              "value" : "{ '$or' : [ {'JOB_TYPE' : 'start'}, {'_HOSTNAME':'start'}, {'MESSAGE_TYPE':'start'} ] }"
+            },
+            "three_fields" : {
+              "summary" : "Search for three texts in three different fields. (Matches if all texts exist in specified fields)",
+              "value" : "{ '$and' : [ {'JOB_TYPE':'start'}, {'_HOSTNAME':'myDevice'}, {'R_UNIT':'myUnit'} ] }"
+            },
+            "four_fields" : {
+              "summary" : "Search with nested search criteria.",
+              "value" : "{ '$or' : [ {'JOB_TYPE' : 'start'}, { '$and' : [ {'R_DIAG_MAIN':'080'}, {'$or' : [ {'R_DIAG_DETAIL':'C0'}, {'R_DIAG_DETAIL':'C1'} ] } ] } ] }"
+            }
+          },
+          "explode" : true,
+          "in" : "query",
+          "name" : "search",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/EntryCount"
+                }
+              }
+            },
+            "description" : "information which interfaces are bridged"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get the number of entries",
+        "tags" : [ "Logbook" ]
+      }
+    },
+    "/units" : {
+      "get" : {
+        "description" : "The operation will list all available units that are known to the system. Including systemd units.",
+        "operationId" : "getUnits",
+        "parameters" : [ {
+          "description" : "If specified, only log entries with matching message type(s) are returned. Accepted values can be retrieved from '/fields/messageTypes'.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "messageType",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Units"
+                }
+              }
+            },
+            "description" : "information which interfaces are bridged"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "List all units known to the system",
+        "tags" : [ "Logbook" ]
+      }
+    },
+    "/entities" : {
+      "get" : {
+        "description" : "Returns a list of entities used in diagnostics messages",
+        "operationId" : "getEntities",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Entities"
+                }
+              }
+            },
+            "description" : "information which interfaces are bridged"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get a list of entities used in diagnostics messages",
+        "tags" : [ "Logbook" ]
+      }
+    },
+    "/messageTypes" : {
+      "get" : {
+        "description" : "Returns a list of message types in the system",
+        "operationId" : "getMessageTypes",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MessageTypes"
+                }
+              }
+            },
+            "description" : "information which interfaces are bridged"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get a list of message types in the system",
+        "tags" : [ "Logbook" ]
+      }
+    },
+    "/fields" : {
+      "get" : {
+        "description" : "Returns a list of available fieldnames for the current journal.",
+        "operationId" : "getFieldNames",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FieldValues"
+                }
+              }
+            },
+            "description" : "information which interfaces are bridged"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get a list of all fieldnames currently used in the journal.",
+        "tags" : [ "Logbook" ]
+      }
+    },
+    "/fields/{field}" : {
+      "get" : {
+        "description" : "Returns a list of available values for a given message field",
+        "operationId" : "getFieldValues",
+        "parameters" : [ {
+          "description" : "Name of message field. Returns all available values for this message field.",
+          "example" : "JOB_TYPE",
+          "explode" : false,
+          "in" : "path",
+          "name" : "field",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FieldValues"
+                }
+              }
+            },
+            "description" : "information which interfaces are bridged"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get a list of all values for a specific message field",
+        "tags" : [ "Logbook" ]
+      }
+    },
+    "/diagnostics-messages" : {
+      "get" : {
+        "description" : "Returns the localized message text",
+        "operationId" : "getMainDiagnosticList",
+        "parameters" : [ {
+          "description" : "Main diagnostics code(s)",
+          "explode" : true,
+          "in" : "query",
+          "name" : "mainDiagCode",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Selects if detail diagnostics are requested",
+          "explode" : true,
+          "in" : "query",
+          "name" : "withDetailDiagnostics",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Language for localized diagnostics messages",
+          "explode" : true,
+          "in" : "query",
+          "name" : "language",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DiagMessages"
+                }
+              }
+            },
+            "description" : "List of requested main diagnostics messages. If no main diagnostics code is specified all available main diagnostics messages are returned."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get the localized message text for a given diagnostics number",
+        "tags" : [ "Diagnostics Database" ]
+      }
+    },
+    "/diagnostics-messages/{mainDiagCode}" : {
+      "get" : {
+        "description" : "Returns the localized message text",
+        "operationId" : "getMainDiagnosticData",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "mainDiagCode",
+          "required" : true,
+          "schema" : {
+            "description" : "Main diagnostics code of requested diagnostics text",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Detail diagnostics code(s)",
+          "explode" : true,
+          "in" : "query",
+          "name" : "detailDiagCode",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Selects if detail diagnostics are requested",
+          "explode" : true,
+          "in" : "query",
+          "name" : "withDetailDiagnostics",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Language for localized diagnostics messages",
+          "explode" : true,
+          "in" : "query",
+          "name" : "language",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MainDiagnostic"
+                }
+              }
+            },
+            "description" : "Returns a the main diagnostics message all requested detail diagnostics messages for a main diagnostics code. If no detail diagnostics code is requested all available messages are returned"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get the localized message text for a given diagnostics number",
+        "tags" : [ "Diagnostics Database" ]
+      }
+    },
+    "/diagnostics-messages/{mainDiagCode}/{detailDiagCode}" : {
+      "get" : {
+        "description" : "Returns the localized message text",
+        "operationId" : "getDetailDiagnosticData",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "mainDiagCode",
+          "required" : true,
+          "schema" : {
+            "description" : "Main diagnostics code of requested diagnostics text",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "path",
+          "name" : "detailDiagCode",
+          "required" : true,
+          "schema" : {
+            "description" : "Details diagnostics code of requested diagnostics text",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Language for localized diagnostics messages",
+          "explode" : true,
+          "in" : "query",
+          "name" : "language",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MainDiagnostic"
+                }
+              }
+            },
+            "description" : "Returns a the main diagnostics message all requested detail diagnostics messages for a main diagnostics code. If no detail diagnostics code is requested all available messages are returned"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get the localized message text for a given diagnostics number",
+        "tags" : [ "Diagnostics Database" ]
+      }
+    },
+    "/events" : {
+      "get" : {
+        "description" : "Returns an event stream for current log messages",
+        "operationId" : "getEventStream",
+        "parameters" : [ {
+          "explode" : true,
+          "in" : "query",
+          "name" : "format",
+          "required" : false,
+          "schema" : {
+            "description" : "Event format of messages",
+            "enum" : [ "text", "json", "logfmt" ],
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Defines the field names, that should be filled in logEntry. If used with 'searchText', then text is searched in 'fields'",
+          "explode" : true,
+          "in" : "query",
+          "name" : "fields",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        }, {
+          "description" : "JSON object containing the query definition. $or, $and and $in are supported for logical operations.",
+          "examples" : {
+            "one_field" : {
+              "summary" : "Filter for a single field",
+              "value" : "{'JOB_TYPE': 'start'}"
+            },
+            "two_fields" : {
+              "summary" : "Filter for two fields combinded with an 'and' operator",
+              "value" : "{ '$and': [{'JOB_TYPE': 'start'], {'_HOSTNAME': 'ctrlX'}]}"
+            },
+            "one_of" : {
+              "summary" : "Filter for any of a set of values",
+              "value" : "{'JOB_TYPE': {'$in': ['start', 'stop'] }}"
+            },
+            "or_operation" : {
+              "summary" : "Filter for two fields combined with an 'or' operator",
+              "value" : "{ '$or': [{'JOB_TYPE' : 'start'} , {'_HOSTNAME' : 'ctrlX'} ] }"
+            },
+            "nested_operation" : {
+              "summary" : "Filter for three fields using both an 'and' and an 'or' operator",
+              "value" : "{'$or': [{'JOB_TYPE':'start'},{'$and': [{'_HOSTNAME':'ctrlX'},{'_UID':'1000'}]}]}"
+            }
+          },
+          "explode" : true,
+          "in" : "query",
+          "name" : "filter",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "JSON object containing texts to be searched for in defined message fields. $or and $and are supported for logical operations.\n",
+          "examples" : {
+            "one_field" : {
+              "summary" : "Search for a text in one field",
+              "value" : "{ 'JOB_TYPE' : 'start' }"
+            },
+            "two_fields" : {
+              "summary" : "Search for a text in several fields. (Matches if any of the fields contains the search text)",
+              "value" : "{ '$or' : [ {'JOB_TYPE' : 'start'}, {'_HOSTNAME':'start'}, {'MESSAGE_TYPE':'start'} ] }"
+            },
+            "three_fields" : {
+              "summary" : "Search for three texts in three different fields. (Matches if all texts exist in specified fields)",
+              "value" : "{ '$and' : [ {'JOB_TYPE':'start'}, {'_HOSTNAME':'myDevice'}, {'R_UNIT':'myUnit'} ] }"
+            },
+            "four_fields" : {
+              "summary" : "Search with nested search criteria.",
+              "value" : "{ '$or' : [ {'JOB_TYPE' : 'start'}, { '$and' : [ {'R_DIAG_MAIN':'080'}, {'$or' : [ {'R_DIAG_DETAIL':'C0'}, {'R_DIAG_DETAIL':'C1'} ] } ] } ] }"
+            }
+          },
+          "explode" : true,
+          "in" : "query",
+          "name" : "search",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Start position for log entries",
+          "explode" : true,
+          "in" : "query",
+          "name" : "cursor",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "text/event-stream" : {
+                "schema" : {
+                  "format" : "event-stream",
+                  "items" : {
+                    "$ref" : "#/components/schemas/inline_response_200"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "Returns an event object for each new message"
+          }
+        },
+        "summary" : "Returns an event stream for current log messages",
+        "tags" : [ "Logbook" ]
+      }
+    },
+    "/persistence" : {
+      "get" : {
+        "deprecated" : false,
+        "description" : "Returns the current persistence mode for logbook",
+        "operationId" : "getPersistence",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Persistence"
+                }
+              }
+            },
+            "description" : "Information which interfaces are bridged"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get the persistence mode for logbook",
+        "tags" : [ "Settings" ]
+      },
+      "put" : {
+        "deprecated" : false,
+        "description" : "Sets the current persistence mode for logbook",
+        "operationId" : "setPersistence",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Persistence"
+              }
+            }
+          },
+          "description" : "Persistence mode",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Persistence"
+                }
+              }
+            },
+            "description" : "Information which interfaces are bridged"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Set the persistence mode for logbook",
+        "tags" : [ "Settings" ]
+      }
+    },
+    "/remote-logging/syslog" : {
+      "get" : {
+        "description" : "Returns details of all syslog configurations of the device",
+        "operationId" : "getSyslogConfigurations",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SyslogConfigs"
+                }
+              }
+            },
+            "description" : "Operation successful"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get all syslog configurations",
+        "tags" : [ "Remote Logging" ]
+      },
+      "post" : {
+        "description" : "Add new syslog configuration",
+        "operationId" : "createSyslogConfiguration",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SyslogConfig"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Configuration created successful.",
+            "headers" : {
+              "Location" : {
+                "description" : "The location of the newly created object",
+                "explode" : false,
+                "schema" : {
+                  "format" : "uri",
+                  "type" : "string"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Remote Logging" ]
+      }
+    },
+    "/remote-logging/syslog/{syslogId}" : {
+      "delete" : {
+        "description" : "Remove syslog configuration",
+        "operationId" : "deleteSyslogConfiguration",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "syslogId",
+          "required" : true,
+          "schema" : {
+            "description" : "ID of a syslog configuration",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Deleted successfully"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Remote Logging" ]
+      },
+      "get" : {
+        "description" : "Returns syslog configuration with given id.",
+        "operationId" : "getSyslogConfiguration",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "syslogId",
+          "required" : true,
+          "schema" : {
+            "description" : "ID of a syslog configuration",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FilterConfig"
+                }
+              }
+            },
+            "description" : "Operation successful."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Remote Logging" ]
+      },
+      "put" : {
+        "description" : "Update remote logging configuration",
+        "operationId" : "setSyslogConfiguration",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "syslogId",
+          "required" : true,
+          "schema" : {
+            "description" : "ID of a syslog configuration",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SyslogConfig"
+              }
+            }
+          },
+          "description" : "Updated syslog configuration",
+          "required" : true
+        },
+        "responses" : {
+          "204" : {
+            "description" : "Operation successful."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Remote Logging" ]
+      }
+    },
+    "/remote-logging/syslog/{syslogId}/filters" : {
+      "get" : {
+        "description" : "Return all remote logging filters of the configuration.",
+        "operationId" : "getAllSyslogFilters",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "syslogId",
+          "required" : true,
+          "schema" : {
+            "description" : "ID of a syslog configuration",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FilterConfigs"
+                }
+              }
+            },
+            "description" : "Operation successful."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Remote Logging" ]
+      },
+      "post" : {
+        "description" : "Add a new remote logging filters configuration.",
+        "operationId" : "createSyslogFilters",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "syslogId",
+          "required" : true,
+          "schema" : {
+            "description" : "ID of a syslog configuration",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/FilterConfig"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Configuration created successfully.",
+            "headers" : {
+              "Location" : {
+                "description" : "The location of the newly created object",
+                "explode" : false,
+                "schema" : {
+                  "format" : "uri",
+                  "type" : "string"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Remote Logging" ]
+      }
+    },
+    "/remote-logging/syslog/{syslogId}/filters/{filterId}" : {
+      "delete" : {
+        "description" : "Remove a specific remote logging filters configuration from the syslog configuration.",
+        "operationId" : "deleteSyslogFilters",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "syslogId",
+          "required" : true,
+          "schema" : {
+            "description" : "ID of a syslog configuration",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "path",
+          "name" : "filterId",
+          "required" : true,
+          "schema" : {
+            "description" : "ID of a filter configuration",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Deleted successfully"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Remote Logging" ]
+      },
+      "get" : {
+        "description" : "Return a specific remote logging filters configuration from the syslog configuration.",
+        "operationId" : "getSyslogFilters",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "syslogId",
+          "required" : true,
+          "schema" : {
+            "description" : "ID of a syslog configuration",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "path",
+          "name" : "filterId",
+          "required" : true,
+          "schema" : {
+            "description" : "ID of a filter configuration",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FilterConfig"
+                }
+              }
+            },
+            "description" : "Operation successful."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Remote Logging" ]
+      },
+      "put" : {
+        "description" : "Update a specific remote logging filters configuration from the syslog configuration.",
+        "operationId" : "setSyslogFilters",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "syslogId",
+          "required" : true,
+          "schema" : {
+            "description" : "ID of a syslog configuration",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "explode" : false,
+          "in" : "path",
+          "name" : "filterId",
+          "required" : true,
+          "schema" : {
+            "description" : "ID of a filter configuration",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/FilterConfig"
+              }
+            }
+          },
+          "description" : "Updated syslog filters configuration",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FilterConfig"
+                }
+              }
+            },
+            "description" : "Operation successful."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Remote Logging" ]
+      }
+    },
+    "/remote-logging/syslog/{syslogId}/status" : {
+      "get" : {
+        "description" : "Returns syslog configuration with given id.",
+        "operationId" : "getSyslogConfigurationStatus",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "syslogId",
+          "required" : true,
+          "schema" : {
+            "description" : "ID of a syslog configuration",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SyslogStatus"
+                }
+              }
+            },
+            "description" : "Operation successful."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Remote Logging" ]
+      }
+    },
+    "/log-targets" : {
+      "get" : {
+        "description" : "Returns details of all log targets",
+        "operationId" : "getLogTargets",
+        "parameters" : [ {
+          "description" : "List of properties to be returned. Only the status is currently supported.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "properties",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/LogTargets"
+                }
+              }
+            },
+            "description" : "Operation successful"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Log Targets Management" ]
+      },
+      "post" : {
+        "description" : "Add new log target",
+        "operationId" : "createLogTarget",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/LogTarget"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Log target created successful.",
+            "headers" : {
+              "Location" : {
+                "description" : "The location of the newly created object",
+                "explode" : false,
+                "schema" : {
+                  "format" : "uri",
+                  "type" : "string"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Log Targets Management" ]
+      }
+    },
+    "/log-targets/{logTargetId}" : {
+      "delete" : {
+        "description" : "Remove log target",
+        "operationId" : "deleteLogTarget",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "logTargetId",
+          "required" : true,
+          "schema" : {
+            "description" : "ID of a log target",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Deleted successfully"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Log Targets Management" ]
+      },
+      "get" : {
+        "description" : "Returns log target with given id.",
+        "operationId" : "getLogTarget",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "logTargetId",
+          "required" : true,
+          "schema" : {
+            "description" : "ID of a log target",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "List of properties to be returned.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "properties",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/LogTarget"
+                }
+              }
+            },
+            "description" : "Operation successful."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Log Targets Management" ]
+      },
+      "put" : {
+        "description" : "Update log target",
+        "operationId" : "setLogTarget",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "logTargetId",
+          "required" : true,
+          "schema" : {
+            "description" : "ID of a log target",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/LogTarget"
+              }
+            }
+          },
+          "description" : "Updated log target",
+          "required" : true
+        },
+        "responses" : {
+          "204" : {
+            "description" : "Operation successful."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Log Targets Management" ]
+      }
+    }
+  },
+  "components" : {
+    "parameters" : {
+      "loglevel" : {
+        "description" : "If specified only log entries with matching loglevel(s) are returned",
+        "explode" : true,
+        "in" : "query",
+        "name" : "loglevel",
+        "required" : false,
+        "schema" : {
+          "items" : {
+            "$ref" : "#/components/schemas/Loglevels"
+          },
+          "type" : "array"
+        },
+        "style" : "form"
+      },
+      "unit" : {
+        "description" : "If specified only log entries with matching unit name(s) are returned",
+        "explode" : true,
+        "in" : "query",
+        "name" : "unit",
+        "required" : false,
+        "schema" : {
+          "items" : {
+            "type" : "string"
+          },
+          "type" : "array"
+        },
+        "style" : "form"
+      },
+      "entity" : {
+        "description" : "If specified only log entries with matching entity are returned",
+        "explode" : true,
+        "in" : "query",
+        "name" : "entity",
+        "required" : false,
+        "schema" : {
+          "items" : {
+            "type" : "string"
+          },
+          "type" : "array"
+        },
+        "style" : "form"
+      },
+      "start_date" : {
+        "description" : "The start date for the timespan in which entries are returned. If not specified, oldest available log entries are returned.\n",
+        "explode" : true,
+        "in" : "query",
+        "name" : "start_date",
+        "required" : false,
+        "schema" : {
+          "format" : "date",
+          "type" : "string"
+        },
+        "style" : "form"
+      },
+      "end_date" : {
+        "description" : "The end date for the timespan in which entries are returned. If omitted, 'now' is used for end_date\n",
+        "explode" : true,
+        "in" : "query",
+        "name" : "end_date",
+        "required" : false,
+        "schema" : {
+          "format" : "date",
+          "type" : "string"
+        },
+        "style" : "form"
+      },
+      "search_text" : {
+        "description" : "If search_text contains a non-empty string, then only messages matching search_text are returned.\n",
+        "explode" : true,
+        "in" : "query",
+        "name" : "search_text",
+        "required" : false,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "form"
+      },
+      "limit" : {
+        "description" : "Maximum number of elements in the response.\n",
+        "explode" : true,
+        "in" : "query",
+        "name" : "limit",
+        "required" : false,
+        "schema" : {
+          "type" : "integer"
+        },
+        "style" : "form"
+      },
+      "cursor" : {
+        "description" : "Start position for log entries",
+        "explode" : true,
+        "in" : "query",
+        "name" : "cursor",
+        "required" : false,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "form"
+      },
+      "reverse" : {
+        "description" : "Search direction. Must be used together with cursor. If reverse=false (default), then logbook iterates backwards in time.",
+        "explode" : true,
+        "in" : "query",
+        "name" : "reverse",
+        "required" : false,
+        "schema" : {
+          "type" : "boolean"
+        },
+        "style" : "form"
+      },
+      "timestamp" : {
+        "description" : "Start position for log entries",
+        "explode" : true,
+        "in" : "query",
+        "name" : "timestamp",
+        "required" : false,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "form"
+      },
+      "messageType" : {
+        "description" : "If specified, only log entries with matching message type(s) are returned. Accepted values can be retrieved from '/fields/messageTypes'.",
+        "explode" : true,
+        "in" : "query",
+        "name" : "messageType",
+        "required" : false,
+        "schema" : {
+          "items" : {
+            "type" : "string"
+          },
+          "type" : "array"
+        },
+        "style" : "form"
+      },
+      "filter" : {
+        "description" : "JSON object containing the query definition. $or, $and and $in are supported for logical operations.",
+        "examples" : {
+          "one_field" : {
+            "summary" : "Filter for a single field",
+            "value" : "{'JOB_TYPE': 'start'}"
+          },
+          "two_fields" : {
+            "summary" : "Filter for two fields combinded with an 'and' operator",
+            "value" : "{ '$and': [{'JOB_TYPE': 'start'], {'_HOSTNAME': 'ctrlX'}]}"
+          },
+          "one_of" : {
+            "summary" : "Filter for any of a set of values",
+            "value" : "{'JOB_TYPE': {'$in': ['start', 'stop'] }}"
+          },
+          "or_operation" : {
+            "summary" : "Filter for two fields combined with an 'or' operator",
+            "value" : "{ '$or': [{'JOB_TYPE' : 'start'} , {'_HOSTNAME' : 'ctrlX'} ] }"
+          },
+          "nested_operation" : {
+            "summary" : "Filter for three fields using both an 'and' and an 'or' operator",
+            "value" : "{'$or': [{'JOB_TYPE':'start'},{'$and': [{'_HOSTNAME':'ctrlX'},{'_UID':'1000'}]}]}"
+          }
+        },
+        "explode" : true,
+        "in" : "query",
+        "name" : "filter",
+        "required" : false,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "form"
+      },
+      "field" : {
+        "description" : "Name of message field. Returns all available values for this message field.",
+        "example" : "JOB_TYPE",
+        "explode" : false,
+        "in" : "path",
+        "name" : "field",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "language" : {
+        "description" : "Language for localized diagnostics messages",
+        "explode" : true,
+        "in" : "query",
+        "name" : "language",
+        "required" : false,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "form"
+      },
+      "withDetailDiagnostics" : {
+        "description" : "Selects if detail diagnostics are requested",
+        "explode" : true,
+        "in" : "query",
+        "name" : "withDetailDiagnostics",
+        "required" : false,
+        "schema" : {
+          "type" : "boolean"
+        },
+        "style" : "form"
+      },
+      "mainDiagCode" : {
+        "description" : "Main diagnostics code(s)",
+        "explode" : true,
+        "in" : "query",
+        "name" : "mainDiagCode",
+        "required" : false,
+        "schema" : {
+          "items" : {
+            "type" : "string"
+          },
+          "type" : "array"
+        },
+        "style" : "form"
+      },
+      "detailDiagCode" : {
+        "description" : "Detail diagnostics code(s)",
+        "explode" : true,
+        "in" : "query",
+        "name" : "detailDiagCode",
+        "required" : false,
+        "schema" : {
+          "items" : {
+            "type" : "string"
+          },
+          "type" : "array"
+        },
+        "style" : "form"
+      },
+      "mainCode" : {
+        "explode" : false,
+        "in" : "path",
+        "name" : "mainDiagCode",
+        "required" : true,
+        "schema" : {
+          "description" : "Main diagnostics code of requested diagnostics text",
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "detailCode" : {
+        "explode" : false,
+        "in" : "path",
+        "name" : "detailDiagCode",
+        "required" : true,
+        "schema" : {
+          "description" : "Details diagnostics code of requested diagnostics text",
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "fields" : {
+        "description" : "Defines the field names, that should be filled in logEntry. If used with 'searchText', then text is searched in 'fields'",
+        "explode" : true,
+        "in" : "query",
+        "name" : "fields",
+        "required" : false,
+        "schema" : {
+          "items" : {
+            "type" : "string"
+          },
+          "type" : "array"
+        },
+        "style" : "form"
+      },
+      "syslogId" : {
+        "explode" : false,
+        "in" : "path",
+        "name" : "syslogId",
+        "required" : true,
+        "schema" : {
+          "description" : "ID of a syslog configuration",
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "filterId" : {
+        "explode" : false,
+        "in" : "path",
+        "name" : "filterId",
+        "required" : true,
+        "schema" : {
+          "description" : "ID of a filter configuration",
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "search" : {
+        "description" : "JSON object containing texts to be searched for in defined message fields. $or and $and are supported for logical operations.\n",
+        "examples" : {
+          "one_field" : {
+            "summary" : "Search for a text in one field",
+            "value" : "{ 'JOB_TYPE' : 'start' }"
+          },
+          "two_fields" : {
+            "summary" : "Search for a text in several fields. (Matches if any of the fields contains the search text)",
+            "value" : "{ '$or' : [ {'JOB_TYPE' : 'start'}, {'_HOSTNAME':'start'}, {'MESSAGE_TYPE':'start'} ] }"
+          },
+          "three_fields" : {
+            "summary" : "Search for three texts in three different fields. (Matches if all texts exist in specified fields)",
+            "value" : "{ '$and' : [ {'JOB_TYPE':'start'}, {'_HOSTNAME':'myDevice'}, {'R_UNIT':'myUnit'} ] }"
+          },
+          "four_fields" : {
+            "summary" : "Search with nested search criteria.",
+            "value" : "{ '$or' : [ {'JOB_TYPE' : 'start'}, { '$and' : [ {'R_DIAG_MAIN':'080'}, {'$or' : [ {'R_DIAG_DETAIL':'C0'}, {'R_DIAG_DETAIL':'C1'} ] } ] } ] }"
+          }
+        },
+        "explode" : true,
+        "in" : "query",
+        "name" : "search",
+        "required" : false,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "form"
+      },
+      "format" : {
+        "explode" : true,
+        "in" : "query",
+        "name" : "format",
+        "required" : false,
+        "schema" : {
+          "description" : "Event format of messages",
+          "enum" : [ "text", "json", "logfmt" ],
+          "type" : "string"
+        },
+        "style" : "form"
+      },
+      "logTargetId" : {
+        "explode" : false,
+        "in" : "path",
+        "name" : "logTargetId",
+        "required" : true,
+        "schema" : {
+          "description" : "ID of a log target",
+          "type" : "string"
+        },
+        "style" : "simple"
+      }
+    },
+    "responses" : {
+      "Unauthorized" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Not authorized to access this resource"
+      },
+      "Forbidden" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Access forbidden for this resource"
+      },
+      "BadRequest" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The request is incomplete or malformed"
+      },
+      "InternalServerError" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Something unexpected happened on the server"
+      },
+      "NotFound" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The resource was not found"
+      },
+      "NoContents" : {
+        "description" : "The query yields an empty result"
+      }
+    },
+    "schemas" : {
+      "Settings" : {
+        "description" : "logbook related settings, e.g. persistence",
+        "properties" : {
+          "persistence" : {
+            "default" : false,
+            "description" : "Sets if the logbook is stored temporary or persistent on the device. Using persistent mode might increase degeneration of the emmc chip on the device.",
+            "example" : false,
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "LogEntries" : {
+        "example" : {
+          "entries" : [ {
+            "systemUnit" : "systemUnit",
+            "dynamicSourceLinenumber" : "dynamicSourceLinenumber",
+            "sourceTimestamp" : "2020-07-21T17:32:50.165814Z",
+            "dynamicDescription" : "dynamicDescription",
+            "userId" : "userId",
+            "dynamicSourceOrigin" : "dynamicSourceOrigin",
+            "dynamicSourceFilename" : "dynamicSourceFilename",
+            "messageType" : "Failed to start axis 1 because of missing reference position",
+            "mainTitle" : "Error stop for Axis Nr.",
+            "dynamicSourceFunctionname" : "dynamicSourceFunctionname",
+            "detailedDiagnosisCode" : "0C201235",
+            "detailedTitle" : "Missing reference position",
+            "entity" : "entity",
+            "dynamicSourceUnitname" : "dynamicSourceUnitname",
+            "timestamp" : "2020-07-21T17:32:50.16687Z",
+            "mainDiagnosisCode" : "3F1F0002"
+          }, {
+            "systemUnit" : "systemUnit",
+            "dynamicSourceLinenumber" : "dynamicSourceLinenumber",
+            "sourceTimestamp" : "2020-07-21T17:32:50.165814Z",
+            "dynamicDescription" : "dynamicDescription",
+            "userId" : "userId",
+            "dynamicSourceOrigin" : "dynamicSourceOrigin",
+            "dynamicSourceFilename" : "dynamicSourceFilename",
+            "messageType" : "Failed to start axis 1 because of missing reference position",
+            "mainTitle" : "Error stop for Axis Nr.",
+            "dynamicSourceFunctionname" : "dynamicSourceFunctionname",
+            "detailedDiagnosisCode" : "0C201235",
+            "detailedTitle" : "Missing reference position",
+            "entity" : "entity",
+            "dynamicSourceUnitname" : "dynamicSourceUnitname",
+            "timestamp" : "2020-07-21T17:32:50.16687Z",
+            "mainDiagnosisCode" : "3F1F0002"
+          } ],
+          "pagination" : {
+            "next" : {
+              "cursor" : "cursor",
+              "url" : "url"
+            },
+            "last" : {
+              "cursor" : "cursor",
+              "url" : "url"
+            },
+            "prev" : {
+              "cursor" : "cursor",
+              "url" : "url"
+            },
+            "self" : {
+              "cursor" : "cursor",
+              "url" : "url"
+            },
+            "first" : {
+              "cursor" : "cursor",
+              "url" : "url"
+            }
+          }
+        },
+        "properties" : {
+          "entries" : {
+            "items" : {
+              "$ref" : "#/components/schemas/LogEntry"
+            },
+            "type" : "array"
+          },
+          "pagination" : {
+            "$ref" : "#/components/schemas/LogEntries_pagination"
+          }
+        },
+        "type" : "object"
+      },
+      "LogEntry" : {
+        "description" : "Single journald entry",
+        "example" : {
+          "systemUnit" : "systemUnit",
+          "dynamicSourceLinenumber" : "dynamicSourceLinenumber",
+          "sourceTimestamp" : "2020-07-21T17:32:50.165814Z",
+          "dynamicDescription" : "dynamicDescription",
+          "userId" : "userId",
+          "dynamicSourceOrigin" : "dynamicSourceOrigin",
+          "dynamicSourceFilename" : "dynamicSourceFilename",
+          "messageType" : "Failed to start axis 1 because of missing reference position",
+          "mainTitle" : "Error stop for Axis Nr.",
+          "dynamicSourceFunctionname" : "dynamicSourceFunctionname",
+          "detailedDiagnosisCode" : "0C201235",
+          "detailedTitle" : "Missing reference position",
+          "entity" : "entity",
+          "dynamicSourceUnitname" : "dynamicSourceUnitname",
+          "timestamp" : "2020-07-21T17:32:50.16687Z",
+          "mainDiagnosisCode" : "3F1F0002"
+        },
+        "properties" : {
+          "timestamp" : {
+            "description" : "Timestamp reflects the timestamp that was applied to a log entry by the journal when receiving the entry. It is subsequent or identical to SourceTimestamp. (field '__REALTIME_TIMESTAMP')",
+            "example" : "2020-07-21T17:32:50.16687Z",
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "sourceTimestamp" : {
+            "description" : "SourceTimestamp reflects the timestamp that was applied to a log entry by the data source. It is prior or identical to timestamp. (field 'R_TIMESTAMP')",
+            "example" : "2020-07-21T17:32:50.165814Z",
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "userId" : {
+            "description" : "Unique user id related to user who set the entry (parsed from field 'MESSAGE')",
+            "type" : "string"
+          },
+          "mainDiagnosisCode" : {
+            "description" : "The diagnostics Code of the entry (field 'R_DIAG_MAIN')",
+            "example" : "3F1F0002",
+            "type" : "string"
+          },
+          "detailedDiagnosisCode" : {
+            "description" : "Unique detailed diagnostics code (field 'R_DIAG_DETAILED')",
+            "example" : "0C201235",
+            "type" : "string"
+          },
+          "mainTitle" : {
+            "description" : "The main title of the entry (parsed from field 'MESSAGE')",
+            "example" : "Error stop for Axis Nr.",
+            "type" : "string"
+          },
+          "detailedTitle" : {
+            "description" : "The detailed title of the entry (parsed from field 'MESSAGE')",
+            "example" : "Missing reference position",
+            "type" : "string"
+          },
+          "entity" : {
+            "description" : "(parsed from field 'MESSAGE')",
+            "type" : "string"
+          },
+          "dynamicSourceOrigin" : {
+            "description" : "Name of the application (parsed from field 'MESSAGE')",
+            "type" : "string"
+          },
+          "dynamicSourceUnitname" : {
+            "description" : "Name of the bundle / component / function unit of the application (parsed from field 'MESSAGE')",
+            "type" : "string"
+          },
+          "dynamicSourceFilename" : {
+            "description" : "Name of the file where the log was sent (parsed from field 'MESSAGE')",
+            "type" : "string"
+          },
+          "dynamicSourceFunctionname" : {
+            "description" : "Function name where the log was sent (parsed from field 'MESSAGE')",
+            "type" : "string"
+          },
+          "dynamicSourceLinenumber" : {
+            "description" : "Line number where the log was sent (parsed from field 'MESSAGE')",
+            "type" : "string"
+          },
+          "dynamicDescription" : {
+            "description" : "The dynamic description of the message (parsed from field 'MESSAGE')",
+            "type" : "string"
+          },
+          "messageType" : {
+            "description" : "The type of message (diag or trace) (field 'R_ENTRY_TYPE')",
+            "example" : "Failed to start axis 1 because of missing reference position",
+            "type" : "string"
+          },
+          "systemUnit" : {
+            "description" : "(field '_SYSTEMD_UNIT')",
+            "type" : "string"
+          },
+          "logLevel" : {
+            "$ref" : "#/components/schemas/Loglevels"
+          }
+        },
+        "type" : "object"
+      },
+      "DiagMessages" : {
+        "example" : {
+          "Diagnostics" : {
+            "key" : {
+              "text" : "text",
+              "detailDiagnostics" : {
+                "key" : "detailDiagnostics"
+              }
+            }
+          }
+        },
+        "properties" : {
+          "Diagnostics" : {
+            "additionalProperties" : {
+              "$ref" : "#/components/schemas/MainDiagnostic"
+            },
+            "type" : "object"
+          }
+        },
+        "type" : "object"
+      },
+      "Units" : {
+        "items" : {
+          "type" : "string"
+        },
+        "type" : "array"
+      },
+      "MessageTypes" : {
+        "items" : {
+          "type" : "string"
+        },
+        "type" : "array"
+      },
+      "Entities" : {
+        "items" : {
+          "type" : "string"
+        },
+        "type" : "array"
+      },
+      "EntryCount" : {
+        "type" : "integer"
+      },
+      "Problem" : {
+        "description" : "This document defines a \"problem detail\" as a way  to carry machine-readable details of errors in a  HTTP response to avoid the need to define new error  response formats for HTTP APIs.\n",
+        "properties" : {
+          "type" : {
+            "default" : "about:blank",
+            "description" : "A URI reference [RFC3986] that identifies the problem type. \nThis specification encourages that, when dereferenced, \nit provide human-readable documentation for the problem type \n(e.g., using HTML [W3C.REC-html5-20141028]). When this member \nis not present, its value is assumed to be \"about:blank\".\n",
+            "example" : "https://example.com/probs/out-of-credit",
+            "format" : "uri",
+            "type" : "string"
+          },
+          "title" : {
+            "description" : "A short, human-readable summary of the problem type. \nIt SHOULD NOT change from occurrence to occurrence of the problem, \nexcept for purposes of localization (e.g., using proactive content \nnegotiation; see [RFC7231], Section 3.4).\nIf the response is a diagnostics message, it contains \nthe text associated with the mainDiagnosisCode.\n",
+            "example" : "You do not have enough credit.",
+            "type" : "string"
+          },
+          "status" : {
+            "description" : "The HTTP status code ([RFC7231], Section 6) generated by the \norigin server for this occurrence of the problem.\n",
+            "example" : 403,
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "detail" : {
+            "description" : "A human-readable explanation specific to this occurrence of the problem.\nIf the response is a diagnostics message, it contains the text associated with\nthe detailedDiagnosisCode.\n",
+            "example" : "Your current balance is 30, but that costs 50.",
+            "type" : "string"
+          },
+          "instance" : {
+            "description" : "A URI reference that identifies the specific occurrence of the problem.\nIt may or may not yield further information if dereferenced.\n",
+            "example" : "/account/12345/msgs/abc",
+            "type" : "string"
+          },
+          "code" : {
+            "deprecated" : true,
+            "description" : "An error code issued by the system that caused the original problem.\nThis code can be used to track down the root cause of the error.\n",
+            "example" : "F360001",
+            "type" : "string"
+          },
+          "mainDiagnosisCode" : {
+            "description" : "The main diagnosis code is issued by the system that caused the problem.\nThis code can be used to track down the root cause and source of the error.\nIt can be used to search in the documentation for a solution.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "080F0100",
+            "type" : "string"
+          },
+          "detailedDiagnosisCode" : {
+            "description" : "The detailed diagnosis code issued by the system that caused the problem.\nThis code can be used to track down the detailed cause and source of the error.\nIt can be used to search in the documentation for a solution.\nThe detailed diagnosis code gives additional information about the cause of the error.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "00666001",
+            "type" : "string"
+          },
+          "dynamicDescription" : {
+            "description" : "A dynamic description gives detailed information about the occurrence of a problem.\nIt can change between different occurrences of the same error.\n",
+            "example" : "value = -4.5",
+            "type" : "string"
+          },
+          "severity" : {
+            "description" : " Severity of a problem as defined RFC5424 of the Syslog standard, see https://tools.ietf.org/html/rfc5424",
+            "enum" : [ "Emergency", "Alert", "Critical", "Error", "Warning", "Notice", "Informational", "Debug" ],
+            "example" : "Error",
+            "type" : "string"
+          },
+          "links" : {
+            "description" : "Collection of links to fix the problem. E.g. links to online user manual,\nto an online community (using tags) or a developer chat (e.g. Slack).\n",
+            "items" : {
+              "example" : "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001",
+              "format" : "uri",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "moreInfo" : {
+            "additionalProperties" : true,
+            "description" : "The moreInfo field allows you to add additional information that might be necessary to debug or trace down the cause of an error.\nIt might also contain information what is needed to resolve the problem.\nThere are loosely specified fields for specific problems that can be used in these situations, e.g.:\n- On a 403 Forbidden error: The moreInfo can contain a field \"requiredPermissions\" with the required permissions seperated by comma\n- On a 402 Payment required: The moreInfo can contain a field \"requiredLicenses\" with the required licenses seperated by comma\n",
+            "example" : {
+              "trace" : "ExampleClass.cpp#452 Null pointer exception",
+              "class" : "ExampleClass"
+            },
+            "type" : "object"
+          },
+          "cause" : {
+            "description" : "Sometimes a problem might be caused by problems that occure in other components or are the root cause of a problem. In this\ncase the related problems can be added as a cause. Since it might be possible that multiple components have problems on a single\naction, cause is an array. E.g. Loading failed because several components where not able to load the configuration.\n",
+            "items" : {
+              "$ref" : "#/components/schemas/Problem"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "title", "type" ],
+        "type" : "object",
+        "x-version" : "1.0.0"
+      },
+      "Loglevels" : {
+        "enum" : [ "emerg", "alert", "crit", "err", "warning", "notice", "info", "debug" ],
+        "type" : "string"
+      },
+      "PageInfo" : {
+        "description" : "Metadata for pagination",
+        "example" : {
+          "cursor" : "cursor",
+          "url" : "url"
+        },
+        "properties" : {
+          "cursor" : {
+            "description" : "cursor data for journald",
+            "type" : "string"
+          },
+          "url" : {
+            "description" : "Full url for http request",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "Persistence" : {
+        "type" : "boolean"
+      },
+      "SyslogConfig" : {
+        "example" : {
+          "messageFramer" : "none",
+          "messageFormat" : "RFC3164",
+          "name" : "name",
+          "id" : "id",
+          "tag" : "tag",
+          "url" : "udp://192.168.0.1:765",
+          "enabled" : true,
+          "tlsConfig" : {
+            "certificate" : "certificate",
+            "skipServerCertificateVerification" : true,
+            "key" : "key",
+            "ca" : "ca"
+          }
+        },
+        "properties" : {
+          "id" : {
+            "description" : "Id of syslog configuration",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "name" : {
+            "description" : "Name of syslog configuration",
+            "type" : "string"
+          },
+          "url" : {
+            "description" : "URL of syslog server. Currently tcp (e.g. tcp://192.168.0.1:658) and udp (e.g. udp://192.168.0.1:765) are supported.",
+            "example" : "udp://192.168.0.1:765",
+            "format" : "uri",
+            "type" : "string"
+          },
+          "enabled" : {
+            "description" : "Enables or disables configuration",
+            "type" : "boolean"
+          },
+          "tag" : {
+            "description" : "With the tag the log source can be identified in the syslog server",
+            "type" : "string"
+          },
+          "messageFormat" : {
+            "description" : "Define the message format.",
+            "enum" : [ "RFC3164", "RFC5424" ],
+            "type" : "string"
+          },
+          "messageFramer" : {
+            "description" : "RFC5425 prepends the message length to the front of the provided message, as defined in RFC 5425.",
+            "enum" : [ "none", "RFC5425" ],
+            "type" : "string"
+          },
+          "tlsConfig" : {
+            "$ref" : "#/components/schemas/TLSConfig"
+          }
+        },
+        "required" : [ "enabled", "id", "messageFormat", "name", "url" ],
+        "type" : "object"
+      },
+      "SyslogConfigs" : {
+        "items" : {
+          "$ref" : "#/components/schemas/SyslogConfig"
+        },
+        "type" : "array"
+      },
+      "SyslogStatus" : {
+        "example" : {
+          "connected" : "connected",
+          "enabled" : true
+        },
+        "properties" : {
+          "enabled" : {
+            "description" : "Shows current status of configuration.",
+            "type" : "boolean"
+          },
+          "connected" : {
+            "description" : "Connection status of configuration. UDP based configurations have the connection status \"unknown\".",
+            "enum" : [ "connected", "disconnected", "unknown" ],
+            "type" : "string"
+          }
+        },
+        "required" : [ "enabled" ],
+        "type" : "object"
+      },
+      "FilterConfig" : {
+        "example" : {
+          "loglevels" : [ null, null ],
+          "name" : "name",
+          "id" : "id",
+          "programs" : [ "programs", "programs" ],
+          "units" : [ "units", "units" ],
+          "facilities" : [ "kern", "kern" ],
+          "messageTypes" : [ "messageTypes", "messageTypes" ]
+        },
+        "properties" : {
+          "id" : {
+            "description" : "Id of filter configuration.",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "name" : {
+            "description" : "A Human-readable identifier of the filter.",
+            "type" : "string"
+          },
+          "facilities" : {
+            "description" : "Facility/facilities the remote message originates from, e.g. kernel or user.",
+            "items" : {
+              "enum" : [ "kern", "user", "mail", "daemon", "auth", "syslog", "lpr", "news", "uucp", "cron", "authpriv", "ftp", "ntp", "security", "console", "solaris-cron", "local0", "local1", "local2", "local3", "local4", "local5", "local6", "local7" ],
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "loglevels" : {
+            "description" : "Loglevel(s) of the remote log message, e.g. \"emergency\" or \"alert\". Corresponds to the severity field of syslogng.",
+            "items" : {
+              "$ref" : "#/components/schemas/Loglevels"
+            },
+            "type" : "array"
+          },
+          "programs" : {
+            "description" : "Unix-specific application(s) the remote log message originates from, e.g. \"sshd\" or \"systemd-login\".",
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "units" : {
+            "description" : "Specific unit(s) the log message originates from, e.g. \"web.identitymanager\" or \"web.licensemanager\", \"nodered\"",
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "messageTypes" : {
+            "description" : "Specific message type(s), e.g. trace or diagnosis.",
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "facilities", "id", "loglevels", "messageTypes", "name", "programs", "units" ],
+        "type" : "object"
+      },
+      "FilterConfigs" : {
+        "items" : {
+          "$ref" : "#/components/schemas/FilterConfig"
+        },
+        "type" : "array"
+      },
+      "FieldValues" : {
+        "items" : {
+          "type" : "string"
+        },
+        "type" : "array"
+      },
+      "TLSConfig" : {
+        "example" : {
+          "certificate" : "certificate",
+          "skipServerCertificateVerification" : true,
+          "key" : "key",
+          "ca" : "ca"
+        },
+        "properties" : {
+          "certificate" : {
+            "description" : "File name of the client certificate used for the TLS connection. The certificate needs to be available as own certificate of \"Network Security\" in the certificate manager.",
+            "type" : "string"
+          },
+          "key" : {
+            "description" : "File name of the private key used for the TLS connection. The key needs to be available as own key of \"Network Security\" in the certificate manager.",
+            "type" : "string"
+          },
+          "ca" : {
+            "description" : "The name of a file that contains a set of trusted CA certificates used to validate the server certificate for the TLS connection. The certificates need to be available as ca certificates of \"Network Security\" in the certificate manager.",
+            "type" : "string"
+          },
+          "skipServerCertificateVerification" : {
+            "description" : "If true, skip server certificate verification. If false, the server certificate will be validated against the specified ca stored in the certificate manager as ca certificate of \"Network Security\".",
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "LogTarget" : {
+        "description" : "defines where and how log messages are sent.",
+        "discriminator" : {
+          "propertyName" : "destinationType"
+        },
+        "example" : {
+          "name" : "name",
+          "options" : {
+            "timestampPrecision" : "seconds"
+          },
+          "destinationType" : "file",
+          "oneOfDestinations" : "",
+          "id" : "id",
+          "filters" : [ {
+            "loglevels" : [ null, null ],
+            "name" : "name",
+            "id" : "id",
+            "programs" : [ "programs", "programs" ],
+            "units" : [ "units", "units" ],
+            "facilities" : [ "kern", "kern" ],
+            "messageTypes" : [ "messageTypes", "messageTypes" ]
+          }, {
+            "loglevels" : [ null, null ],
+            "name" : "name",
+            "id" : "id",
+            "programs" : [ "programs", "programs" ],
+            "units" : [ "units", "units" ],
+            "facilities" : [ "kern", "kern" ],
+            "messageTypes" : [ "messageTypes", "messageTypes" ]
+          } ],
+          "enabled" : true,
+          "status" : "connected"
+        },
+        "properties" : {
+          "id" : {
+            "description" : "Id of log target",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "name" : {
+            "description" : "Name of log target",
+            "type" : "string"
+          },
+          "enabled" : {
+            "description" : "Enables or disables log target",
+            "type" : "boolean"
+          },
+          "status" : {
+            "description" : "The Status of log target. \nconnected: tcp/tls connection is established.\ndisconnected: tcp/tls connection is not established.\nnot-applicable: The status of the UDP connection and the logging in the file are not applicable.\n",
+            "enum" : [ "connected", "disconnected", "not-applicable" ],
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "destinationType" : {
+            "description" : "A destination is where the log messages are sent. \nCurrently only the following two destinations are supported:\nfile: logging on external media.\nnetwork: logging on remote syslog server through the network using the TCP, TLS, and UDP networking protocols.\n",
+            "enum" : [ "file", "network" ],
+            "type" : "string"
+          },
+          "oneOfDestinations" : {
+            "discriminator" : {
+              "mapping" : {
+                "file" : "#/components/schemas/FileDestination",
+                "network" : "#/components/schemas/NetworkDestination"
+              },
+              "propertyName" : "destinationType"
+            },
+            "oneOf" : [ {
+              "$ref" : "#/components/schemas/FileDestination"
+            }, {
+              "$ref" : "#/components/schemas/NetworkDestination"
+            } ]
+          },
+          "filters" : {
+            "items" : {
+              "$ref" : "#/components/schemas/FilterConfig"
+            },
+            "type" : "array"
+          },
+          "options" : {
+            "$ref" : "#/components/schemas/LogTargetOptions"
+          }
+        },
+        "required" : [ "id" ],
+        "type" : "object"
+      },
+      "LogTargets" : {
+        "items" : {
+          "$ref" : "#/components/schemas/LogTarget"
+        },
+        "type" : "array"
+      },
+      "MainDiagnostic" : {
+        "description" : "Diagnostics texts for a given main code",
+        "example" : {
+          "text" : "text",
+          "detailDiagnostics" : {
+            "key" : "detailDiagnostics"
+          }
+        },
+        "properties" : {
+          "text" : {
+            "description" : "Translated text for main diagnostics code",
+            "type" : "string"
+          },
+          "detailDiagnostics" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "description" : "Collection of detail diagnostics codes and the according translated text",
+            "type" : "object"
+          }
+        },
+        "type" : "object"
+      },
+      "FileDestination" : {
+        "description" : "Settings for logging on file. Currently only logging on external storage is supported.",
+        "discriminator" : {
+          "propertyName" : "assignment"
+        },
+        "properties" : {
+          "assignment" : {
+            "default" : "data-exchange",
+            "description" : "This defines how a media device can be mounted and used in the system. \nCurrently only data-exchange is supported. This means that logs are saved on removable media (data-exchange).\n",
+            "enum" : [ "data-exchange" ],
+            "example" : "data-exchange",
+            "type" : "string"
+          },
+          "oneOfAssignments" : {
+            "discriminator" : {
+              "mapping" : {
+                "data-exchange" : "#/DataExchange"
+              },
+              "propertyName" : "assignment"
+            },
+            "oneOf" : [ {
+              "$ref" : "#/components/schemas/DataExchange"
+            } ]
+          }
+        },
+        "required" : [ "assignment", "oneOfAssignments" ],
+        "type" : "object"
+      },
+      "DataExchange" : {
+        "description" : "Configurations for logging on removable media device.",
+        "properties" : {
+          "mountPoint" : {
+            "description" : "Contains the mount point for the removable media device.",
+            "example" : "/media/sda1",
+            "type" : "string"
+          },
+          "relativePath" : {
+            "default" : "./logbook/logs/messages.log",
+            "description" : "The relative file path on the external logging device",
+            "example" : "./logbook/logs/messages.log",
+            "type" : "string"
+          }
+        },
+        "required" : [ "mountPoint" ],
+        "type" : "object"
+      },
+      "NetworkDestination" : {
+        "description" : "Settings for sending syslog messages from the network using the TCP, TLS, and UDP protocols.",
+        "properties" : {
+          "host" : {
+            "description" : "The IP address or hostname of the remote logging server.",
+            "example" : "192.168.1.2",
+            "type" : "string"
+          },
+          "port" : {
+            "description" : "The destination port of the remote logging server.",
+            "example" : "514",
+            "type" : "string"
+          },
+          "messageFormat" : {
+            "description" : "The message format used for sending the message to the remote logging server.",
+            "enum" : [ "RFC3164", "RFC5424" ],
+            "example" : "RFC3164",
+            "type" : "string"
+          },
+          "protocol" : {
+            "description" : "The protocol used for sending the message to the remote logging server.",
+            "enum" : [ "tcp", "tls", "udp" ],
+            "example" : "tcp",
+            "type" : "string"
+          },
+          "parameters" : {
+            "discriminator" : {
+              "mapping" : {
+                "tls" : "#/TLSParameters"
+              },
+              "propertyName" : "protocol"
+            },
+            "oneOf" : [ {
+              "$ref" : "#/components/schemas/TLSParameters"
+            } ]
+          }
+        },
+        "required" : [ "host", "messageFormat", "port", "protocol" ],
+        "type" : "object"
+      },
+      "TLSParameters" : {
+        "properties" : {
+          "certificate" : {
+            "description" : "File name of the client certificate used for the TLS connection. The certificate needs to be available as own certificate of \"Network Security\" in the certificate manager.",
+            "example" : "clientCert.pem",
+            "type" : "string"
+          },
+          "key" : {
+            "description" : "File name of the private key used for the TLS connection. The key needs to be available as own key of \"Network Security\" in the certificate manager.",
+            "example" : "clientKey.pem",
+            "type" : "string"
+          },
+          "ca" : {
+            "description" : "The name of a file that contains a set of trusted CA certificates used to validate the server certificate for the TLS connection. The certificates need to be available as ca certificates of \"Network Security\" in the certificate manager.",
+            "example" : "caCert.pem",
+            "type" : "string"
+          },
+          "skipServerCertificateVerification" : {
+            "description" : "If true, skip server certificate verification. If false, the server certificate will be validated against the specified ca stored in the certificate manager as ca certificate of \"Network Security\".",
+            "example" : false,
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "LogTargetOptions" : {
+        "description" : "Options for the log target",
+        "example" : {
+          "timestampPrecision" : "seconds"
+        },
+        "properties" : {
+          "timestampPrecision" : {
+            "default" : "seconds",
+            "description" : "The precision of the timestamp header of the log message.",
+            "enum" : [ "seconds", "milliseconds", "microseconds" ],
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "inline_response_200" : {
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "event" : {
+            "type" : "string"
+          },
+          "data" : {
+            "type" : "string"
+          }
+        }
+      },
+      "LogEntries_pagination" : {
+        "description" : "Provides data required for pagination",
+        "example" : {
+          "next" : {
+            "cursor" : "cursor",
+            "url" : "url"
+          },
+          "last" : {
+            "cursor" : "cursor",
+            "url" : "url"
+          },
+          "prev" : {
+            "cursor" : "cursor",
+            "url" : "url"
+          },
+          "self" : {
+            "cursor" : "cursor",
+            "url" : "url"
+          },
+          "first" : {
+            "cursor" : "cursor",
+            "url" : "url"
+          }
+        },
+        "properties" : {
+          "self" : {
+            "$ref" : "#/components/schemas/PageInfo"
+          },
+          "next" : {
+            "$ref" : "#/components/schemas/PageInfo"
+          },
+          "prev" : {
+            "$ref" : "#/components/schemas/PageInfo"
+          },
+          "first" : {
+            "$ref" : "#/components/schemas/PageInfo"
+          },
+          "last" : {
+            "$ref" : "#/components/schemas/PageInfo"
+          }
+        }
+      }
+    },
+    "securitySchemes" : {
+      "UsernamePassword" : {
+        "description" : "Enter username and password",
+        "flows" : {
+          "password" : {
+            "scopes" : {
+              "Dummy" : "Scopes"
+            },
+            "tokenUrl" : "/identity-manager/api/v2/auth/token"
+          }
+        },
+        "type" : "oauth2"
+      },
+      "Bearer" : {
+        "description" : "Alternatively&colon; Enter bearer token (without prefix 'Bearer')",
+        "scheme" : "bearer",
+        "type" : "http"
+      }
+    }
+  }
+}

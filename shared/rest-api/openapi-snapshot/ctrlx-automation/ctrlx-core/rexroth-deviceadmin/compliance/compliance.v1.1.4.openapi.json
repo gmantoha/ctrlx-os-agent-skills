@@ -1,0 +1,649 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "contact" : {
+      "name" : "Bosch Rexroth AG",
+      "url" : "https://www.boschrexroth.com"
+    },
+    "description" : "Provides compliance related information, such as terms of use and open source license obligations, of ctrlX OS.",
+    "title" : "ctrlX OS - Compliance API",
+    "version" : "1.1.4"
+  },
+  "servers" : [ {
+    "url" : "/compliance/api/v1"
+  }, {
+    "url" : "https://{host}/compliance/api/v1",
+    "variables" : {
+      "host" : {
+        "default" : "[fe80::dcad:beff:fe00:0001]",
+        "description" : "Hostname or ip address of the ctrlX OS system"
+      }
+    }
+  } ],
+  "tags" : [ {
+    "description" : "Information about the compliance regulations of the device",
+    "name" : "Compliance"
+  }, {
+    "description" : "The terms of use",
+    "name" : "Terms of use"
+  }, {
+    "description" : "Provide information about FOSS components and licenses",
+    "name" : "Foss info"
+  } ],
+  "paths" : {
+    "/legal-information" : {
+      "get" : {
+        "description" : "Get the legal information of the device",
+        "operationId" : "getLegalInformation",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/LegalInformation"
+                }
+              }
+            },
+            "description" : "Legal information about the device"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get the legal information of the device",
+        "tags" : [ "Compliance" ]
+      }
+    },
+    "/information" : {
+      "get" : {
+        "description" : "Get information about the compliance regulations and state of the device",
+        "operationId" : "getComplianceInformation",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ComplianceInformation"
+                }
+              }
+            },
+            "description" : "Information about the compliance regulations and state"
+          }
+        },
+        "summary" : "Get information about the compliance regulations and state of the device",
+        "tags" : [ "Compliance" ]
+      }
+    },
+    "/terms-of-use" : {
+      "get" : {
+        "deprecated" : true,
+        "description" : "Deprecate. Will redirect to the first entry in /legal-information -> legalPolicy",
+        "operationId" : "getTermsOfUse",
+        "responses" : {
+          "301" : {
+            "description" : "Redirect to the public available terms of use",
+            "headers" : {
+              "Location" : {
+                "explode" : false,
+                "schema" : {
+                  "example" : "https://www.boschrexroth.com/terms-of-use",
+                  "format" : "url",
+                  "type" : "string"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Terms of use" ]
+      }
+    },
+    "/terms-of-use/approval" : {
+      "get" : {
+        "description" : "Get the terms of use",
+        "operationId" : "getTermsOfUseApproval",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Approval"
+                }
+              }
+            },
+            "description" : "Approval status of the terms of use"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Terms of use" ]
+      },
+      "put" : {
+        "description" : "Sets the terms of use",
+        "operationId" : "setTermsOfUseApproval",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Approval"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Successful"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Terms of use" ]
+      }
+    },
+    "/foss-components" : {
+      "get" : {
+        "description" : "Get the FOSS components of all installed packages",
+        "operationId" : "getFossComponents",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "description" : "Represents a list of FOSS components",
+                  "items" : {
+                    "$ref" : "#/components/schemas/FossComponent"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "List of FOSS components"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get the FOSS components of all installed packages",
+        "tags" : [ "Foss info" ]
+      }
+    }
+  },
+  "components" : {
+    "responses" : {
+      "Forbidden" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Access forbidden for this resource"
+      },
+      "InternalServerError" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Something unexpected happened on the server"
+      }
+    },
+    "schemas" : {
+      "Approval" : {
+        "example" : {
+          "approved" : true
+        },
+        "properties" : {
+          "approved" : {
+            "example" : true,
+            "type" : "boolean"
+          }
+        },
+        "required" : [ "approved" ],
+        "type" : "object"
+      },
+      "LegalInformation" : {
+        "description" : "Information about the legal information of the device",
+        "example" : {
+          "contact" : {
+            "address" : {
+              "country" : "Germany",
+              "city" : "97816 Lohr am Main",
+              "street" : "Bgm.-Dr.-Nebel-Str. 2",
+              "state" : "Bavaria"
+            },
+            "name" : "Bosch Rexroth AG",
+            "email" : "info@boschrexroth.com",
+            "url" : "https://www.boschrexroth.com"
+          },
+          "legalPolicies" : [ {
+            "link" : "https://dc-corp.resource.bosch.com/media/xc/boschrexroth_tac_delivery.pdf",
+            "title" : "General Terms of Use"
+          }, {
+            "link" : "https://dc-corp.resource.bosch.com/media/xc/boschrexroth_tac_delivery.pdf",
+            "title" : "General Terms of Use"
+          } ]
+        },
+        "properties" : {
+          "contact" : {
+            "$ref" : "#/components/schemas/Contact"
+          },
+          "legalPolicies" : {
+            "description" : "Represents a list of title and link of the legal policies",
+            "items" : {
+              "$ref" : "#/components/schemas/LegalPolicy"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "ComplianceInformation" : {
+        "description" : "Information about the compliance regulations of the device",
+        "example" : {
+          "approvedOperationalUse" : true,
+          "systemIntegrity" : {
+            "reasons" : [ "UNSIGNED_APPS", "ROOT_USER" ],
+            "degraded" : true
+          }
+        },
+        "properties" : {
+          "approvedOperationalUse" : {
+            "description" : "Indicates if the device is approved and released for the use as operational equipment\nfor automation processes.\n",
+            "type" : "boolean"
+          },
+          "systemIntegrity" : {
+            "$ref" : "#/components/schemas/SystemIntegrity"
+          }
+        },
+        "type" : "object"
+      },
+      "FossComponent" : {
+        "description" : "Represents a FOSS component",
+        "example" : {
+          "copyright" : {
+            "text" : "Copyright (c) 2010-2019 Google LLC. http://angular.io/license",
+            "notice" : "notice"
+          },
+          "licenses" : [ {
+            "spdx" : "MIT",
+            "name" : "MIT License",
+            "text" : "The MIT License ..."
+          }, {
+            "spdx" : "MIT",
+            "name" : "MIT License",
+            "text" : "The MIT License ..."
+          } ],
+          "name" : "@angular/common",
+          "usages" : [ {
+            "component" : "webapp.deviceadministration",
+            "integrationMechanism" : "LinkedStatically",
+            "usage" : "AsIs"
+          }, {
+            "component" : "webapp.deviceadministration",
+            "integrationMechanism" : "LinkedStatically",
+            "usage" : "AsIs"
+          } ],
+          "version" : "7.2.15",
+          "homepage" : "https://github.com/angular/angular"
+        },
+        "properties" : {
+          "name" : {
+            "description" : "Name of the component",
+            "example" : "@angular/common",
+            "type" : "string"
+          },
+          "version" : {
+            "description" : "Version of the component",
+            "example" : "7.2.15",
+            "type" : "string"
+          },
+          "homepage" : {
+            "description" : "URL to the component's homepage",
+            "example" : "https://github.com/angular/angular",
+            "type" : "string"
+          },
+          "copyright" : {
+            "$ref" : "#/components/schemas/FossCopyright"
+          },
+          "licenses" : {
+            "description" : "The license(s) of the FOSS component",
+            "items" : {
+              "$ref" : "#/components/schemas/FossLicense"
+            },
+            "type" : "array"
+          },
+          "usages" : {
+            "description" : "The usages of the FOSS component",
+            "items" : {
+              "$ref" : "#/components/schemas/FossUsage"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "Problem" : {
+        "description" : "This document defines a \"problem detail\" as a way  to carry machine-readable details of errors in a  HTTP response to avoid the need to define new error  response formats for HTTP APIs.\n",
+        "properties" : {
+          "type" : {
+            "default" : "about:blank",
+            "description" : "A URI reference [RFC3986] that identifies the problem type. \nThis specification encourages that, when dereferenced, \nit provide human-readable documentation for the problem type \n(e.g., using HTML [W3C.REC-html5-20141028]). When this member \nis not present, its value is assumed to be \"about:blank\".\n",
+            "example" : "https://example.com/probs/out-of-credit",
+            "format" : "uri",
+            "type" : "string"
+          },
+          "title" : {
+            "description" : "A short, human-readable summary of the problem type. \nIt SHOULD NOT change from occurrence to occurrence of the problem, \nexcept for purposes of localization (e.g., using proactive content \nnegotiation; see [RFC7231], Section 3.4).\nIf the response is a diagnostics message, it contains \nthe text associated with the mainDiagnosisCode.\n",
+            "example" : "You do not have enough credit.",
+            "type" : "string"
+          },
+          "status" : {
+            "description" : "The HTTP status code ([RFC7231], Section 6) generated by the \norigin server for this occurrence of the problem.\n",
+            "example" : 403,
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "detail" : {
+            "description" : "A human-readable explanation specific to this occurrence of the problem.\nIf the response is a diagnostics message, it contains the text associated with\nthe detailedDiagnosisCode.\n",
+            "example" : "Your current balance is 30, but that costs 50.",
+            "type" : "string"
+          },
+          "instance" : {
+            "description" : "A URI reference that identifies the specific occurrence of the problem.\nIt may or may not yield further information if dereferenced.\n",
+            "example" : "/account/12345/msgs/abc",
+            "type" : "string"
+          },
+          "code" : {
+            "deprecated" : true,
+            "description" : "An error code issued by the system that caused the original problem.\nThis code can be used to track down the root cause of the error.\n",
+            "example" : "F360001",
+            "type" : "string"
+          },
+          "mainDiagnosisCode" : {
+            "description" : "The main diagnosis code is issued by the system that caused the problem.\nThis code can be used to track down the root cause and source of the error.\nIt can be used to search in the documentation for a solution.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "080F0100",
+            "type" : "string"
+          },
+          "detailedDiagnosisCode" : {
+            "description" : "The detailed diagnosis code issued by the system that caused the problem.\nThis code can be used to track down the detailed cause and source of the error.\nIt can be used to search in the documentation for a solution.\nThe detailed diagnosis code gives additional information about the cause of the error.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "00666001",
+            "type" : "string"
+          },
+          "dynamicDescription" : {
+            "description" : "A dynamic description gives detailed information about the occurrence of a problem.\nIt can change between different occurrences of the same error.\n",
+            "example" : "value = -4.5",
+            "type" : "string"
+          },
+          "severity" : {
+            "description" : " Severity of a problem as defined RFC5424 of the Syslog standard, see https://tools.ietf.org/html/rfc5424",
+            "enum" : [ "Emergency", "Alert", "Critical", "Error", "Warning", "Notice", "Informational", "Debug" ],
+            "example" : "Error",
+            "type" : "string"
+          },
+          "links" : {
+            "description" : "Collection of links to fix the problem. E.g. links to online user manual,\nto an online community (using tags) or a developer chat (e.g. Slack).\n",
+            "items" : {
+              "example" : "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001",
+              "format" : "uri",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "moreInfo" : {
+            "additionalProperties" : true,
+            "description" : "The moreInfo field allows you to add additional information that might be necessary to debug or trace down the cause of an error.\nIt might also contain information what is needed to resolve the problem.\nThere are loosely specified fields for specific problems that can be used in these situations, e.g.:\n- On a 403 Forbidden error: The moreInfo can contain a field \"requiredPermissions\" with the required permissions seperated by comma\n- On a 402 Payment required: The moreInfo can contain a field \"requiredLicenses\" with the required licenses seperated by comma\n",
+            "example" : {
+              "trace" : "ExampleClass.cpp#452 Null pointer exception",
+              "class" : "ExampleClass"
+            },
+            "type" : "object"
+          },
+          "cause" : {
+            "description" : "Sometimes a problem might be caused by problems that occure in other components or are the root cause of a problem. In this\ncase the related problems can be added as a cause. Since it might be possible that multiple components have problems on a single\naction, cause is an array. E.g. Loading failed because several components where not able to load the configuration.\n",
+            "items" : {
+              "$ref" : "#/components/schemas/Problem"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "title", "type" ],
+        "type" : "object",
+        "x-version" : "1.0.0"
+      },
+      "Contact" : {
+        "description" : "Represents the contact data of the company",
+        "example" : {
+          "address" : {
+            "country" : "Germany",
+            "city" : "97816 Lohr am Main",
+            "street" : "Bgm.-Dr.-Nebel-Str. 2",
+            "state" : "Bavaria"
+          },
+          "name" : "Bosch Rexroth AG",
+          "email" : "info@boschrexroth.com",
+          "url" : "https://www.boschrexroth.com"
+        },
+        "properties" : {
+          "name" : {
+            "description" : "Name of the company",
+            "example" : "Bosch Rexroth AG",
+            "type" : "string"
+          },
+          "address" : {
+            "$ref" : "#/components/schemas/Address"
+          },
+          "email" : {
+            "description" : "Email of the company",
+            "example" : "info@boschrexroth.com",
+            "type" : "string"
+          },
+          "url" : {
+            "description" : "Url of the company",
+            "example" : "https://www.boschrexroth.com",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "Address" : {
+        "example" : {
+          "country" : "Germany",
+          "city" : "97816 Lohr am Main",
+          "street" : "Bgm.-Dr.-Nebel-Str. 2",
+          "state" : "Bavaria"
+        },
+        "properties" : {
+          "street" : {
+            "description" : "Street and number of the company",
+            "example" : "Bgm.-Dr.-Nebel-Str. 2",
+            "type" : "string"
+          },
+          "city" : {
+            "description" : "Post code and city of the company",
+            "example" : "97816 Lohr am Main",
+            "type" : "string"
+          },
+          "state" : {
+            "description" : "State of the company",
+            "example" : "Bavaria",
+            "type" : "string"
+          },
+          "country" : {
+            "description" : "Country of the company",
+            "example" : "Germany",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "LegalPolicy" : {
+        "example" : {
+          "link" : "https://dc-corp.resource.bosch.com/media/xc/boschrexroth_tac_delivery.pdf",
+          "title" : "General Terms of Use"
+        },
+        "properties" : {
+          "title" : {
+            "description" : "Title of the leagal policy",
+            "example" : "General Terms of Use",
+            "type" : "string"
+          },
+          "link" : {
+            "description" : "Link to the legal policy",
+            "example" : "https://dc-corp.resource.bosch.com/media/xc/boschrexroth_tac_delivery.pdf",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "SystemIntegrity" : {
+        "description" : "Indicates if the system integrity is degraded and whats the reason.\nThe system integrity reflects the state of the system wherein its mandated operational and technical properties\nare within the prescribed limits. The system integrity state may be degraded when security relevant options are changed.\n",
+        "example" : {
+          "reasons" : [ "UNSIGNED_APPS", "ROOT_USER" ],
+          "degraded" : true
+        },
+        "properties" : {
+          "degraded" : {
+            "description" : "Indicates if the system integrity is degraded",
+            "example" : true,
+            "type" : "boolean"
+          },
+          "reasons" : {
+            "description" : "The reason(s) why the system is degraded",
+            "example" : [ "UNSIGNED_APPS", "ROOT_USER" ],
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "FossCopyright" : {
+        "description" : "Represents the copyright information of a FOSS component",
+        "example" : {
+          "text" : "Copyright (c) 2010-2019 Google LLC. http://angular.io/license",
+          "notice" : "notice"
+        },
+        "properties" : {
+          "text" : {
+            "description" : "The copyright text",
+            "example" : "Copyright (c) 2010-2019 Google LLC. http://angular.io/license",
+            "type" : "string"
+          },
+          "notice" : {
+            "description" : "An optional copyright notice",
+            "example" : "notice",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "FossLicense" : {
+        "description" : "Represents a license of a FOSS component",
+        "example" : {
+          "spdx" : "MIT",
+          "name" : "MIT License",
+          "text" : "The MIT License ..."
+        },
+        "properties" : {
+          "spdx" : {
+            "description" : "The SPDX identifier of the license",
+            "example" : "MIT",
+            "type" : "string"
+          },
+          "name" : {
+            "description" : "The name of the license",
+            "example" : "MIT License",
+            "type" : "string"
+          },
+          "text" : {
+            "description" : "The license text",
+            "example" : "The MIT License ...",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "FossUsage" : {
+        "description" : "Describes how a FOSS component is used by a Rexroth component",
+        "example" : {
+          "component" : "webapp.deviceadministration",
+          "integrationMechanism" : "LinkedStatically",
+          "usage" : "AsIs"
+        },
+        "properties" : {
+          "component" : {
+            "description" : "Name of the consuming component",
+            "example" : "webapp.deviceadministration",
+            "type" : "string"
+          },
+          "usage" : {
+            "description" : "AsIs or Modified",
+            "example" : "AsIs",
+            "type" : "string"
+          },
+          "integrationMechanism" : {
+            "description" : "LinkedDynamically, Snippet, SeparateComponent, LinkedStatically or CallOfLinuxKernelServiceViaSystemCall",
+            "example" : "LinkedStatically",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      }
+    }
+  }
+}

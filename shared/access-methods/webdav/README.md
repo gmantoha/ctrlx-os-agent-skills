@@ -2,6 +2,8 @@
 
 The Solutions app can expose app data through WebDAV.
 
+Use WebDAV primarily for inspecting, transferring, or editing app data exposed through the Solutions app.
+
 Use WebDAV for:
 
 - inspecting app data trees

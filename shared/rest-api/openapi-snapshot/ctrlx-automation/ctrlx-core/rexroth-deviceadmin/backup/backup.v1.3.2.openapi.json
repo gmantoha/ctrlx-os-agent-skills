@@ -1,0 +1,844 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "contact" : {
+      "email" : "support@boschrexroth.com",
+      "name" : "Bosch Rexroth AG",
+      "url" : "https://www.boschrexroth.com"
+    },
+    "description" : "<p> The ctrlX Backup API provides functionalities for backup and restore. </p> <p>Usage&colon;</p> <ul> <li>Click 'Authorize' to open the 'Available authorizations' dialog.</li> <li>Enter 'username' and 'password'. The 'Client credentials location' selector together with the 'client_id' and 'client_secret' fields as well as the 'Bearer' section can be ignored.</li> <li>Click 'Authorize' and then 'Close' to close the 'Available authorizations' dialog.</li> <li>Try out those GET, PUT, ... operations you're interested in.</li> </ul>",
+    "license" : {
+      "name" : "MIT"
+    },
+    "title" : "ctrlX OS - Backup API",
+    "version" : "1.3.2"
+  },
+  "servers" : [ {
+    "url" : "/backup/api/v1"
+  }, {
+    "url" : "https://[fe80::dcad:beff:fe00:1]/backup/api/v1"
+  }, {
+    "url" : "https://{host}/backup/api/v1",
+    "variables" : {
+      "host" : {
+        "default" : "[fe80::dcad:beff:fe00:0001]",
+        "description" : "Hostname or ip address of the ctrlX OS system"
+      }
+    }
+  } ],
+  "security" : [ {
+    "UsernamePassword" : [ ]
+  }, {
+    "Bearer" : [ ]
+  } ],
+  "tags" : [ {
+    "description" : "Create backup archive and download it.",
+    "name" : "Backup"
+  }, {
+    "description" : "Upload backup archive and restore it.",
+    "name" : "Restore"
+  }, {
+    "description" : "Contains information about running tasks for asynchronous request handling.",
+    "name" : "Tasks"
+  } ],
+  "paths" : {
+    "/backup" : {
+      "post" : {
+        "description" : "Creates a new backup archive",
+        "operationId" : "createBackup",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Backup"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/x-tar" : {
+                "schema" : {
+                  "format" : "binary",
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "Returns the archive file of the backup"
+          },
+          "202" : {
+            "description" : "Accepted",
+            "headers" : {
+              "Location" : {
+                "explode" : false,
+                "schema" : {
+                  "example" : "/tasks/123",
+                  "type" : "string"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request conflicts with the current state of the resource."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Creates a new backup archive",
+        "tags" : [ "Backup" ]
+      }
+    },
+    "/restore" : {
+      "post" : {
+        "description" : "Uploads a backup archive and restores it",
+        "operationId" : "restoreBackup",
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Restore"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "202" : {
+            "description" : "Accepted",
+            "headers" : {
+              "Location" : {
+                "explode" : false,
+                "schema" : {
+                  "example" : "/tasks/123",
+                  "type" : "string"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "204" : {
+            "description" : "No Content (restore succeeded)"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request conflicts with the current state of the resource."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Uploads a backup archive and restores it",
+        "tags" : [ "Restore" ]
+      }
+    },
+    "/archives/{taskId}" : {
+      "get" : {
+        "description" : "Receives a backup archive file by task id",
+        "operationId" : "getArchiveByTaskId",
+        "parameters" : [ {
+          "description" : "task id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "taskId",
+          "required" : true,
+          "schema" : {
+            "example" : "a1b2c3d4e5",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/x-tar" : {
+                "schema" : {
+                  "format" : "binary",
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "Returns the packed archive file by the task id"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Receives a backup archive file by task id",
+        "tags" : [ "Backup" ]
+      }
+    },
+    "/backups" : {
+      "get" : {
+        "description" : "Gets backup archives from removable media",
+        "operationId" : "listBackups",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/BackupInfo"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "List of backup archives"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Gets backup archives from removable media",
+        "tags" : [ "Restore" ]
+      }
+    },
+    "/tasks" : {
+      "get" : {
+        "description" : "Receives a list of tasks",
+        "operationId" : "getTasks",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Tasks"
+                }
+              }
+            },
+            "description" : "List of Tasks"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Receives a list of tasks",
+        "tags" : [ "Tasks" ]
+      }
+    },
+    "/tasks/{taskId}" : {
+      "get" : {
+        "description" : "Receives information about a task",
+        "operationId" : "getTask",
+        "parameters" : [ {
+          "description" : "task id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "taskId",
+          "required" : true,
+          "schema" : {
+            "example" : "a1b2c3d4e5",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Task"
+                }
+              }
+            },
+            "description" : "Done - Task information"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Receives information about a task",
+        "tags" : [ "Tasks" ]
+      }
+    }
+  },
+  "components" : {
+    "parameters" : {
+      "taskId" : {
+        "description" : "task id",
+        "explode" : false,
+        "in" : "path",
+        "name" : "taskId",
+        "required" : true,
+        "schema" : {
+          "example" : "a1b2c3d4e5",
+          "type" : "string"
+        },
+        "style" : "simple"
+      }
+    },
+    "responses" : {
+      "BadRequest" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The request is incomplete or malformed"
+      },
+      "Unauthorized" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Not authorized to access this resource"
+      },
+      "Forbidden" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Access forbidden for this resource"
+      },
+      "NotFound" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The resource was not found"
+      },
+      "Conflict" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The request conflicts with the current state of the resource."
+      },
+      "InternalServerError" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Something unexpected happened on the server"
+      }
+    },
+    "schemas" : {
+      "Backup" : {
+        "example" : {
+          "includesnaps" : true,
+          "async" : false,
+          "password" : "secret",
+          "download" : true,
+          "useexternalstorage" : true,
+          "targetdir" : "targetdir"
+        },
+        "properties" : {
+          "password" : {
+            "description" : "The password for encryption of the backup archive.",
+            "example" : "secret",
+            "format" : "password",
+            "maxLength" : 64,
+            "minLength" : 1,
+            "pattern" : "^[a-zA-Z]+[\\w\\-\\_\\.]*$",
+            "type" : "string"
+          },
+          "targetdir" : {
+            "default" : "",
+            "description" : "The target directory for a copy of the backup on device.",
+            "maxLength" : 256,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "download" : {
+            "default" : true,
+            "description" : "True if the backup archive should be downloaded.",
+            "example" : true,
+            "type" : "boolean"
+          },
+          "includesnaps" : {
+            "default" : true,
+            "description" : "True if the snaps should be included in backup archive.",
+            "example" : true,
+            "type" : "boolean"
+          },
+          "async" : {
+            "default" : false,
+            "description" : "True if the operation should be asynchronous.",
+            "example" : false,
+            "type" : "boolean"
+          },
+          "useexternalstorage" : {
+            "default" : true,
+            "description" : "True if the operation should use external storage for temporary files (if possible).",
+            "example" : true,
+            "type" : "boolean"
+          }
+        },
+        "required" : [ "password" ],
+        "type" : "object"
+      },
+      "BackupInfo" : {
+        "example" : {
+          "path" : "/media/sdb2/ctrlX-2021-05-01-08-30-00.tar"
+        },
+        "properties" : {
+          "path" : {
+            "description" : "Path of backup archive on device",
+            "example" : "/media/sdb2/ctrlX-2021-05-01-08-30-00.tar",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "Restore" : {
+        "properties" : {
+          "password" : {
+            "default" : "",
+            "description" : "The password for decryption of the backup archive.",
+            "example" : "secret",
+            "format" : "password",
+            "maxLength" : 64,
+            "minLength" : 0,
+            "pattern" : "^$|^[a-zA-Z]+[\\w\\-\\_\\.]*$",
+            "type" : "string"
+          },
+          "archive" : {
+            "description" : "The backup archive file to upload for restore. Required if 'uri' is undefined.",
+            "format" : "binary",
+            "type" : "string"
+          },
+          "uri" : {
+            "default" : "",
+            "description" : "URI of backup archive that should be used for restore. Required if 'archive' is undefined.",
+            "example" : "file:///media/sdb2/ctrlX-2021-05-01-08-30-00.tar",
+            "type" : "string"
+          },
+          "async" : {
+            "default" : false,
+            "description" : "True if the operation should be asynchronous.",
+            "example" : false,
+            "type" : "boolean"
+          },
+          "useexternalstorage" : {
+            "default" : true,
+            "description" : "True if the operation should use external storage for temporary files (if possible).",
+            "example" : true,
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "Task" : {
+        "example" : {
+          "actionIndex" : 0,
+          "eta" : "2019-01-01T12:00:27.87+00:20",
+          "warnings" : [ "warnings", "warnings" ],
+          "progress" : 10,
+          "id" : "123",
+          "state" : "running",
+          "error" : "error",
+          "actions" : [ "actions", "actions" ],
+          "parameters" : {
+            "process" : "backup",
+            "version" : "v1.0.0",
+            "state" : "SaveSnaps"
+          }
+        },
+        "properties" : {
+          "id" : {
+            "description" : "The temporary id of a task",
+            "example" : "123",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "state" : {
+            "enum" : [ "pending", "failed", "done", "running" ],
+            "example" : "running",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "progress" : {
+            "description" : "Progress of the task",
+            "example" : 10,
+            "maximum" : 100,
+            "minimum" : 0,
+            "readOnly" : true,
+            "type" : "integer"
+          },
+          "eta" : {
+            "description" : "ETA in RFC 3339 format",
+            "example" : "2019-01-01T12:00:27.87+00:20",
+            "format" : "dateTime",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "actionIndex" : {
+            "description" : "Current zero based index of possible actions list",
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "actions" : {
+            "description" : "List of possible actions which are processed in the task",
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "warnings" : {
+            "description" : "List of possible warnings which are occurred in the task",
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "error" : {
+            "description" : "Error occurred in the task",
+            "type" : "string"
+          },
+          "parameters" : {
+            "additionalProperties" : {
+              "type" : "string"
+            },
+            "description" : "Additional properties not explicitly declared",
+            "example" : {
+              "process" : "backup",
+              "version" : "v1.0.0",
+              "state" : "SaveSnaps"
+            },
+            "type" : "object"
+          }
+        },
+        "type" : "object"
+      },
+      "Tasks" : {
+        "items" : {
+          "$ref" : "#/components/schemas/Task"
+        },
+        "type" : "array"
+      },
+      "Problem" : {
+        "description" : "This document defines a \"problem detail\" as a way  to carry machine-readable details of errors in a  HTTP response to avoid the need to define new error  response formats for HTTP APIs.\n",
+        "properties" : {
+          "type" : {
+            "default" : "about:blank",
+            "description" : "A URI reference [RFC3986] that identifies the problem type. \nThis specification encourages that, when dereferenced, \nit provide human-readable documentation for the problem type \n(e.g., using HTML [W3C.REC-html5-20141028]). When this member \nis not present, its value is assumed to be \"about:blank\".\n",
+            "example" : "https://example.com/probs/out-of-credit",
+            "format" : "uri",
+            "type" : "string"
+          },
+          "title" : {
+            "description" : "A short, human-readable summary of the problem type. \nIt SHOULD NOT change from occurrence to occurrence of the problem, \nexcept for purposes of localization (e.g., using proactive content \nnegotiation; see [RFC7231], Section 3.4).\n",
+            "example" : "You do not have enough credit.",
+            "type" : "string"
+          },
+          "status" : {
+            "description" : "The HTTP status code ([RFC7231], Section 6) generated by the \norigin server for this occurrence of the problem.\n",
+            "example" : 403,
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "detail" : {
+            "description" : "A human-readable explanation specific to this occurrence of the problem.\n",
+            "example" : "Your current balance is 30, but that costs 50.",
+            "type" : "string"
+          },
+          "instance" : {
+            "description" : "A URI reference that identifies the specific occurrence of the problem.\nIt may or may not yield further information if dereferenced.\n",
+            "example" : "/account/12345/msgs/abc",
+            "type" : "string"
+          },
+          "code" : {
+            "deprecated" : true,
+            "description" : "An error code issued by the system that caused the original problem.\nThis code can be used to track down the root cause of the error.\n",
+            "example" : "F360001",
+            "type" : "string"
+          },
+          "mainDiagnosisCode" : {
+            "description" : "The main diagnosis code is issued by the system that caused the problem.\nThis code can be used to track down the root cause and source of the error.\nIt can be used to search in the documentation for a solution.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "080F0100",
+            "type" : "string"
+          },
+          "detailedDiagnosisCode" : {
+            "description" : "The detailed diagnosis code issued by the system that caused the problem.\nThis code can be used to track down the detailed cause and source of the error.\nIt can be used to search in the documentation for a solution.\nThe detailed diagnosis code gives additional information about the cause of the error.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "00666001",
+            "type" : "string"
+          },
+          "dynamicDescription" : {
+            "description" : "A dynamic description gives detailed information about the occurrence of a problem.\nIt can change between different occurrences of the same error.\n",
+            "example" : "value = -4.5",
+            "type" : "string"
+          },
+          "severity" : {
+            "description" : " Severity of a problem as defined RFC5424 of the Syslog standard, see https://tools.ietf.org/html/rfc5424",
+            "enum" : [ "Emergency", "Alert", "Critical", "Error", "Warning", "Notice", "Informational", "Debug" ],
+            "example" : "Error",
+            "type" : "string"
+          },
+          "links" : {
+            "description" : "Collection of links to fix the problem. E.g. links to online user manual,\nto an online community (using tags) or a developer chat (e.g. Slack).\n",
+            "items" : {
+              "example" : "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001",
+              "format" : "uri",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "moreInfo" : {
+            "additionalProperties" : true,
+            "example" : {
+              "trace" : "ExampleClass.cpp#452 Null pointer exception",
+              "class" : "ExampleClass"
+            },
+            "type" : "object"
+          }
+        },
+        "required" : [ "title", "type" ],
+        "type" : "object",
+        "x-version" : "1.0.0"
+      }
+    },
+    "securitySchemes" : {
+      "UsernamePassword" : {
+        "description" : "Enter username and password",
+        "flows" : {
+          "password" : {
+            "scopes" : {
+              "dummy" : "Dummy scope (scopes not used)"
+            },
+            "tokenUrl" : "/identity-manager/api/v1.0/auth/token"
+          }
+        },
+        "type" : "oauth2"
+      },
+      "Bearer" : {
+        "description" : "Alternatively&colon; Enter bearer token (without prefix 'Bearer')",
+        "scheme" : "bearer",
+        "type" : "http"
+      }
+    }
+  }
+}

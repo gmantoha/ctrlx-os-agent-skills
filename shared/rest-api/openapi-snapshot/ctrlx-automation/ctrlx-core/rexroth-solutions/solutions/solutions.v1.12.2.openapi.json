@@ -1,0 +1,3731 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "contact" : {
+      "email" : "support@boschrexroth.com",
+      "name" : "Bosch Rexroth AG",
+      "url" : "https://www.boschrexroth.com"
+    },
+    "description" : "<p> The Solutions API provides functionalities for persisting and managing app data on ctrlX OS devices. </p> <p>Usage&colon;</p> <ul> <li>Click 'Authorize' to open the 'Available authorizations' dialog.</li> <li>Enter 'username' and 'password'. The 'Client credentials location' selector together with the 'client_id' and 'client_secret' fields as well as the 'Bearer' section can be ignored.</li> <li>Click 'Authorize' and then 'Close' to close the 'Available authorizations' dialog.</li> <li>Try out those GET, PUT, ... operations you're interested in.</li> </ul>",
+    "title" : "ctrlX OS - Solutions API",
+    "version" : "1.12.2"
+  },
+  "servers" : [ {
+    "url" : "/solutions/api/v1"
+  }, {
+    "url" : "https://[fe80::dcad:beff:fe00:1]/solutions/api/v1"
+  }, {
+    "url" : "https://{host}/solutions/api/v1",
+    "variables" : {
+      "host" : {
+        "default" : "[fe80::dcad:beff:fe00:0001]",
+        "description" : "Hostname or ip address of the ctrlX device"
+      }
+    }
+  } ],
+  "security" : [ {
+    "UsernamePassword" : [ ]
+  }, {
+    "Bearer" : [ ]
+  } ],
+  "tags" : [ {
+    "description" : "Read and update appdata properties",
+    "name" : "appdata"
+  }, {
+    "description" : "Manage configurations, e.g. create, update and delete them",
+    "name" : "configurations"
+  }, {
+    "description" : "Handle asynchronous requests, e.g. uploading a solution",
+    "name" : "tasks"
+  }, {
+    "description" : "Manage solutions, e.g. create, update and delete them",
+    "name" : "solutions"
+  } ],
+  "paths" : {
+    "/appdata" : {
+      "get" : {
+        "description" : "Gets the appdata properties",
+        "operationId" : "getAppdata",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AppdataGet"
+                }
+              }
+            },
+            "description" : "OK (object with appdata properties)"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Gets the appdata properties",
+        "tags" : [ "appdata" ]
+      },
+      "put" : {
+        "description" : "Updates the specified appdata properties with the specified values.\nAll unspecified properties will be reset to their default values.\n",
+        "operationId" : "putAppdata",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AppdataPut"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "204" : {
+            "description" : "No Content"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Updates the specified appdata properties with the specified values.\nAll unspecified properties will be reset to their default values.\n",
+        "tags" : [ "appdata" ]
+      }
+    },
+    "/appdata/content" : {
+      "get" : {
+        "description" : "Gets the appdata content",
+        "operationId" : "getAppdataContent",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AppdataContentGet"
+                }
+              }
+            },
+            "description" : "OK (object with appdata content)"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Gets the appdata content",
+        "tags" : [ "appdata" ]
+      }
+    },
+    "/active-solution" : {
+      "get" : {
+        "description" : "Gets properties of the active solution",
+        "operationId" : "getActiveSolutionState",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ActiveSolutionState"
+                }
+              }
+            },
+            "description" : "OK (object with properties of active solution)"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Gets properties of the active solution",
+        "tags" : [ "solutions" ]
+      }
+    },
+    "/solutions" : {
+      "get" : {
+        "description" : "Gets properties of all solutions",
+        "operationId" : "listSolutions",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ExtendedSolutions"
+                }
+              }
+            },
+            "description" : "OK (array of objects with properties of all solutions)"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Gets properties of all solutions",
+        "tags" : [ "solutions" ]
+      },
+      "post" : {
+        "description" : "Creates a new solution",
+        "operationId" : "createSolution",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ExtendedSolution"
+              }
+            },
+            "multipart/form-data" : {
+              "schema" : {
+                "properties" : {
+                  "name" : {
+                    "description" : "Name of the new solution",
+                    "type" : "string"
+                  },
+                  "file" : {
+                    "description" : "Solution file (zip-file)",
+                    "format" : "binary",
+                    "type" : "string"
+                  }
+                },
+                "type" : "object"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created (solution created)",
+            "headers" : {
+              "Location" : {
+                "explode" : false,
+                "schema" : {
+                  "example" : "/solutions/api/v1/solutions/NewSolution",
+                  "type" : "string"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Creates a new solution",
+        "tags" : [ "solutions" ]
+      }
+    },
+    "/solutions/{name}" : {
+      "delete" : {
+        "description" : "Deletes a solution",
+        "operationId" : "deleteSolution",
+        "parameters" : [ {
+          "description" : "Solution name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No Content (solution deleted)"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Deletes a solution",
+        "tags" : [ "solutions" ]
+      },
+      "get" : {
+        "description" : "Gets properties of a solution",
+        "operationId" : "getSolution",
+        "parameters" : [ {
+          "description" : "Solution name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ExtendedSolution"
+                }
+              }
+            },
+            "description" : "OK (object with properties of specified solution)"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Gets properties of a solution",
+        "tags" : [ "solutions" ]
+      },
+      "put" : {
+        "description" : "Changes properties of a solution",
+        "operationId" : "updateSolution",
+        "parameters" : [ {
+          "description" : "Solution name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ExtendedSolution"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "204" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ExtendedSolution"
+                }
+              }
+            },
+            "description" : "No Content (properties of solution changed)"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Changes properties of a solution",
+        "tags" : [ "solutions" ]
+      }
+    },
+    "/solutions/{name}/content" : {
+      "get" : {
+        "description" : "Gets an object which can be used to identify the content of files and folders inside a solution",
+        "operationId" : "getDirectoryContent",
+        "parameters" : [ {
+          "description" : "Solution name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "A specified directory",
+          "explode" : true,
+          "in" : "query",
+          "name" : "dir",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DirectoryEntry"
+                }
+              }
+            },
+            "description" : "OK (object which can be used to identify the content of files and folders inside the specified solution)"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Gets an object which can be used to identify the content of files and folders inside a solution",
+        "tags" : [ "solutions" ]
+      }
+    },
+    "/solutions/{name}/filesystem" : {
+      "get" : {
+        "description" : "Gets an object which represents the filesystem entries of the specified directory.",
+        "operationId" : "browseFilesystem",
+        "parameters" : [ {
+          "description" : "Solution name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Starting directory for which the filesystem entry is returned.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "dir",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Number of levels returned in the filesystem entry. Specify '-1' for all levels.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "depth",
+          "required" : false,
+          "schema" : {
+            "default" : "0",
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Whether the returned filesystem entries should include checksums of file contents.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "includeChecksums",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FilesystemEntry"
+                }
+              }
+            },
+            "description" : "OK (Object which represents the files and directories starting from the specified directory)"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Gets an object which represents the filesystem entries of the specified directory.",
+        "tags" : [ "solutions" ]
+      }
+    },
+    "/solutions/{name}/archive" : {
+      "get" : {
+        "description" : "Packs a solution as zip-file",
+        "operationId" : "exportSolution",
+        "parameters" : [ {
+          "description" : "Solution name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/octet-stream" : {
+                "schema" : {
+                  "format" : "binary",
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "OK (specified solution as zip-file)"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Packs a solution as zip-file",
+        "tags" : [ "solutions" ]
+      },
+      "put" : {
+        "description" : "Updates a solution with an archive file",
+        "operationId" : "uploadSolution",
+        "parameters" : [ {
+          "description" : "Solution name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/octet-stream" : {
+              "schema" : {
+                "format" : "binary",
+                "type" : "string"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Updated solution",
+            "headers" : {
+              "Location" : {
+                "explode" : false,
+                "schema" : {
+                  "example" : "/solutions/UpdatedSolution",
+                  "type" : "string"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Updates a solution with an archive file",
+        "tags" : [ "solutions" ]
+      }
+    },
+    "/solutions/{name}/history" : {
+      "get" : {
+        "description" : "Gets all git commits inside a solution",
+        "operationId" : "getSolutionHistory",
+        "parameters" : [ {
+          "description" : "Solution name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "OK (array of objects which represent all git commits inside the specified solution)"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Gets all git commits inside a solution",
+        "tags" : [ "solutions" ]
+      }
+    },
+    "/active-configuration" : {
+      "get" : {
+        "description" : "Gets properties of the active configuration",
+        "operationId" : "getActiveConfigurationState",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ActiveConfigurationState"
+                }
+              }
+            },
+            "description" : "OK (object with properties of active configuration)"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Gets properties of the active configuration",
+        "tags" : [ "configurations" ]
+      }
+    },
+    "/solutions/{solution}/configurations" : {
+      "get" : {
+        "description" : "Gets properties of all configurations inside a solution",
+        "operationId" : "getConfigurations",
+        "parameters" : [ {
+          "description" : "Solution name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "solution",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ExtendedConfigurations"
+                }
+              }
+            },
+            "description" : "OK (array of objects with properties of all configurations inside the specified solution)"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Gets properties of all configurations inside a solution",
+        "tags" : [ "configurations" ]
+      },
+      "post" : {
+        "description" : "Creates a new configuration",
+        "operationId" : "createConfiguration",
+        "parameters" : [ {
+          "description" : "Solution name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "solution",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ExtendedConfiguration"
+              }
+            },
+            "multipart/form-data" : {
+              "schema" : {
+                "properties" : {
+                  "name" : {
+                    "description" : "Name of the new configuration",
+                    "type" : "string"
+                  },
+                  "file" : {
+                    "description" : "Configuration file (zip-file)",
+                    "format" : "binary",
+                    "type" : "string"
+                  }
+                },
+                "type" : "object"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created (configuration inside specified solution created)",
+            "headers" : {
+              "Location" : {
+                "explode" : false,
+                "schema" : {
+                  "example" : "/solutions/api/v1/solutions/DefaultSolution/configurations/NewConfiguration",
+                  "type" : "string"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Creates a new configuration",
+        "tags" : [ "configurations" ]
+      }
+    },
+    "/solutions/{solution}/configurations/{configuration}" : {
+      "delete" : {
+        "description" : "Deletes a configuration",
+        "operationId" : "deleteConfiguration",
+        "parameters" : [ {
+          "description" : "Solution name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "solution",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Configuration name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "configuration",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No Content (configuration inside specified solution deleted)"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Deletes a configuration",
+        "tags" : [ "configurations" ]
+      },
+      "get" : {
+        "description" : "Gets properties of a configuration",
+        "operationId" : "getConfiguration",
+        "parameters" : [ {
+          "description" : "Solution name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "solution",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Configuration name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "configuration",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ExtendedConfiguration"
+                }
+              }
+            },
+            "description" : "OK (object with properties of specified configuration)"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Gets properties of a configuration",
+        "tags" : [ "configurations" ]
+      },
+      "put" : {
+        "description" : "Changes properties of a configuration",
+        "operationId" : "updateConfiguration",
+        "parameters" : [ {
+          "description" : "Solution name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "solution",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Configuration name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "configuration",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ExtendedConfiguration"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "204" : {
+            "description" : "No Content (properties of configuration changed)"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Changes properties of a configuration",
+        "tags" : [ "configurations" ]
+      }
+    },
+    "/solutions/{solution}/configurations/{configuration}/archive" : {
+      "get" : {
+        "description" : "Since XCR-V-0116, if 'appdata' is specified as configuration, the archive is downloaded from a \ntemporary directory which has been provided by a copy task with source and destination\n'/solutions/DefaultSolution/configurations/appdata'. See the 'tasks' endpoint for details.\n",
+        "operationId" : "exportConfiguration",
+        "parameters" : [ {
+          "description" : "Solution name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "solution",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Configuration name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "configuration",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The full path of a configuration's directory whose content is exported. Since XCR-V-0202.",
+          "example" : "doc/chapter1",
+          "explode" : true,
+          "in" : "query",
+          "name" : "dir",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/octet-stream" : {
+                "schema" : {
+                  "format" : "binary",
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "OK (specified configuration as zip-file)"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Packs a configuration or a part of it as zip-file",
+        "tags" : [ "configurations" ]
+      },
+      "put" : {
+        "description" : "Since XCR-V-0116, if 'appdata' is specified as configuration, the archive is uploaded to a \ntemporary directory and can then be loaded to the apps using a load task with configurationPath\n'/solutions/DefaultSolution/configurations/appdata'. See the 'tasks' endpoint for details.\n",
+        "operationId" : "uploadConfiguration",
+        "parameters" : [ {
+          "description" : "Solution name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "solution",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Configuration name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "configuration",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The full path of a configuration's directory in which the content is uploaded. Since XCR-V-0202.",
+          "example" : "doc/chapter1",
+          "explode" : true,
+          "in" : "query",
+          "name" : "dir",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/octet-stream" : {
+              "schema" : {
+                "format" : "binary",
+                "type" : "string"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "204" : {
+            "description" : "Configuration created or updated"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Replaces the content or a part of a configuration with the content of the transferred archive.\nIf the configuration does not exist, a new one is created.\n",
+        "tags" : [ "configurations" ]
+      }
+    },
+    "/solutions/{solution}/configurations/{configuration}/differences" : {
+      "get" : {
+        "description" : "Gets an object representing the differences between the filesystem entries at the configuration path and the filesystem entries at the comparison path",
+        "operationId" : "getDifferences",
+        "parameters" : [ {
+          "description" : "Solution name",
+          "explode" : false,
+          "in" : "path",
+          "name" : "solution",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Configuration name",
+          "example" : "config1",
+          "explode" : false,
+          "in" : "path",
+          "name" : "configuration",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The path of the directory within the configuration whose content is compared.",
+          "example" : "doc/chapter1",
+          "explode" : true,
+          "in" : "query",
+          "name" : "dir",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "The name of the configuration to be compared.",
+          "example" : "config2",
+          "explode" : true,
+          "in" : "query",
+          "name" : "otherConfiguration",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "The path of the directory within the other configuration to be compared.",
+          "example" : "doc/chapter1",
+          "explode" : true,
+          "in" : "query",
+          "name" : "otherDir",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "name" : "My configuration",
+                  "isDir" : true,
+                  "count" : 2,
+                  "type" : "different",
+                  "entries" : [ {
+                    "name" : "dir1",
+                    "isDir" : true,
+                    "count" : 1,
+                    "type" : "leftOnly",
+                    "entries" : [ ]
+                  }, {
+                    "name" : "dir2",
+                    "isDir" : true,
+                    "count" : 1,
+                    "type" : "rightOnly",
+                    "entries" : [ ]
+                  }, {
+                    "name" : "file",
+                    "count" : 0,
+                    "type" : "equal"
+                  } ]
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/DiffResult"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Gets an object representing the differences between the filesystem entries at the configuration path and the filesystem entries at the comparison path",
+        "tags" : [ "configurations" ]
+      }
+    },
+    "/tasks" : {
+      "get" : {
+        "description" : "Gets properties of all tasks",
+        "operationId" : "getTasks",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "oneOf" : [ {
+                      "$ref" : "#/components/schemas/GitTask"
+                    }, {
+                      "$ref" : "#/components/schemas/LoadTask"
+                    }, {
+                      "$ref" : "#/components/schemas/ResetTask"
+                    }, {
+                      "$ref" : "#/components/schemas/SaveTask"
+                    }, {
+                      "$ref" : "#/components/schemas/TransferTask"
+                    } ]
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK (array of properties of all tasks)"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Gets properties of all tasks",
+        "tags" : [ "tasks" ]
+      },
+      "post" : {
+        "description" : "Depending on the action value in the request the created task \nwill be asynchonous or synchronous.\nSynchronous tasks may timeout before they are finished so \nthey should no longer be used.\n\nAsynchronous tasks:\n- git_clone_async\n- load_async\n- reset_async\n- save_async\n- copy\n\nSynchronous tasks:\n- load\n- reset\n- save\n",
+        "operationId" : "createTask",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "load_async" : {
+                  "$ref" : "#/components/examples/LoadTaskRequest"
+                },
+                "reset_async" : {
+                  "$ref" : "#/components/examples/ResetTaskRequest"
+                },
+                "save_async" : {
+                  "$ref" : "#/components/examples/SaveTaskRequest"
+                },
+                "copy" : {
+                  "summary" : "copy - Asynchronous task to copy configurations",
+                  "value" : {
+                    "action" : "copy",
+                    "parameters" : {
+                      "source" : "solutions/{solution}/configurations/{configuration}",
+                      "destination" : "solutions/{solution}/configurations/{configuration}"
+                    }
+                  }
+                },
+                "load" : {
+                  "summary" : "load - Synchronous task to load the specified configuration",
+                  "value" : {
+                    "action" : "load",
+                    "properties" : {
+                      "configurationPath" : "solutions/DefaultSolution/configurations/Picker"
+                    }
+                  }
+                },
+                "queryload" : {
+                  "summary" : "load (queryOnly) - Synchronous task to check if system is ready for loading",
+                  "value" : {
+                    "action" : "load",
+                    "properties" : {
+                      "configurationPath" : "solutions/DefaultSolution/configurations/Picker",
+                      "queryOnly" : "true"
+                    }
+                  }
+                },
+                "reset" : {
+                  "summary" : "reset - Synchronous task to reset the appdata configuration by loading an empty configuration",
+                  "value" : {
+                    "action" : "reset"
+                  }
+                },
+                "queryreset" : {
+                  "summary" : "reset (queryOnly) - Synchronous task to check if system is ready for reset",
+                  "value" : {
+                    "action" : "reset",
+                    "properties" : {
+                      "queryOnly" : "true"
+                    }
+                  }
+                },
+                "save" : {
+                  "summary" : "save - Synchronous task to save to the appdata configuration",
+                  "value" : {
+                    "action" : "save"
+                  }
+                }
+              },
+              "schema" : {
+                "discriminator" : {
+                  "mapping" : {
+                    "git_clone_async" : "#/components/schemas/GitTask",
+                    "load_async" : "#/components/schemas/LoadTask",
+                    "reset_async" : "#/components/schemas/ResetTask",
+                    "save_async" : "#/components/schemas/SaveTask",
+                    "copy" : "#/components/schemas/TransferTask"
+                  },
+                  "propertyName" : "action"
+                },
+                "oneOf" : [ {
+                  "$ref" : "#/components/schemas/Task"
+                }, {
+                  "$ref" : "#/components/schemas/GitTask"
+                }, {
+                  "$ref" : "#/components/schemas/LoadTask"
+                }, {
+                  "$ref" : "#/components/schemas/ResetTask"
+                }, {
+                  "$ref" : "#/components/schemas/SaveTask"
+                }, {
+                  "$ref" : "#/components/schemas/TransferTask"
+                } ]
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created (task created). The Location header must be interpreted as a relative path, even if it is\nincorrectly returned as an absolute path (starting with a slash).\n",
+            "headers" : {
+              "Location" : {
+                "explode" : false,
+                "schema" : {
+                  "example" : "/tasks/JQCRqL",
+                  "type" : "string"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Creates a new task",
+        "tags" : [ "tasks" ]
+      }
+    },
+    "/tasks/{id}" : {
+      "get" : {
+        "description" : "Gets properties of a task",
+        "operationId" : "getTask",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "load_async" : {
+                    "$ref" : "#/components/examples/LoadTaskResponse"
+                  },
+                  "reset_async" : {
+                    "$ref" : "#/components/examples/ResetTaskResponse"
+                  },
+                  "save_async" : {
+                    "$ref" : "#/components/examples/SaveTaskResponse"
+                  },
+                  "copy" : {
+                    "summary" : "copy",
+                    "value" : {
+                      "id" : "Rv1EUf",
+                      "state" : "done",
+                      "progress" : 100,
+                      "action" : "copy",
+                      "parameters" : {
+                        "source" : "solutions/DefaultSolution/configurations/Picker",
+                        "destination" : "solutions/DefaultSolution/configurations/Picker.bak"
+                      }
+                    }
+                  }
+                },
+                "schema" : {
+                  "anyOf" : [ {
+                    "$ref" : "#/components/schemas/GitTask"
+                  }, {
+                    "$ref" : "#/components/schemas/LoadTask"
+                  }, {
+                    "$ref" : "#/components/schemas/ResetTask"
+                  }, {
+                    "$ref" : "#/components/schemas/SaveTask"
+                  }, {
+                    "$ref" : "#/components/schemas/TransferTask"
+                  } ],
+                  "discriminator" : {
+                    "mapping" : {
+                      "git_clone_async" : "#/components/schemas/GitTask",
+                      "load_async" : "#/components/schemas/LoadTask",
+                      "reset_async" : "#/components/schemas/ResetTask",
+                      "save_async" : "#/components/schemas/SaveTask",
+                      "copy" : "#/components/schemas/TransferTask"
+                    },
+                    "propertyName" : "action"
+                  }
+                }
+              }
+            },
+            "description" : "OK (object with properties of specified task)"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Gets properties of a task",
+        "tags" : [ "tasks" ]
+      }
+    }
+  },
+  "components" : {
+    "examples" : {
+      "LoadTaskRequest" : {
+        "summary" : "load_async - Asynchronous task to load specified configuration",
+        "value" : {
+          "action" : "load_async",
+          "parameters" : {
+            "configurationPath" : "solutions/DefaultSolution/configurations/Picker",
+            "queryOnly" : false
+          }
+        }
+      },
+      "ResetTaskRequest" : {
+        "summary" : "reset_async - Asynchronous task to reset app data",
+        "value" : {
+          "action" : "reset_async",
+          "parameters" : {
+            "queryOnly" : false
+          }
+        }
+      },
+      "SaveTaskRequest" : {
+        "summary" : "save_async - Asynchronous task to save app data",
+        "value" : {
+          "action" : "save_async"
+        }
+      },
+      "LoadTaskResponse" : {
+        "value" : {
+          "id" : "Rv1EUf",
+          "state" : "done",
+          "progress" : 100,
+          "action" : "load_async",
+          "parameters" : {
+            "configurationPath" : "solutions/DefaultSolution/configurations/Picker",
+            "queryOnly" : true
+          },
+          "result" : {
+            "id" : "Rv1EUf",
+            "configuration" : "Picker",
+            "time" : "2023-07-25T15:25:01.134265444+02:00",
+            "partialResults" : [ {
+              "phase" : "query",
+              "subject" : "axisprofile settings"
+            }, {
+              "phase" : "query",
+              "subject" : "datalayer settings"
+            }, {
+              "phase" : "query",
+              "subject" : "EtherCAT settings",
+              "problem" : {
+                "type" : "about:blank",
+                "title" : "Loading configuration not possible in current state",
+                "status" : 409,
+                "detail" : "Ecat: Device not in Init",
+                "instance" : "fieldbuses/ethercat/master/admin/cfg/load",
+                "mainDiagnosisCode" : "080F0E00",
+                "detailedDiagnosisCode" : "0C884081",
+                "severity" : "Error"
+              }
+            }, {
+              "phase" : "query",
+              "subject" : "motion settings"
+            }, {
+              "phase" : "query",
+              "subject" : "Node-RED flows"
+            }, {
+              "phase" : "query",
+              "subject" : "plc runtime data",
+              "problem" : {
+                "type" : "about:blank",
+                "title" : "Loading configuration not possible in current state",
+                "status" : 409,
+                "detail" : "Loading the configuration in the “RUN” state is not permitted",
+                "instance" : "plc/admin/cfg/load",
+                "mainDiagnosisCode" : "080F0E00",
+                "detailedDiagnosisCode" : "0C280100",
+                "dynamicDescription" : " [rvVptv]",
+                "severity" : "Error"
+              }
+            }, {
+              "phase" : "query",
+              "subject" : "Remote-logging configurations"
+            }, {
+              "phase" : "query",
+              "subject" : "scheduler settings"
+            }, {
+              "phase" : "query",
+              "subject" : "trace settings"
+            }, {
+              "phase" : "query",
+              "subject" : "configuration context"
+            }, {
+              "phase" : "query",
+              "subject" : "trace settings"
+            } ]
+          }
+        }
+      },
+      "ResetTaskResponse" : {
+        "value" : {
+          "id" : "Rv1EUf",
+          "state" : "done",
+          "progress" : 100,
+          "action" : "reset_async",
+          "result" : {
+            "id" : "Rv1EUf",
+            "configuration" : "empty",
+            "time" : "2023-07-25T15:25:01.134265444+02:00",
+            "partialResults" : [ {
+              "phase" : "query",
+              "subject" : "axisprofile settings"
+            }, {
+              "phase" : "query",
+              "subject" : "datalayer settings"
+            }, {
+              "phase" : "query",
+              "subject" : "EtherCAT settings",
+              "problem" : {
+                "type" : "about:blank",
+                "title" : "Loading configuration not possible in current state",
+                "status" : 409,
+                "detail" : "Ecat: Device not in Init",
+                "instance" : "fieldbuses/ethercat/master/admin/cfg/load",
+                "mainDiagnosisCode" : "080F0E00",
+                "detailedDiagnosisCode" : "0C884081",
+                "severity" : "Error"
+              }
+            }, {
+              "phase" : "query",
+              "subject" : "motion settings"
+            }, {
+              "phase" : "query",
+              "subject" : "Node-RED flows"
+            }, {
+              "phase" : "query",
+              "subject" : "plc runtime data",
+              "problem" : {
+                "type" : "about:blank",
+                "title" : "Loading configuration not possible in current state",
+                "status" : 409,
+                "detail" : "Loading the configuration in the “RUN” state is not permitted",
+                "instance" : "plc/admin/cfg/load",
+                "mainDiagnosisCode" : "080F0E00",
+                "detailedDiagnosisCode" : "0C280100",
+                "dynamicDescription" : " [rvVptv]",
+                "severity" : "Error"
+              }
+            }, {
+              "phase" : "query",
+              "subject" : "Remote-logging configurations"
+            }, {
+              "phase" : "query",
+              "subject" : "scheduler settings"
+            }, {
+              "phase" : "query",
+              "subject" : "trace settings"
+            }, {
+              "phase" : "query",
+              "subject" : "configuration context"
+            }, {
+              "phase" : "query",
+              "subject" : "trace settings"
+            } ]
+          }
+        }
+      },
+      "SaveTaskResponse" : {
+        "value" : {
+          "id" : "Rv1EUf",
+          "state" : "done",
+          "progress" : 100,
+          "action" : "save_async",
+          "result" : {
+            "id" : "Rv1EUf",
+            "configuration" : "Picker",
+            "time" : "2023-07-25T15:25:01.134265444+02:00",
+            "partialResults" : [ {
+              "phase" : "query",
+              "subject" : "axisprofile settings"
+            }, {
+              "phase" : "query",
+              "subject" : "datalayer settings"
+            }, {
+              "phase" : "query",
+              "subject" : "EtherCAT settings",
+              "problem" : {
+                "type" : "about:blank",
+                "title" : "Loading configuration not possible in current state",
+                "status" : 409,
+                "detail" : "Ecat: Device not in Init",
+                "instance" : "fieldbuses/ethercat/master/admin/cfg/load",
+                "mainDiagnosisCode" : "080F0E00",
+                "detailedDiagnosisCode" : "0C884081",
+                "severity" : "Error"
+              }
+            }, {
+              "phase" : "query",
+              "subject" : "motion settings"
+            }, {
+              "phase" : "query",
+              "subject" : "Node-RED flows"
+            }, {
+              "phase" : "query",
+              "subject" : "plc runtime data",
+              "problem" : {
+                "type" : "about:blank",
+                "title" : "Loading configuration not possible in current state",
+                "status" : 409,
+                "detail" : "Loading the configuration in the “RUN” state is not permitted",
+                "instance" : "plc/admin/cfg/load",
+                "mainDiagnosisCode" : "080F0E00",
+                "detailedDiagnosisCode" : "0C280100",
+                "dynamicDescription" : " [rvVptv]",
+                "severity" : "Error"
+              }
+            }, {
+              "phase" : "query",
+              "subject" : "Remote-logging configurations"
+            }, {
+              "phase" : "query",
+              "subject" : "scheduler settings"
+            }, {
+              "phase" : "query",
+              "subject" : "trace settings"
+            }, {
+              "phase" : "query",
+              "subject" : "configuration context"
+            }, {
+              "phase" : "query",
+              "subject" : "trace settings"
+            } ]
+          }
+        }
+      }
+    },
+    "responses" : {
+      "Unauthorized" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Not authorized to access this resource"
+      },
+      "Forbidden" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Access forbidden for this resource"
+      },
+      "BadRequest" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The request is incomplete or malformed"
+      },
+      "InternalServerError" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Something unexpected happened on the server"
+      },
+      "NotFound" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The resource was not found"
+      }
+    },
+    "schemas" : {
+      "AppdataGet" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/AppdataPut"
+        }, {
+          "$ref" : "#/components/schemas/ConfigurationMetadata"
+        }, {
+          "$ref" : "#/components/schemas/AppdataGet_allOf"
+        } ],
+        "type" : "object"
+      },
+      "AppdataPut" : {
+        "example" : {
+          "description" : "Picker project"
+        },
+        "properties" : {
+          "description" : {
+            "description" : "Short description of the appdata",
+            "example" : "Picker project",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "AppdataContentGet" : {
+        "example" : {
+          "directories" : [ {
+            "name" : "motion/axes",
+            "icon" : "my-icon",
+            "description" : "Axes Configuration"
+          }, {
+            "name" : "motion/axes",
+            "icon" : "my-icon",
+            "description" : "Axes Configuration"
+          } ]
+        },
+        "properties" : {
+          "directories" : {
+            "description" : "List of appdata directories.",
+            "items" : {
+              "$ref" : "#/components/schemas/ContentDirectory"
+            },
+            "readOnly" : true,
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "Solution" : {
+        "properties" : {
+          "name" : {
+            "description" : "Name of the solution",
+            "maxLength" : 64,
+            "minLength" : 1,
+            "pattern" : "^[a-zA-Z]+[\\w\\-\\_\\.]*$",
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "Short description of the solution",
+            "maxLength" : 256,
+            "minLength" : 0,
+            "type" : "string"
+          }
+        },
+        "required" : [ "name" ],
+        "type" : "object"
+      },
+      "SolutionStatus" : {
+        "properties" : {
+          "active" : {
+            "description" : "True, if solution is the active solution (among others); otherwise, false.",
+            "readOnly" : true,
+            "type" : "boolean"
+          },
+          "status" : {
+            "description" : "Git status of the working directory of the solution",
+            "readOnly" : true,
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "ExtendedSolution" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Solution"
+        }, {
+          "$ref" : "#/components/schemas/SolutionStatus"
+        } ],
+        "type" : "object"
+      },
+      "ExtendedSolutions" : {
+        "items" : {
+          "$ref" : "#/components/schemas/ExtendedSolution"
+        },
+        "type" : "array"
+      },
+      "GitTask" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task"
+        }, {
+          "$ref" : "#/components/schemas/GitTask_allOf"
+        } ],
+        "description" : "Task for long running Git operations"
+      },
+      "LoadTask" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task"
+        }, {
+          "$ref" : "#/components/schemas/LoadTask_allOf"
+        } ],
+        "description" : "Task for loading a specified configuration into the apps"
+      },
+      "ResetTask" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task"
+        }, {
+          "$ref" : "#/components/schemas/ResetTask_allOf"
+        } ],
+        "description" : "Task for resetting the data of the apps"
+      },
+      "SaveTask" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task"
+        }, {
+          "$ref" : "#/components/schemas/SaveTask_allOf"
+        } ],
+        "description" : "Task for saving the data of the apps"
+      },
+      "Task" : {
+        "discriminator" : {
+          "propertyName" : "action"
+        },
+        "properties" : {
+          "id" : {
+            "description" : "A server generated ID used to identify the task. This ID is unique.",
+            "example" : "123",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "state" : {
+            "description" : "The state of the task.",
+            "enum" : [ "pending", "failed", "done", "running" ],
+            "example" : "running",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "action" : {
+            "description" : "The action name executed by this task. This has to be inherited and overwritten by the application.",
+            "type" : "string"
+          },
+          "progress" : {
+            "description" : "Optional progress of the task in percentage.",
+            "example" : 10,
+            "maximum" : 100,
+            "minimum" : 0,
+            "readOnly" : true,
+            "type" : "integer"
+          },
+          "eta" : {
+            "description" : "Optional ETA in RFC 3339 format.",
+            "example" : "2019-01-01T12:00:27.87+00:20",
+            "format" : "dateTime",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "parameters" : {
+            "additionalProperties" : true,
+            "description" : "Optional map of additional parameters required by the request. Should be defined when inherited by an application.",
+            "type" : "object"
+          },
+          "result" : {
+            "additionalProperties" : true,
+            "description" : "Optional map reflecting the result of the task. May be empty until task completition. Should be defined when inherited by an application.",
+            "readOnly" : true,
+            "type" : "object"
+          }
+        },
+        "required" : [ "action", "id", "state" ],
+        "type" : "object"
+      },
+      "TransferTask" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task"
+        }, {
+          "$ref" : "#/components/schemas/TransferTask_allOf"
+        } ],
+        "description" : "Handle asynchronous transfer requests, e.g. copy configurations"
+      },
+      "Configuration" : {
+        "properties" : {
+          "name" : {
+            "description" : "Name of the configuration",
+            "example" : "PickerControl",
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "Short description of the configuration",
+            "example" : "This configuration is used to represent a picker",
+            "type" : "string"
+          },
+          "deploy" : {
+            "$ref" : "#/components/schemas/Configuration_deploy"
+          },
+          "features" : {
+            "deprecated" : true,
+            "description" : "Features is not used by the Solutions app and should\nnot be used by others. It is kept for compatibility.\nIt will be removed with the next major release (v2.0.0)\n",
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "units" : {
+            "deprecated" : true,
+            "description" : "Units is not used by the Solutions app and should\nnot be used by others. It is kept for compatibility.\nIt will be removed with the next major release (v2.0.0)\n",
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "name" ],
+        "type" : "object"
+      },
+      "ConfigurationStatus" : {
+        "properties" : {
+          "active" : {
+            "description" : "True, if configuration is the appdata configuration; otherwise, false.\nThis flag is ignored on PUT and POST requests.\n",
+            "readOnly" : true,
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "ConfigurationMetadata" : {
+        "description" : "Configuration metadata contains information about the system context\nin which a configuration was created or used.\nConfiguration metadata are managed by the Solutions app.\n",
+        "properties" : {
+          "modTime" : {
+            "description" : "Timestamp in RFC 3339 format when the configuration was modified",
+            "example" : "2019-01-01T12:00:27.87+00:20",
+            "format" : "date-time",
+            "nullable" : true,
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "device" : {
+            "description" : "Name of the device where the configuration has been saved or loaded",
+            "example" : "ctrlX-1",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "user" : {
+            "description" : "Name of the logged-in user who has saved or loaded the configuration",
+            "example" : "boschrexroth",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "apps" : {
+            "description" : "List of apps which have been enabled while the configuration has been saved or loaded",
+            "items" : {
+              "$ref" : "#/components/schemas/App"
+            },
+            "nullable" : true,
+            "readOnly" : true,
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "ExtendedConfiguration" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Configuration"
+        }, {
+          "$ref" : "#/components/schemas/ConfigurationStatus"
+        }, {
+          "$ref" : "#/components/schemas/ConfigurationMetadata"
+        } ],
+        "type" : "object"
+      },
+      "ExtendedConfigurations" : {
+        "items" : {
+          "$ref" : "#/components/schemas/ExtendedConfiguration"
+        },
+        "type" : "array"
+      },
+      "ActiveConfigurationState" : {
+        "example" : {
+          "loadTime" : "2019-01-01T12:00:27.87+00:20",
+          "solution" : "solution",
+          "name" : "name",
+          "loadResult" : {
+            "configuration" : "Picker",
+            "id" : "282xy5",
+            "time" : "2019-01-01T12:00:27.87+00:20",
+            "partialResults" : [ {
+              "phase" : "prepare",
+              "app" : "myapp",
+              "problem" : {
+                "severity" : "Error",
+                "instance" : "/account/12345/msgs/abc",
+                "code" : "F360001",
+                "dynamicDescription" : "value = -4.5",
+                "cause" : [ null, null ],
+                "type" : "https://example.com/probs/out-of-credit",
+                "title" : "You do not have enough credit.",
+                "moreInfo" : {
+                  "trace" : "ExampleClass.cpp#452 Null pointer exception",
+                  "class" : "ExampleClass"
+                },
+                "detailedDiagnosisCode" : "00666001",
+                "links" : [ "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001", "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001" ],
+                "detail" : "Your current balance is 30, but that costs 50.",
+                "status" : 403,
+                "mainDiagnosisCode" : "080F0100"
+              },
+              "subject" : "motion settings"
+            }, {
+              "phase" : "prepare",
+              "app" : "myapp",
+              "problem" : {
+                "severity" : "Error",
+                "instance" : "/account/12345/msgs/abc",
+                "code" : "F360001",
+                "dynamicDescription" : "value = -4.5",
+                "cause" : [ null, null ],
+                "type" : "https://example.com/probs/out-of-credit",
+                "title" : "You do not have enough credit.",
+                "moreInfo" : {
+                  "trace" : "ExampleClass.cpp#452 Null pointer exception",
+                  "class" : "ExampleClass"
+                },
+                "detailedDiagnosisCode" : "00666001",
+                "links" : [ "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001", "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001" ],
+                "detail" : "Your current balance is 30, but that costs 50.",
+                "status" : 403,
+                "mainDiagnosisCode" : "080F0100"
+              },
+              "subject" : "motion settings"
+            } ]
+          },
+          "loadResults" : [ {
+            "problem" : {
+              "severity" : "Error",
+              "instance" : "/account/12345/msgs/abc",
+              "code" : "F360001",
+              "dynamicDescription" : "value = -4.5",
+              "cause" : [ null, null ],
+              "type" : "https://example.com/probs/out-of-credit",
+              "title" : "You do not have enough credit.",
+              "moreInfo" : {
+                "trace" : "ExampleClass.cpp#452 Null pointer exception",
+                "class" : "ExampleClass"
+              },
+              "detailedDiagnosisCode" : "00666001",
+              "links" : [ "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001", "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001" ],
+              "detail" : "Your current balance is 30, but that costs 50.",
+              "status" : 403,
+              "mainDiagnosisCode" : "080F0100"
+            },
+            "subject" : "subject"
+          }, {
+            "problem" : {
+              "severity" : "Error",
+              "instance" : "/account/12345/msgs/abc",
+              "code" : "F360001",
+              "dynamicDescription" : "value = -4.5",
+              "cause" : [ null, null ],
+              "type" : "https://example.com/probs/out-of-credit",
+              "title" : "You do not have enough credit.",
+              "moreInfo" : {
+                "trace" : "ExampleClass.cpp#452 Null pointer exception",
+                "class" : "ExampleClass"
+              },
+              "detailedDiagnosisCode" : "00666001",
+              "links" : [ "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001", "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001" ],
+              "detail" : "Your current balance is 30, but that costs 50.",
+              "status" : 403,
+              "mainDiagnosisCode" : "080F0100"
+            },
+            "subject" : "subject"
+          } ]
+        },
+        "properties" : {
+          "name" : {
+            "description" : "Name of the active configuration.",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "solution" : {
+            "description" : "Name of the active solution.",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "loadTime" : {
+            "description" : "Timestamp in RFC 3339 format when active configuration was loaded.",
+            "example" : "2019-01-01T12:00:27.87+00:20",
+            "format" : "date-time",
+            "nullable" : true,
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "loadResult" : {
+            "$ref" : "#/components/schemas/Result"
+          },
+          "loadResults" : {
+            "deprecated" : true,
+            "description" : "Array of the latest load results.\nWill be removed with next major version.\nUse loadResult instead.\n",
+            "items" : {
+              "$ref" : "#/components/schemas/LoadResult"
+            },
+            "readOnly" : true,
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "ActiveSolutionState" : {
+        "example" : {
+          "git-status" : "git-status",
+          "configuration" : "configuration",
+          "name" : "name"
+        },
+        "properties" : {
+          "name" : {
+            "description" : "Name of the solution",
+            "type" : "string"
+          },
+          "configuration" : {
+            "description" : "Name of the active configuration inside the solution",
+            "type" : "string"
+          },
+          "git-status" : {
+            "description" : "Git status of the working directory of the solution",
+            "readOnly" : true,
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "DiffResult" : {
+        "description" : "The result provided if two filesystem entries are compared.",
+        "example" : {
+          "entries" : [ ],
+          "name" : "My element",
+          "count" : 0,
+          "modified" : {
+            "left" : "2019-01-01T12:00:27.87+00:20",
+            "right" : "2019-01-01T12:00:27.87+00:20"
+          },
+          "type" : "equal",
+          "isDir" : false
+        },
+        "properties" : {
+          "name" : {
+            "description" : "The name of the compared filesystem entry.",
+            "example" : "My element",
+            "type" : "string"
+          },
+          "isDir" : {
+            "description" : "True if the compared filesystem entry is a directory and may contain other filesystem entries.",
+            "example" : false,
+            "type" : "boolean"
+          },
+          "type" : {
+            "description" : "Describes the difference of a filesystem entry to a compared source.\n* `equal` - Entry exists in both sources with equal content\n* `different` - Entry exists in both sources but with different content\n* `leftOnly` - Entry only exists in the left (origin) source\n* `rightOnly` - Entry only exists in the right (compared) source\n",
+            "enum" : [ "equal", "different", "leftOnly", "rightOnly" ],
+            "example" : "equal",
+            "type" : "string"
+          },
+          "count" : {
+            "description" : "The number of differences found.",
+            "example" : 0,
+            "type" : "integer"
+          },
+          "modified" : {
+            "$ref" : "#/components/schemas/DiffResultModified"
+          },
+          "entries" : {
+            "example" : [ ],
+            "items" : {
+              "$ref" : "#/components/schemas/DiffResult"
+            },
+            "nullable" : true,
+            "type" : "array"
+          }
+        },
+        "required" : [ "count", "name", "type" ],
+        "type" : "object"
+      },
+      "DirectoryEntry" : {
+        "example" : {
+          "name" : "name",
+          "files" : [ {
+            "crc" : "crc",
+            "name" : "name"
+          }, {
+            "crc" : "crc",
+            "name" : "name"
+          } ],
+          "directories" : [ null, null ]
+        },
+        "properties" : {
+          "name" : {
+            "description" : "Name of the directory",
+            "type" : "string"
+          },
+          "files" : {
+            "items" : {
+              "$ref" : "#/components/schemas/FileEntry"
+            },
+            "type" : "array"
+          },
+          "directories" : {
+            "items" : {
+              "$ref" : "#/components/schemas/DirectoryEntry"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "FilesystemEntry" : {
+        "example" : {
+          "owner" : "root",
+          "entries" : [ ],
+          "size" : 128,
+          "name" : "configuration.json",
+          "checksum" : "d4c2f2cf38de6a88de9a7f4f5194da51",
+          "modified" : "2019-01-01T12:00:27.87+00:20",
+          "isContainer" : false,
+          "readOnly" : true,
+          "fileMode" : "-rw-r--r--",
+          "group" : "root"
+        },
+        "properties" : {
+          "name" : {
+            "description" : "Name of the filesystem element",
+            "example" : "configuration.json",
+            "type" : "string"
+          },
+          "size" : {
+            "description" : "Size of the filesystem element in bytes",
+            "example" : 128,
+            "format" : "int64",
+            "nullable" : true,
+            "type" : "integer"
+          },
+          "modified" : {
+            "description" : "Date of last modification. Timestamp in RFC 3339 format.",
+            "example" : "2019-01-01T12:00:27.87+00:20",
+            "format" : "date-time",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "readOnly" : {
+            "description" : "True, if filesystem element is readonly",
+            "example" : true,
+            "type" : "boolean"
+          },
+          "owner" : {
+            "description" : "Owner of the filesystem element",
+            "example" : "root",
+            "type" : "string"
+          },
+          "group" : {
+            "description" : "Group of the filesystem element",
+            "example" : "root",
+            "type" : "string"
+          },
+          "fileMode" : {
+            "description" : "File's mode and permissions of the filesystem element\nin symbolic notation of standard unix permissions\nsuch as '-rwxr-xr-x' or 'drwxr-xr-x'.\n",
+            "example" : "-rw-r--r--",
+            "type" : "string"
+          },
+          "isContainer" : {
+            "description" : "True if the filesystem entry is a directory and may contain other filesystem entries",
+            "example" : false,
+            "type" : "boolean"
+          },
+          "checksum" : {
+            "description" : "Checksum if the filesystem entry is a file and the checksum has been requested.\nThe checksum is computed for the complete file content and may therefore be used to check\nif the contents of two files are identical or different.\n",
+            "example" : "d4c2f2cf38de6a88de9a7f4f5194da51",
+            "type" : "string"
+          },
+          "entries" : {
+            "example" : [ ],
+            "items" : {
+              "$ref" : "#/components/schemas/FilesystemEntry"
+            },
+            "nullable" : true,
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "Problem" : {
+        "description" : "This document defines a \"problem detail\" as a way  to carry machine-readable details of errors in a  HTTP response to avoid the need to define new error  response formats for HTTP APIs.\n",
+        "example" : {
+          "severity" : "Error",
+          "instance" : "/account/12345/msgs/abc",
+          "code" : "F360001",
+          "dynamicDescription" : "value = -4.5",
+          "cause" : [ null, null ],
+          "type" : "https://example.com/probs/out-of-credit",
+          "title" : "You do not have enough credit.",
+          "moreInfo" : {
+            "trace" : "ExampleClass.cpp#452 Null pointer exception",
+            "class" : "ExampleClass"
+          },
+          "detailedDiagnosisCode" : "00666001",
+          "links" : [ "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001", "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001" ],
+          "detail" : "Your current balance is 30, but that costs 50.",
+          "status" : 403,
+          "mainDiagnosisCode" : "080F0100"
+        },
+        "properties" : {
+          "type" : {
+            "default" : "about:blank",
+            "description" : "A URI reference [RFC3986] that identifies the problem type. \nThis specification encourages that, when dereferenced, \nit provide human-readable documentation for the problem type \n(e.g., using HTML [W3C.REC-html5-20141028]). When this member \nis not present, its value is assumed to be \"about:blank\".\n",
+            "example" : "https://example.com/probs/out-of-credit",
+            "format" : "uri",
+            "type" : "string"
+          },
+          "title" : {
+            "description" : "A short, human-readable summary of the problem type. \nIt SHOULD NOT change from occurrence to occurrence of the problem, \nexcept for purposes of localization (e.g., using proactive content \nnegotiation; see [RFC7231], Section 3.4).\nIf the response is a diagnostics message, it contains \nthe text associated with the mainDiagnosisCode.\n",
+            "example" : "You do not have enough credit.",
+            "type" : "string"
+          },
+          "status" : {
+            "description" : "The HTTP status code ([RFC7231], Section 6) generated by the \norigin server for this occurrence of the problem.\n",
+            "example" : 403,
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "detail" : {
+            "description" : "A human-readable explanation specific to this occurrence of the problem.\nIf the response is a diagnostics message, it contains the text associated with\nthe detailedDiagnosisCode.\n",
+            "example" : "Your current balance is 30, but that costs 50.",
+            "type" : "string"
+          },
+          "instance" : {
+            "description" : "A URI reference that identifies the specific occurrence of the problem.\nIt may or may not yield further information if dereferenced.\n",
+            "example" : "/account/12345/msgs/abc",
+            "type" : "string"
+          },
+          "code" : {
+            "deprecated" : true,
+            "description" : "An error code issued by the system that caused the original problem.\nThis code can be used to track down the root cause of the error.\n",
+            "example" : "F360001",
+            "type" : "string"
+          },
+          "mainDiagnosisCode" : {
+            "description" : "The main diagnosis code is issued by the system that caused the problem.\nThis code can be used to track down the root cause and source of the error.\nIt can be used to search in the documentation for a solution.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "080F0100",
+            "type" : "string"
+          },
+          "detailedDiagnosisCode" : {
+            "description" : "The detailed diagnosis code issued by the system that caused the problem.\nThis code can be used to track down the detailed cause and source of the error.\nIt can be used to search in the documentation for a solution.\nThe detailed diagnosis code gives additional information about the cause of the error.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "00666001",
+            "type" : "string"
+          },
+          "dynamicDescription" : {
+            "description" : "A dynamic description gives detailed information about the occurrence of a problem.\nIt can change between different occurrences of the same error.\n",
+            "example" : "value = -4.5",
+            "type" : "string"
+          },
+          "severity" : {
+            "description" : " Severity of a problem as defined RFC5424 of the Syslog standard, see https://tools.ietf.org/html/rfc5424",
+            "enum" : [ "Emergency", "Alert", "Critical", "Error", "Warning", "Notice", "Informational", "Debug" ],
+            "example" : "Error",
+            "type" : "string"
+          },
+          "links" : {
+            "description" : "Collection of links to fix the problem. E.g. links to online user manual,\nto an online community (using tags) or a developer chat (e.g. Slack).\n",
+            "items" : {
+              "example" : "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001",
+              "format" : "uri",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "moreInfo" : {
+            "additionalProperties" : true,
+            "description" : "The moreInfo field allows you to add additional information that might be necessary to debug or trace down the cause of an error.\nIt might also contain information what is needed to resolve the problem.\nThere are loosely specified fields for specific problems that can be used in these situations, e.g.:\n- On a 403 Forbidden error: The moreInfo can contain a field \"requiredPermissions\" with the required permissions seperated by comma\n- On a 402 Payment required: The moreInfo can contain a field \"requiredLicenses\" with the required licenses seperated by comma\n",
+            "example" : {
+              "trace" : "ExampleClass.cpp#452 Null pointer exception",
+              "class" : "ExampleClass"
+            },
+            "type" : "object"
+          },
+          "cause" : {
+            "description" : "Sometimes a problem might be caused by problems that occure in other components or are the root cause of a problem. In this\ncase the related problems can be added as a cause. Since it might be possible that multiple components have problems on a single\naction, cause is an array. E.g. Loading failed because several components where not able to load the configuration.\n",
+            "items" : {
+              "$ref" : "#/components/schemas/Problem"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "title", "type" ],
+        "type" : "object",
+        "x-version" : "1.0.0"
+      },
+      "DiffResultModified" : {
+        "description" : "Modification dates of origin filesystem entry (left) and compared filesystem entry (right).",
+        "example" : {
+          "left" : "2019-01-01T12:00:27.87+00:20",
+          "right" : "2019-01-01T12:00:27.87+00:20"
+        },
+        "nullable" : true,
+        "properties" : {
+          "left" : {
+            "description" : "Modification date of the origin filesystem entry as timestamp in RFC 3339 format.",
+            "example" : "2019-01-01T12:00:27.87+00:20",
+            "format" : "date-time",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "right" : {
+            "description" : "Modification date of the compared filesystem entry as timestamp in RFC 3339 format.",
+            "example" : "2019-01-01T12:00:27.87+00:20",
+            "format" : "date-time",
+            "nullable" : true,
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "DiffResultEntries" : {
+        "example" : [ ],
+        "items" : {
+          "$ref" : "#/components/schemas/DiffResult"
+        },
+        "nullable" : true,
+        "type" : "array"
+      },
+      "DirectoryEntries" : {
+        "items" : {
+          "$ref" : "#/components/schemas/DirectoryEntry"
+        },
+        "type" : "array"
+      },
+      "FilesystemEntries" : {
+        "example" : [ ],
+        "items" : {
+          "$ref" : "#/components/schemas/FilesystemEntry"
+        },
+        "nullable" : true,
+        "type" : "array"
+      },
+      "Result" : {
+        "description" : "The overall result of a save or load operation.",
+        "example" : {
+          "configuration" : "Picker",
+          "id" : "282xy5",
+          "time" : "2019-01-01T12:00:27.87+00:20",
+          "partialResults" : [ {
+            "phase" : "prepare",
+            "app" : "myapp",
+            "problem" : {
+              "severity" : "Error",
+              "instance" : "/account/12345/msgs/abc",
+              "code" : "F360001",
+              "dynamicDescription" : "value = -4.5",
+              "cause" : [ null, null ],
+              "type" : "https://example.com/probs/out-of-credit",
+              "title" : "You do not have enough credit.",
+              "moreInfo" : {
+                "trace" : "ExampleClass.cpp#452 Null pointer exception",
+                "class" : "ExampleClass"
+              },
+              "detailedDiagnosisCode" : "00666001",
+              "links" : [ "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001", "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001" ],
+              "detail" : "Your current balance is 30, but that costs 50.",
+              "status" : 403,
+              "mainDiagnosisCode" : "080F0100"
+            },
+            "subject" : "motion settings"
+          }, {
+            "phase" : "prepare",
+            "app" : "myapp",
+            "problem" : {
+              "severity" : "Error",
+              "instance" : "/account/12345/msgs/abc",
+              "code" : "F360001",
+              "dynamicDescription" : "value = -4.5",
+              "cause" : [ null, null ],
+              "type" : "https://example.com/probs/out-of-credit",
+              "title" : "You do not have enough credit.",
+              "moreInfo" : {
+                "trace" : "ExampleClass.cpp#452 Null pointer exception",
+                "class" : "ExampleClass"
+              },
+              "detailedDiagnosisCode" : "00666001",
+              "links" : [ "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001", "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001" ],
+              "detail" : "Your current balance is 30, but that costs 50.",
+              "status" : 403,
+              "mainDiagnosisCode" : "080F0100"
+            },
+            "subject" : "motion settings"
+          } ]
+        },
+        "properties" : {
+          "id" : {
+            "description" : "A random code which identifies the instance of the save or load operation.\nShould be used to tag related log messages.\nThe value 'nullid' denotes that this result is uninitialized.\n",
+            "example" : "282xy5",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "configuration" : {
+            "description" : "The configuration that was saved or loaded.",
+            "example" : "Picker",
+            "nullable" : true,
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "time" : {
+            "description" : "Time in RFC 3339 format when the configuration was saved or loaded.",
+            "example" : "2019-01-01T12:00:27.87+00:20",
+            "format" : "date-time",
+            "nullable" : true,
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "partialResults" : {
+            "description" : "Partial results provided by the participants of the operation.",
+            "items" : {
+              "$ref" : "#/components/schemas/PartialResult"
+            },
+            "readOnly" : true,
+            "type" : "array"
+          }
+        },
+        "required" : [ "id" ],
+        "type" : "object"
+      },
+      "ContentDirectory" : {
+        "description" : "Describes a directory contained in a configuration.\n",
+        "example" : {
+          "name" : "motion/axes",
+          "icon" : "my-icon",
+          "description" : "Axes Configuration"
+        },
+        "properties" : {
+          "name" : {
+            "description" : "Name or path of the directory",
+            "example" : "motion/axes",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "Short description of the content or purpose of the directory",
+            "example" : "Axes Configuration",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "icon" : {
+            "description" : "Name of a font icon",
+            "example" : "my-icon",
+            "readOnly" : true,
+            "type" : "string"
+          }
+        },
+        "required" : [ "name" ],
+        "type" : "object"
+      },
+      "App" : {
+        "description" : "App which was enabled while the configuration has been saved or loaded",
+        "properties" : {
+          "name" : {
+            "description" : "Name of the app",
+            "example" : "rexroth-motion",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "title" : {
+            "description" : "Display title of the app",
+            "example" : "Motion",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "version" : {
+            "description" : "Semantic version of the app",
+            "example" : "1.2.3",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "appDirectories" : {
+            "description" : "List of directories owned by the app",
+            "items" : {
+              "$ref" : "#/components/schemas/AppDirectory"
+            },
+            "readOnly" : true,
+            "type" : "array"
+          }
+        },
+        "required" : [ "name" ],
+        "type" : "object"
+      },
+      "LoadResult" : {
+        "deprecated" : true,
+        "description" : "The result provided by a participant of a load operation.\nWill be removed with next major version (v2.0.0).\nUse Result instead.\n",
+        "example" : {
+          "problem" : {
+            "severity" : "Error",
+            "instance" : "/account/12345/msgs/abc",
+            "code" : "F360001",
+            "dynamicDescription" : "value = -4.5",
+            "cause" : [ null, null ],
+            "type" : "https://example.com/probs/out-of-credit",
+            "title" : "You do not have enough credit.",
+            "moreInfo" : {
+              "trace" : "ExampleClass.cpp#452 Null pointer exception",
+              "class" : "ExampleClass"
+            },
+            "detailedDiagnosisCode" : "00666001",
+            "links" : [ "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001", "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001" ],
+            "detail" : "Your current balance is 30, but that costs 50.",
+            "status" : 403,
+            "mainDiagnosisCode" : "080F0100"
+          },
+          "subject" : "subject"
+        },
+        "properties" : {
+          "subject" : {
+            "description" : "The subject of the result (subject = what has been loaded, e.g. motion settings)",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "problem" : {
+            "$ref" : "#/components/schemas/Problem"
+          }
+        },
+        "type" : "object"
+      },
+      "FileEntry" : {
+        "example" : {
+          "crc" : "crc",
+          "name" : "name"
+        },
+        "properties" : {
+          "name" : {
+            "description" : "Name of the file",
+            "type" : "string"
+          },
+          "crc" : {
+            "description" : "Checksum of the file",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "PartialResult" : {
+        "description" : "Result provided by a participant of a save or load operation.",
+        "example" : {
+          "phase" : "prepare",
+          "app" : "myapp",
+          "problem" : {
+            "severity" : "Error",
+            "instance" : "/account/12345/msgs/abc",
+            "code" : "F360001",
+            "dynamicDescription" : "value = -4.5",
+            "cause" : [ null, null ],
+            "type" : "https://example.com/probs/out-of-credit",
+            "title" : "You do not have enough credit.",
+            "moreInfo" : {
+              "trace" : "ExampleClass.cpp#452 Null pointer exception",
+              "class" : "ExampleClass"
+            },
+            "detailedDiagnosisCode" : "00666001",
+            "links" : [ "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001", "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001" ],
+            "detail" : "Your current balance is 30, but that costs 50.",
+            "status" : 403,
+            "mainDiagnosisCode" : "080F0100"
+          },
+          "subject" : "motion settings"
+        },
+        "properties" : {
+          "phase" : {
+            "description" : "The phase in which this result was reported.",
+            "example" : "prepare",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "app" : {
+            "description" : "The app providing this result.",
+            "example" : "myapp",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "subject" : {
+            "description" : "The subject of this result (subject = what has been saved or loaded).",
+            "example" : "motion settings",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "problem" : {
+            "$ref" : "#/components/schemas/Problem"
+          }
+        },
+        "type" : "object"
+      },
+      "AppDirectory" : {
+        "description" : "Describes an app directory stored as part of a configuration.",
+        "properties" : {
+          "name" : {
+            "description" : "Path of the app directory in the configuration.",
+            "example" : "my-app",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "Short description of the directory content (visible in the Solutions UI).",
+            "example" : "My app",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "icon" : {
+            "description" : "An optional icon representing the app.",
+            "example" : "bosch-ic-robot",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "permissions" : {
+            "deprecated" : true,
+            "description" : "Permissions are deprecated and no longer have effect.\n",
+            "example" : [ "edit_oem_scripts", "edit_system_scripts" ],
+            "items" : {
+              "type" : "string"
+            },
+            "readOnly" : true,
+            "type" : "array"
+          },
+          "scopes" : {
+            "deprecated" : true,
+            "description" : "Scopes are deprecated and no longer have effect.",
+            "items" : {
+              "type" : "string"
+            },
+            "readOnly" : true,
+            "type" : "array"
+          },
+          "copyOnLoad" : {
+            "default" : false,
+            "description" : "If true, the copy operation is done by the Solutions app; otherwise, by the app itself.\n",
+            "example" : true,
+            "readOnly" : true,
+            "type" : "boolean"
+          },
+          "writeProtected" : {
+            "default" : true,
+            "description" : "If true, the directory is protected against changes through WebDAV or the Solutions UI.\n",
+            "example" : false,
+            "nullable" : true,
+            "readOnly" : true,
+            "type" : "boolean"
+          }
+        },
+        "required" : [ "name" ],
+        "type" : "object"
+      },
+      "AppdataGet_allOf" : {
+        "properties" : {
+          "lastLoadResult" : {
+            "$ref" : "#/components/schemas/Result"
+          }
+        }
+      },
+      "GitTask_allOf_parameters" : {
+        "properties" : {
+          "command" : {
+            "description" : "The Git command  to be executed",
+            "example" : "clone",
+            "type" : "string"
+          },
+          "configurationName" : {
+            "description" : "The name of the configuration.",
+            "example" : "Picker",
+            "type" : "string"
+          },
+          "remoteUrl" : {
+            "description" : "The url of the remote repository.",
+            "type" : "string"
+          }
+        }
+      },
+      "GitTask_allOf" : {
+        "properties" : {
+          "action" : {
+            "description" : "* `git_async` - Task for long running Git commands\n",
+            "enum" : [ "git_async" ],
+            "type" : "string"
+          },
+          "progressText" : {
+            "type" : "string"
+          },
+          "parameters" : {
+            "$ref" : "#/components/schemas/GitTask_allOf_parameters"
+          },
+          "result" : {
+            "description" : "The result of the operation.",
+            "readOnly" : true,
+            "type" : "object"
+          }
+        }
+      },
+      "LoadTask_allOf_parameters" : {
+        "properties" : {
+          "configurationPath" : {
+            "description" : "The path of the configuration to be loaded, starting from the solutions directory.",
+            "example" : "solutions/DefaultSolution/configurations/Picker",
+            "type" : "string"
+          },
+          "queryOnly" : {
+            "description" : "If true, only performs the query phase to check if system\nis ready for loading the specified configuration.\n",
+            "type" : "boolean"
+          }
+        }
+      },
+      "LoadTask_allOf" : {
+        "properties" : {
+          "action" : {
+            "description" : "* `load_async` - Task for loading a specified configuration into the apps\n",
+            "enum" : [ "load_async" ],
+            "type" : "string"
+          },
+          "parameters" : {
+            "$ref" : "#/components/schemas/LoadTask_allOf_parameters"
+          },
+          "result" : {
+            "$ref" : "#/components/schemas/Result"
+          }
+        }
+      },
+      "ResetTask_allOf_parameters" : {
+        "properties" : {
+          "queryOnly" : {
+            "description" : "If true, only performs the query phase to check if system\nis ready for resetting the data of the apps.\n",
+            "type" : "boolean"
+          }
+        }
+      },
+      "ResetTask_allOf" : {
+        "properties" : {
+          "action" : {
+            "description" : "* `reset_async` - Task for resetting the data of the apps\n",
+            "enum" : [ "reset_async" ],
+            "type" : "string"
+          },
+          "parameters" : {
+            "$ref" : "#/components/schemas/ResetTask_allOf_parameters"
+          },
+          "result" : {
+            "$ref" : "#/components/schemas/Result"
+          }
+        }
+      },
+      "SaveTask_allOf" : {
+        "properties" : {
+          "action" : {
+            "description" : "* `save_async` - Task for saving the data of the apps\n",
+            "enum" : [ "save_async" ],
+            "type" : "string"
+          },
+          "result" : {
+            "$ref" : "#/components/schemas/Result"
+          }
+        }
+      },
+      "TransferTask_allOf_parameters" : {
+        "properties" : {
+          "source" : {
+            "description" : "Path to the source configuration in the format 'solutions/{solution}/configurations/{configuration}'",
+            "type" : "string"
+          },
+          "destination" : {
+            "description" : "Path to the destination configuration in the format 'solutions/{solution}/configurations/{configuration}'",
+            "type" : "string"
+          }
+        }
+      },
+      "TransferTask_allOf" : {
+        "properties" : {
+          "action" : {
+            "description" : "* `copy` - Copies the content of an configuration to another location              \n",
+            "enum" : [ "copy" ],
+            "type" : "string"
+          },
+          "parameters" : {
+            "$ref" : "#/components/schemas/TransferTask_allOf_parameters"
+          },
+          "result" : {
+            "oneOf" : [ {
+              "additionalProperties" : {
+                "example" : "{\"Error\": \"Error type\"}",
+                "type" : "string"
+              },
+              "description" : "Generic result object",
+              "type" : "object"
+            }, {
+              "$ref" : "#/components/schemas/Problem"
+            } ]
+          }
+        }
+      },
+      "Configuration_deploy" : {
+        "description" : "Deploy is not used by the Solutions app and should\nnot be used by others. It is kept for compatibility.\nIt will be removed with the next major release (v2.0.0)\n",
+        "properties" : {
+          "constraints" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        }
+      }
+    },
+    "securitySchemes" : {
+      "UsernamePassword" : {
+        "description" : "Enter username and password",
+        "flows" : {
+          "password" : {
+            "scopes" : {
+              "dummy" : "Dummy scope (scopes not used)"
+            },
+            "tokenUrl" : "/identity-manager/api/v2/auth/token"
+          }
+        },
+        "type" : "oauth2"
+      },
+      "Bearer" : {
+        "description" : "Alternatively&colon; Enter bearer token (without prefix 'Bearer')",
+        "scheme" : "bearer",
+        "type" : "http"
+      }
+    }
+  }
+}
