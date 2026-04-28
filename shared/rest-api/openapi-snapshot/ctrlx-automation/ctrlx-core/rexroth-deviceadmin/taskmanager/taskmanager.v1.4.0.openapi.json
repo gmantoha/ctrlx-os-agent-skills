@@ -1,0 +1,368 @@
+{
+  "openapi" : "3.0.2",
+  "info" : {
+    "contact" : {
+      "email" : "support@boschrexroth.com",
+      "name" : "Bosch Rexroth Support",
+      "url" : "https://www.boschrexroth.com"
+    },
+    "description" : "API description to manage system tasks on ctrlX OS devices",
+    "title" : "ctrlX OS Task Manager",
+    "version" : "1.4.0"
+  },
+  "servers" : [ {
+    "description" : "Use this, if this page and the api are on the same server",
+    "url" : "/task-manager/api/v1"
+  }, {
+    "url" : "{protocol}://{host}/task-manager/api/v1",
+    "variables" : {
+      "protocol" : {
+        "default" : "https",
+        "description" : "Protocol to access the host (http or https)",
+        "enum" : [ "https", "http" ]
+      },
+      "host" : {
+        "default" : "localhost:443",
+        "description" : "Hostname (or IP) and port of the Service"
+      }
+    }
+  } ],
+  "security" : [ {
+    "UsernamePassword" : [ ]
+  }, {
+    "Bearer" : [ ]
+  } ],
+  "tags" : [ {
+    "description" : "Group all snaps and processes related information",
+    "name" : "processes"
+  } ],
+  "paths" : {
+    "/processes" : {
+      "get" : {
+        "description" : "Returns list of snaps and its threads",
+        "operationId" : "getProcesses",
+        "parameters" : [ {
+          "description" : "If the withThreads parameter is set to true, the response will include processes and threads. If it is set to false, the response will contain only processes and no threads.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "withThreads",
+          "required" : false,
+          "schema" : {
+            "default" : true,
+            "type" : "boolean"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Processes"
+                }
+              }
+            },
+            "description" : "list of all process and threads"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get list of snaps and their related threads",
+        "tags" : [ "processes" ]
+      }
+    }
+  },
+  "components" : {
+    "parameters" : {
+      "withThreads" : {
+        "description" : "If the withThreads parameter is set to true, the response will include processes and threads. If it is set to false, the response will contain only processes and no threads.",
+        "explode" : true,
+        "in" : "query",
+        "name" : "withThreads",
+        "required" : false,
+        "schema" : {
+          "default" : true,
+          "type" : "boolean"
+        },
+        "style" : "form"
+      }
+    },
+    "responses" : {
+      "Unauthorized" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Not authorized to access this resource"
+      },
+      "Forbidden" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Access forbidden for this resource"
+      },
+      "InternalServerError" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Something unexpected happened on the server"
+      }
+    },
+    "schemas" : {
+      "Processes" : {
+        "description" : "list of the processes of the system",
+        "example" : {
+          "processes" : [ {
+            "cpuUsage" : 5.4,
+            "memoryUsage" : 5242,
+            "appName" : "Device Admin",
+            "name" : "control",
+            "isThread" : true,
+            "pid" : 4100,
+            "state" : "running",
+            "priority" : 20,
+            "lastUsedCpuCore" : 1,
+            "ppid" : 2373
+          }, {
+            "cpuUsage" : 5.4,
+            "memoryUsage" : 5242,
+            "appName" : "Device Admin",
+            "name" : "control",
+            "isThread" : true,
+            "pid" : 4100,
+            "state" : "running",
+            "priority" : 20,
+            "lastUsedCpuCore" : 1,
+            "ppid" : 2373
+          } ]
+        },
+        "properties" : {
+          "processes" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Process"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "Process" : {
+        "description" : "describes process, it's cpu usage and memory usage",
+        "example" : {
+          "cpuUsage" : 5.4,
+          "memoryUsage" : 5242,
+          "appName" : "Device Admin",
+          "name" : "control",
+          "isThread" : true,
+          "pid" : 4100,
+          "state" : "running",
+          "priority" : 20,
+          "lastUsedCpuCore" : 1,
+          "ppid" : 2373
+        },
+        "properties" : {
+          "name" : {
+            "description" : "the name of the process or thread based on the executable name or the thread name",
+            "example" : "control",
+            "type" : "string"
+          },
+          "pid" : {
+            "description" : "the process id assigned by the system",
+            "example" : 4100,
+            "type" : "integer"
+          },
+          "ppid" : {
+            "description" : "the parent process id (ppid). A ppid 1 means, that the process was initiated by the init process, all processes can be traced down to this process. The kernel has a pid of 0.",
+            "example" : 2373,
+            "type" : "integer"
+          },
+          "memoryUsage" : {
+            "description" : "memory usage of the process in bytes. For threads the memory usage is the usage of the overall process, not the usage of a single thread.",
+            "example" : 5242,
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "cpuUsage" : {
+            "description" : "cpu usage of the process or thread in percentage",
+            "example" : 5.4,
+            "type" : "number"
+          },
+          "appName" : {
+            "description" : "The name of the app that has spawn the process or thread.",
+            "example" : "Device Admin",
+            "type" : "string"
+          },
+          "priority" : {
+            "description" : "Priority of the process or thread. rt for real time processes or threads.",
+            "example" : 20,
+            "type" : "integer"
+          },
+          "state" : {
+            "description" : "Current state of the process or thread",
+            "enum" : [ "running", "uninterruptibleSleep", "interruptibleSleep", "stopped", "zombie" ],
+            "example" : "running",
+            "type" : "string"
+          },
+          "lastUsedCpuCore" : {
+            "description" : "Last used cpu core of the process or thread",
+            "example" : 1,
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "isThread" : {
+            "description" : "Indicates if the process is a thread. A thread is the smallest unit of execution within a process. Threads share the same resources, such as memory space and file descriptors, with other threads in the same process. On the other hand, a process is an independent program that runs in its own memory space and has its own resources.",
+            "example" : true,
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "Problem" : {
+        "description" : "This document defines a \"problem detail\" as a way  to carry machine-readable details of errors in a  HTTP response to avoid the need to define new error  response formats for HTTP APIs.\n",
+        "properties" : {
+          "type" : {
+            "default" : "about:blank",
+            "description" : "A URI reference [RFC3986] that identifies the problem type. \nThis specification encourages that, when dereferenced, \nit provide human-readable documentation for the problem type \n(e.g., using HTML [W3C.REC-html5-20141028]). When this member \nis not present, its value is assumed to be \"about:blank\".\n",
+            "example" : "https://example.com/probs/out-of-credit",
+            "format" : "uri",
+            "type" : "string"
+          },
+          "title" : {
+            "description" : "A short, human-readable summary of the problem type. \nIt SHOULD NOT change from occurrence to occurrence of the problem, \nexcept for purposes of localization (e.g., using proactive content \nnegotiation; see [RFC7231], Section 3.4).\nIf the response is a diagnostics message, it contains \nthe text associated with the mainDiagnosisCode.\n",
+            "example" : "You do not have enough credit.",
+            "type" : "string"
+          },
+          "status" : {
+            "description" : "The HTTP status code ([RFC7231], Section 6) generated by the \norigin server for this occurrence of the problem.\n",
+            "example" : 403,
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "detail" : {
+            "description" : "A human-readable explanation specific to this occurrence of the problem.\nIf the response is a diagnostics message, it contains the text associated with\nthe detailedDiagnosisCode.\n",
+            "example" : "Your current balance is 30, but that costs 50.",
+            "type" : "string"
+          },
+          "instance" : {
+            "description" : "A URI reference that identifies the specific occurrence of the problem.\nIt may or may not yield further information if dereferenced.\n",
+            "example" : "/account/12345/msgs/abc",
+            "type" : "string"
+          },
+          "code" : {
+            "deprecated" : true,
+            "description" : "An error code issued by the system that caused the original problem.\nThis code can be used to track down the root cause of the error.\n",
+            "example" : "F360001",
+            "type" : "string"
+          },
+          "mainDiagnosisCode" : {
+            "description" : "The main diagnosis code is issued by the system that caused the problem.\nThis code can be used to track down the root cause and source of the error.\nIt can be used to search in the documentation for a solution.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "080F0100",
+            "type" : "string"
+          },
+          "detailedDiagnosisCode" : {
+            "description" : "The detailed diagnosis code issued by the system that caused the problem.\nThis code can be used to track down the detailed cause and source of the error.\nIt can be used to search in the documentation for a solution.\nThe detailed diagnosis code gives additional information about the cause of the error.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "00666001",
+            "type" : "string"
+          },
+          "dynamicDescription" : {
+            "description" : "A dynamic description gives detailed information about the occurrence of a problem.\nIt can change between different occurrences of the same error.\n",
+            "example" : "value = -4.5",
+            "type" : "string"
+          },
+          "severity" : {
+            "description" : " Severity of a problem as defined RFC5424 of the Syslog standard, see https://tools.ietf.org/html/rfc5424",
+            "enum" : [ "Emergency", "Alert", "Critical", "Error", "Warning", "Notice", "Informational", "Debug" ],
+            "example" : "Error",
+            "type" : "string"
+          },
+          "links" : {
+            "description" : "Collection of links to fix the problem. E.g. links to online user manual,\nto an online community (using tags) or a developer chat (e.g. Slack).\n",
+            "items" : {
+              "example" : "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001",
+              "format" : "uri",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "moreInfo" : {
+            "additionalProperties" : true,
+            "description" : "The moreInfo field allows you to add additional information that might be necessary to debug or trace down the cause of an error.\nIt might also contain information what is needed to resolve the problem.\nThere are loosely specified fields for specific problems that can be used in these situations, e.g.:\n- On a 403 Forbidden error: The moreInfo can contain a field \"requiredPermissions\" with the required permissions seperated by comma\n- On a 402 Payment required: The moreInfo can contain a field \"requiredLicenses\" with the required licenses seperated by comma\n",
+            "example" : {
+              "trace" : "ExampleClass.cpp#452 Null pointer exception",
+              "class" : "ExampleClass"
+            },
+            "type" : "object"
+          },
+          "cause" : {
+            "description" : "Sometimes a problem might be caused by problems that occure in other components or are the root cause of a problem. In this\ncase the related problems can be added as a cause. Since it might be possible that multiple components have problems on a single\naction, cause is an array. E.g. Loading failed because several components where not able to load the configuration.\n",
+            "items" : {
+              "$ref" : "#/components/schemas/Problem"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "title", "type" ],
+        "type" : "object",
+        "x-version" : "1.0.0"
+      }
+    },
+    "securitySchemes" : {
+      "UsernamePassword" : {
+        "description" : "Enter username and password",
+        "flows" : {
+          "password" : {
+            "scopes" : {
+              "dummy" : "Dummy scope (scopes not used)"
+            },
+            "tokenUrl" : "/identity-manager/api/v2/auth/token"
+          }
+        },
+        "type" : "oauth2"
+      },
+      "Bearer" : {
+        "description" : "Alternatively&colon; Enter bearer token (without prefix 'Bearer')",
+        "scheme" : "bearer",
+        "type" : "http"
+      }
+    }
+  }
+}

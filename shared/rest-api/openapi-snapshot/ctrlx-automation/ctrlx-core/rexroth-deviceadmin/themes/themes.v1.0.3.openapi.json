@@ -1,0 +1,558 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "contact" : {
+      "email" : "support@boschrexroth.com",
+      "name" : "Bosch Rexroth AG",
+      "url" : "https://www.boschrexroth.com"
+    },
+    "description" : "Provides theming service for ctrlX OS.",
+    "title" : "ctrlX OS - Themes API",
+    "version" : "1.0.3"
+  },
+  "servers" : [ {
+    "url" : "/themes/api/v1"
+  }, {
+    "url" : "https://{host}/themes/api/v1",
+    "variables" : {
+      "host" : {
+        "default" : "localhost",
+        "description" : "Hostname or ip address of the ctrlX OS system"
+      }
+    }
+  } ],
+  "security" : [ {
+    "UsernamePassword" : [ ]
+  }, {
+    "Bearer" : [ ]
+  } ],
+  "tags" : [ {
+    "description" : "All commands to get theme informations",
+    "name" : "Themes"
+  } ],
+  "paths" : {
+    "/themes" : {
+      "get" : {
+        "description" : "Get a list of available themes",
+        "operationId" : "getThemes",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/AvailableThemes"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "List of themes"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get a list of themes",
+        "tags" : [ "Themes" ]
+      },
+      "put" : {
+        "description" : "Select a new theme",
+        "operationId" : "selectTheme",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ThemeInfo"
+              }
+            }
+          },
+          "description" : "The new theme name.",
+          "required" : true
+        },
+        "responses" : {
+          "204" : {
+            "description" : "OK, new theme selected"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Select a new theme",
+        "tags" : [ "Themes" ]
+      }
+    },
+    "/default-theme" : {
+      "get" : {
+        "description" : "Get the default theme",
+        "operationId" : "getDefaultTheme",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/Theme"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "The default theme"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get the default theme",
+        "tags" : [ "Themes" ]
+      }
+    },
+    "/current-theme" : {
+      "get" : {
+        "description" : "Get the currently active theme informantion",
+        "operationId" : "getCurrentTheme",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ThemeInfo"
+                }
+              }
+            },
+            "description" : "The current theme information"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get the currently active theme informantion",
+        "tags" : [ "Themes" ]
+      }
+    },
+    "/active-theme" : {
+      "get" : {
+        "description" : "Get the active theme",
+        "operationId" : "getActiveTheme",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/Theme"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "The active theme"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Get the active theme",
+        "tags" : [ "Themes" ]
+      }
+    },
+    "/themes/{appName}/{themeName}" : {
+      "get" : {
+        "description" : "Return selected theme",
+        "operationId" : "getTheme",
+        "parameters" : [ {
+          "description" : "The app name containing themes",
+          "explode" : false,
+          "in" : "path",
+          "name" : "appName",
+          "required" : true,
+          "schema" : {
+            "example" : "rexroth-theming",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "The theme name - active-theme represent the selected theme",
+          "explode" : false,
+          "in" : "path",
+          "name" : "themeName",
+          "required" : true,
+          "schema" : {
+            "example" : "dark-theme",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Theme"
+                }
+              }
+            },
+            "description" : "Return information of selected theme"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Return selected theme",
+        "tags" : [ "Themes" ]
+      }
+    }
+  },
+  "components" : {
+    "parameters" : {
+      "appName" : {
+        "description" : "The app name containing themes",
+        "explode" : false,
+        "in" : "path",
+        "name" : "appName",
+        "required" : true,
+        "schema" : {
+          "example" : "rexroth-theming",
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "themeName" : {
+        "description" : "The theme name - active-theme represent the selected theme",
+        "explode" : false,
+        "in" : "path",
+        "name" : "themeName",
+        "required" : true,
+        "schema" : {
+          "example" : "dark-theme",
+          "type" : "string"
+        },
+        "style" : "simple"
+      }
+    },
+    "responses" : {
+      "Unauthorized" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Not authorized to access this resource"
+      },
+      "Forbidden" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Access forbidden for this resource"
+      },
+      "BadRequest" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The request is incomplete or malformed"
+      },
+      "InternalServerError" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Something unexpected happened on the server"
+      },
+      "NotFound" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The resource was not found"
+      }
+    },
+    "schemas" : {
+      "ThemeInfo" : {
+        "example" : {
+          "app" : "rexroth-theming",
+          "theme" : "dark-theme"
+        },
+        "properties" : {
+          "app" : {
+            "example" : "rexroth-theming",
+            "type" : "string"
+          },
+          "theme" : {
+            "example" : "dark-theme",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "Theme" : {
+        "additionalProperties" : {
+          "type" : "object"
+        },
+        "example" : {
+          "logo" : {
+            "url" : "/themes/rexroth-deviceadmin/default/assets/logo.png"
+          },
+          "supergraphic" : {
+            "url" : "/themes/rexroth-deviceadmin/default/assets/supergraphic.svg"
+          },
+          "login" : {
+            "backgroundImage" : {
+              "url" : "/themes/rexroth-deviceadmin/default/assets/login/backgroundImage.jpg"
+            }
+          },
+          "spinner" : {
+            "tag" : "bosch-activity-indicator",
+            "url" : "/themes/rexroth-deviceadmin/default/assets/spinner/spinner/main.js"
+          },
+          "home" : {
+            "hideLearn" : false,
+            "hideEssentials" : false,
+            "essentialsBackground" : {
+              "url" : "/themes/rexroth-deviceadmin/default/assets/home/essentialsBackground.png"
+            }
+          }
+        },
+        "type" : "object"
+      },
+      "AvailableThemes" : {
+        "example" : [ {
+          "app" : "rexroth-theming",
+          "theme" : "dark-theme"
+        }, {
+          "app" : "rexroth-theming",
+          "theme" : "light-theme"
+        } ],
+        "items" : {
+          "$ref" : "#/components/schemas/ThemeInfo"
+        },
+        "type" : "array"
+      },
+      "Problem" : {
+        "description" : "This document defines a \"problem detail\" as a way  to carry machine-readable details of errors in a  HTTP response to avoid the need to define new error  response formats for HTTP APIs.\n",
+        "properties" : {
+          "type" : {
+            "default" : "about:blank",
+            "description" : "A URI reference [RFC3986] that identifies the problem type. \nThis specification encourages that, when dereferenced, \nit provide human-readable documentation for the problem type \n(e.g., using HTML [W3C.REC-html5-20141028]). When this member \nis not present, its value is assumed to be \"about:blank\".\n",
+            "example" : "https://example.com/probs/out-of-credit",
+            "format" : "uri",
+            "type" : "string"
+          },
+          "title" : {
+            "description" : "A short, human-readable summary of the problem type. \nIt SHOULD NOT change from occurrence to occurrence of the problem, \nexcept for purposes of localization (e.g., using proactive content \nnegotiation; see [RFC7231], Section 3.4).\nIf the response is a diagnostics message, it contains \nthe text associated with the mainDiagnosisCode.\n",
+            "example" : "You do not have enough credit.",
+            "type" : "string"
+          },
+          "status" : {
+            "description" : "The HTTP status code ([RFC7231], Section 6) generated by the \norigin server for this occurrence of the problem.\n",
+            "example" : 403,
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "detail" : {
+            "description" : "A human-readable explanation specific to this occurrence of the problem.\nIf the response is a diagnostics message, it contains the text associated with\nthe detailedDiagnosisCode.\n",
+            "example" : "Your current balance is 30, but that costs 50.",
+            "type" : "string"
+          },
+          "instance" : {
+            "description" : "A URI reference that identifies the specific occurrence of the problem.\nIt may or may not yield further information if dereferenced.\n",
+            "example" : "/account/12345/msgs/abc",
+            "type" : "string"
+          },
+          "code" : {
+            "deprecated" : true,
+            "description" : "An error code issued by the system that caused the original problem.\nThis code can be used to track down the root cause of the error.\n",
+            "example" : "F360001",
+            "type" : "string"
+          },
+          "mainDiagnosisCode" : {
+            "description" : "The main diagnosis code is issued by the system that caused the problem.\nThis code can be used to track down the root cause and source of the error.\nIt can be used to search in the documentation for a solution.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "080F0100",
+            "type" : "string"
+          },
+          "detailedDiagnosisCode" : {
+            "description" : "The detailed diagnosis code issued by the system that caused the problem.\nThis code can be used to track down the detailed cause and source of the error.\nIt can be used to search in the documentation for a solution.\nThe detailed diagnosis code gives additional information about the cause of the error.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "00666001",
+            "type" : "string"
+          },
+          "dynamicDescription" : {
+            "description" : "A dynamic description gives detailed information about the occurrence of a problem.\nIt can change between different occurrences of the same error.\n",
+            "example" : "value = -4.5",
+            "type" : "string"
+          },
+          "severity" : {
+            "description" : " Severity of a problem as defined RFC5424 of the Syslog standard, see https://tools.ietf.org/html/rfc5424",
+            "enum" : [ "Emergency", "Alert", "Critical", "Error", "Warning", "Notice", "Informational", "Debug" ],
+            "example" : "Error",
+            "type" : "string"
+          },
+          "links" : {
+            "description" : "Collection of links to fix the problem. E.g. links to online user manual,\nto an online community (using tags) or a developer chat (e.g. Slack).\n",
+            "items" : {
+              "example" : "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001",
+              "format" : "uri",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "moreInfo" : {
+            "additionalProperties" : true,
+            "description" : "The moreInfo field allows you to add additional information that might be necessary to debug or trace down the cause of an error.\nIt might also contain information what is needed to resolve the problem.\nThere are loosely specified fields for specific problems that can be used in these situations, e.g.:\n- On a 403 Forbidden error: The moreInfo can contain a field \"requiredPermissions\" with the required permissions seperated by comma\n- On a 402 Payment required: The moreInfo can contain a field \"requiredLicenses\" with the required licenses seperated by comma\n",
+            "example" : {
+              "trace" : "ExampleClass.cpp#452 Null pointer exception",
+              "class" : "ExampleClass"
+            },
+            "type" : "object"
+          },
+          "cause" : {
+            "description" : "Sometimes a problem might be caused by problems that occure in other components or are the root cause of a problem. In this\ncase the related problems can be added as a cause. Since it might be possible that multiple components have problems on a single\naction, cause is an array. E.g. Loading failed because several components where not able to load the configuration.\n",
+            "items" : {
+              "$ref" : "#/components/schemas/Problem"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "title", "type" ],
+        "type" : "object",
+        "x-version" : "1.0.0"
+      }
+    },
+    "securitySchemes" : {
+      "UsernamePassword" : {
+        "description" : "Enter username and password",
+        "flows" : {
+          "password" : {
+            "scopes" : {
+              "dummy" : "Dummy scope (scopes not used)"
+            },
+            "tokenUrl" : "/identity-manager/api/v1/auth/token"
+          }
+        },
+        "type" : "oauth2"
+      },
+      "Bearer" : {
+        "description" : "Alternatively&colon; Enter bearer token (without prefix 'Bearer')",
+        "scheme" : "bearer",
+        "type" : "http"
+      }
+    }
+  }
+}

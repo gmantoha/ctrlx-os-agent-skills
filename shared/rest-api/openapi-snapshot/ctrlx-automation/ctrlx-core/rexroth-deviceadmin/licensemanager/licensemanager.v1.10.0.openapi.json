@@ -1,0 +1,2691 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "contact" : {
+      "email" : "support@boschrexroth.com",
+      "name" : "Bosch Rexroth AG",
+      "url" : "https://www.boschrexroth.com"
+    },
+    "description" : "<p> The ctrlX License Manager API provides functionalities to manage licenses. The license manager can either be used in client mode (default) or in server mode where it serves licenses to requesting connected clients. Either client mode or server mode can be active at a time. In client mode the license manager encapsulates the internal embedded licensing technology stack and acts as a proxy for on-device applications that require a license. If a requested license is present inside the internal license storage for example because the requested license has been uploaded (capability response) into the devices license storage, the license manager will make use of the present license storage when a license acquisition is triggered by an application. If not, the license manager will try to contact a license server (or back-office server) if configured to request any missing license.\n</p> <p> If license server functionality is enabled the license manager acts as a license server that serves requesting devices within the network with cryptographically secured licenses. It is the counterpart to the license manager client as described above and can be used for a number of licensing use-cases and licensing monetization models. In server mode the license manager can distribute licenses to devices within the network, allows floating licenses (i.e. a fixed count of concurrent licenses shared among multiple devices), uncounted licenses and possibly more advanced monetization models such as metered (usage-based) licensing. </p> <p>Usage&colon;</p> <ul> <li>Click 'Authorize' to open the 'Available authorizations' dialog.</li> <li>Enter 'username' and 'password'. The 'Client credentials location' selector together with the 'client_id' and 'client_secret' fields as well as the 'Bearer' section can be ignored.</li> <li>Click 'Authorize' and then 'Close' to close the 'Available authorizations' dialog.</li> <li>Try out those GET, PUT, ... operations you're interested in.</li> </ul>",
+    "license" : {
+      "name" : "MIT"
+    },
+    "title" : "ctrlX OS - Licensing API",
+    "version" : "1.10.0"
+  },
+  "servers" : [ {
+    "url" : "/license-manager/api/v1"
+  }, {
+    "url" : "https://{host}/license-manager/api/v1",
+    "variables" : {
+      "host" : {
+        "default" : "localhost",
+        "description" : "Hostname or ip address of the ctrlX OS system"
+      }
+    }
+  } ],
+  "security" : [ {
+    "UsernamePassword" : [ ]
+  }, {
+    "Bearer" : [ ]
+  } ],
+  "tags" : [ {
+    "description" : "These functions allow an application to acquire or release (i.e. block / release) a license that is expected to be\ninside the device's license storage. If the license to be acquired is not present inside the license storage the\nclient might query the license server(s) or back-office server that has been configured on the device to retrieve its\nlicenses from via capability request / response exchanges. These functions are supposed to be used by licensed applications\nrunning on the device.\n",
+    "name" : "Licenses"
+  }, {
+    "description" : "The capabilities functions allow performing basic capability exchange operations and displaying device's features.\nA capability exchange consists of a request (capability exchange) from a device to a server and the server's response\nto the device (capability response). The exchange can happen offline (for unconnected devices by request generation and\ndownload and response upload) or online if the device is connected to a license server or directly to the back-office.\n",
+    "name" : "Capabilities"
+  }, {
+    "description" : "These settings offer configuration options for the license manager in client mode. The options include activating the\ntemporary usage mode or a server endpoint, where the device can retrieve (floating) licenses from.\n",
+    "name" : "Settings"
+  }, {
+    "description" : "Information regarding license manager such as current state (e.g. normal, test mode, etc.).\n",
+    "name" : "Information"
+  }, {
+    "description" : "The licensing anchors define what licenses are bound to. In general licenses are bound to specific hardware properties\nwhich are defined by and rooted in the anchors. Examples of anchors could be the device's hardware characteristics or the\ncharacteristics of a connected license dongle.\n",
+    "name" : "Licensing Anchors"
+  }, {
+    "description" : "The license server interface allows configuring and using the license manager in server mode. In this mode the device\nwill be able to distribute on-device licenses to connected clients within the network. This mode also enables the license\nserver to special licenses such as floating licenses, uncounted licenses or usage-based licensing.\n",
+    "name" : "License Server"
+  }, {
+    "description" : "The license server settings allow controling the license server's behaviour. It can be used to parameterize the server\nin regard to settings such as the borrow interval (the time borrowed licenses are valid for) and allows globally enabling\nor disabling license server functionality.\n",
+    "name" : "License Server Settings"
+  }, {
+    "description" : "The ctrlX OS device certificate ensures that the device is an authentic ctrlX OS device. It can be used to verify the\nintegrity & authenticity of an unspoofed license-manager (refer to the /license path description) for detailed information.\n",
+    "name" : "Device Certificate Chain"
+  }, {
+    "description" : "The Applications routes allow querying license-related information about installed applications. Furthermore it is possible\nto enable the license trial mode for applications that support this feature. The trial mode allows using egligible licenses\nfor a limited time period (10 days) in order to evaluate the application before a proper license is purchased and installed.\n",
+    "name" : "Applications"
+  }, {
+    "description" : "Create license server endpoint related tasks and query their status.\n",
+    "name" : "Tasks"
+  } ],
+  "paths" : {
+    "/capabilities" : {
+      "get" : {
+        "description" : "Get list of all activated capabalities",
+        "operationId" : "getAllCapabilities",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Capabilities"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Capabilities" ]
+      },
+      "put" : {
+        "description" : "Update the capability state in the device",
+        "operationId" : "updateCapabilityResponse",
+        "parameters" : [ {
+          "description" : "If specified a report of newly added and removed capabilities will be returned",
+          "explode" : true,
+          "in" : "query",
+          "name" : "withChangeReport",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
+          },
+          "style" : "form"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UploadCapabilityResponse"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CapabilityChangeReport"
+                }
+              },
+              "text/plain" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "Returns change report in case of withChangeReport query parameter is set, otherwise empty body."
+          },
+          "204" : {
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Capabilities" ]
+      }
+    },
+    "/license" : {
+      "post" : {
+        "description" : "Acquire a license",
+        "operationId" : "acquireLicense",
+        "parameters" : [ {
+          "description" : "If set, the requesting entity wants the response to the license acquisition operation\nto be digitally signed. This allows the requesting entity to verify the signature\nand hence verify that the license is in fact received from a trusted ctrlX OS device.\nThe device will sign the license request using its device certificate's key and the\nverifying party will need to have the ctrlX OS root certificate installed.\n",
+          "explode" : true,
+          "in" : "query",
+          "name" : "signResponse",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
+          },
+          "style" : "form"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/LicenseRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/License"
+                }
+              }
+            },
+            "description" : "OK",
+            "headers" : {
+              "Payload-Signature" : {
+                "description" : "If the requesting entity wants the license response to be digitally signed, it will\ndo so by setting the corresponding query parameter in the request. If the flag is set,\nthe response will contain a digital signature (ECDSAWithSHA256) which the requesting entity\ncan verify in order to be sure about the authenticity of talking to a ctrlX OS device\nwith an unspoofed license manager. The signature is a hex-encoded string computed using\nECDSA P-256 with SHA256 over the content of the 'License' response. The response can be\nverified using the device certificate (and its public key) which can be retrieved via\nthe /device-certificate-chain path. In order to verify the authenticity the requestor must\nverify the signature using the device's public key and verify the certificate chain up to\nthe ctrlX OS root CA certificate which must be known to the requestor.\n",
+                "explode" : false,
+                "schema" : {
+                  "type" : "string"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Licenses" ]
+      }
+    },
+    "/license/{licenseId}" : {
+      "delete" : {
+        "description" : "Release a license",
+        "operationId" : "releaseLicense",
+        "parameters" : [ {
+          "description" : "The unique id of an acquired license",
+          "explode" : false,
+          "in" : "path",
+          "name" : "licenseId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "License successfully returned"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Licenses" ]
+      }
+    },
+    "/settings" : {
+      "get" : {
+        "description" : "Get license manager client settings",
+        "operationId" : "getSettings",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Settings"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Settings" ]
+      },
+      "put" : {
+        "description" : "Set license management client settings",
+        "operationId" : "setSettings",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Settings"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "204" : {
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Settings" ]
+      }
+    },
+    "/information" : {
+      "get" : {
+        "description" : "Get license manager state information, e.g. current mode and time left within mode",
+        "operationId" : "getInformation",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Information"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Information" ]
+      }
+    },
+    "/anchors" : {
+      "get" : {
+        "description" : "Get license anchors and plug-in state of any license dongle",
+        "operationId" : "getAnchors",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Anchors"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Licensing Anchors" ]
+      }
+    },
+    "/device-certificate-chain" : {
+      "get" : {
+        "description" : "Retrieve the ctrlX OS device certificate and the corresponding (issuing) intermediate CA certificate",
+        "operationId" : "getDeviceCertificateChain",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/octet-stream" : {
+                "schema" : {
+                  "format" : "binary",
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "OK, ctrlX OS device certificate (including intermediate CA certificate) in pem-format"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Device Certificate Chain" ]
+      }
+    },
+    "/server/clients" : {
+      "get" : {
+        "description" : "Get information about the server's currently served and connected clients",
+        "operationId" : "getServedClients",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServedDevices"
+                }
+              }
+            },
+            "description" : "Ok, list of currently served devices"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "License Server" ]
+      }
+    },
+    "/server/clients/{clientId}" : {
+      "get" : {
+        "description" : "Get information about a specific client currently served by the server",
+        "operationId" : "getServedClient",
+        "parameters" : [ {
+          "description" : "The unique id of the client",
+          "explode" : false,
+          "in" : "path",
+          "name" : "clientId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServedDevice"
+                }
+              }
+            },
+            "description" : "Ok, served device's details successfully returned"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "License Server" ]
+      }
+    },
+    "/server/settings" : {
+      "get" : {
+        "description" : "Get license management (server) settings",
+        "operationId" : "getServerSettings",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServerSettings"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "License Server Settings" ]
+      },
+      "put" : {
+        "description" : "Set license management (server) settings",
+        "operationId" : "setServerSettings",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ServerSettings"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "204" : {
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "License Server Settings" ]
+      }
+    },
+    "/server/status" : {
+      "get" : {
+        "description" : "Get basic license server status such as activation state and health",
+        "operationId" : "getServerStatus",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServerStatus"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "License Server Settings" ]
+      },
+      "put" : {
+        "description" : "Set basic license server status such as activation",
+        "operationId" : "setServerStatus",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ServerStatus"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "204" : {
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "License Server Settings" ]
+      }
+    },
+    "/apps" : {
+      "get" : {
+        "description" : "Get list of all installed applications and their current trial mode status. Depending on the query parameter,\nthe user can decide to retrieve only the applications that are actually eligible for trial mode.\n",
+        "operationId" : "getAllApplications",
+        "parameters" : [ {
+          "description" : "If specified, all applications supporting the license trial mode will be returned.\n",
+          "explode" : true,
+          "in" : "query",
+          "name" : "supportsTrial",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Applications"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Applications" ]
+      }
+    },
+    "/apps/{appId}" : {
+      "get" : {
+        "description" : "Get information about a specific installed application and its current trial mode status",
+        "operationId" : "getApplication",
+        "parameters" : [ {
+          "description" : "The unique id of the application (read from package manifest)",
+          "explode" : false,
+          "in" : "path",
+          "name" : "appId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Application"
+                }
+              }
+            },
+            "description" : "OK, application details successfully returned"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Applications" ]
+      },
+      "put" : {
+        "description" : "Set information of a specific application, e.g. trial mode status",
+        "operationId" : "setApplicationInformation",
+        "parameters" : [ {
+          "description" : "The unique id of the application (read from package manifest)",
+          "explode" : false,
+          "in" : "path",
+          "name" : "appId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Application"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "204" : {
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Applications" ]
+      }
+    },
+    "/apps/{appId}/trial-mode-capabilities" : {
+      "get" : {
+        "description" : "Get the capabilities that would be granted if the trial mode for this application is active",
+        "operationId" : "getApplicationTrialModeCapabilities",
+        "parameters" : [ {
+          "description" : "The unique id of the application (read from package manifest)",
+          "explode" : false,
+          "in" : "path",
+          "name" : "appId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Capabilities"
+                }
+              }
+            },
+            "description" : "OK, trial mode capabilities successfully returned"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Applications" ]
+      }
+    },
+    "/tasks" : {
+      "get" : {
+        "description" : "Receive the list of created tasks",
+        "operationId" : "getTasks",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Tasks"
+                }
+              }
+            },
+            "description" : "List of Tasks"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "type" : "about:blank",
+                  "title" : "Http client error",
+                  "detail" : "Unauthorized (401)",
+                  "status" : 401,
+                  "instance" : "scheduler/admin",
+                  "mainDiagnosisCode" : "080E0200",
+                  "detailedDiagnosisCode" : "0C7A0203",
+                  "severity" : "Error"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "type" : "about:blank",
+                  "title" : "Http client error",
+                  "detail" : "Forbidden (403)",
+                  "status" : 403,
+                  "instance" : "scheduler/admin/state",
+                  "mainDiagnosisCode" : "080E0200",
+                  "detailedDiagnosisCode" : "0C7A0204",
+                  "severity" : "Error",
+                  "moreInfo" : {
+                    "requiredPermissions" : "rexroth-automation.datalayer.rw, rexroth-device.all.rwx"
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "type" : "about:blank",
+                  "title" : "Http server error",
+                  "detail" : "Internal server error (500)",
+                  "status" : 500,
+                  "instance" : "scheduler/admin",
+                  "mainDiagnosisCode" : "080F0200",
+                  "detailedDiagnosisCode" : "0C7A0200",
+                  "severity" : "Error",
+                  "moreInfo" : {
+                    "trace" : "ExampleClass.cpp#452 Null pointer exception"
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Tasks" ]
+      },
+      "post" : {
+        "description" : "Create a new task",
+        "operationId" : "createTask",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "copyTaskRequest" : {
+                  "$ref" : "#/components/examples/taskSyncLicensesRequest"
+                }
+              },
+              "schema" : {
+                "$ref" : "#/components/schemas/OneOfTasks"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "taskSyncLicensesResponse" : {
+                    "$ref" : "#/components/examples/taskSyncLicensesResponse"
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/OneOfTasks"
+                }
+              }
+            },
+            "description" : "Task created",
+            "headers" : {
+              "Location" : {
+                "explode" : false,
+                "schema" : {
+                  "description" : "Location of the created task",
+                  "example" : "/certificate-manager/api/v2/tasks/123",
+                  "type" : "string"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "type" : "about:blank",
+                  "title" : "Http client error",
+                  "detail" : "Unauthorized (401)",
+                  "status" : 401,
+                  "instance" : "scheduler/admin",
+                  "mainDiagnosisCode" : "080E0200",
+                  "detailedDiagnosisCode" : "0C7A0203",
+                  "severity" : "Error"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "type" : "about:blank",
+                  "title" : "Http client error",
+                  "detail" : "Forbidden (403)",
+                  "status" : 403,
+                  "instance" : "scheduler/admin/state",
+                  "mainDiagnosisCode" : "080E0200",
+                  "detailedDiagnosisCode" : "0C7A0204",
+                  "severity" : "Error",
+                  "moreInfo" : {
+                    "requiredPermissions" : "rexroth-automation.datalayer.rw, rexroth-device.all.rwx"
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "type" : "about:blank",
+                  "title" : "Http server error",
+                  "detail" : "Internal server error (500)",
+                  "status" : 500,
+                  "instance" : "scheduler/admin",
+                  "mainDiagnosisCode" : "080F0200",
+                  "detailedDiagnosisCode" : "0C7A0200",
+                  "severity" : "Error",
+                  "moreInfo" : {
+                    "trace" : "ExampleClass.cpp#452 Null pointer exception"
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Tasks" ]
+      }
+    },
+    "/tasks/{taskId}" : {
+      "get" : {
+        "description" : "Receive information about a task",
+        "operationId" : "getTask",
+        "parameters" : [ {
+          "description" : "The unique task Id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "taskId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "taskSyncLicensesResponse" : {
+                    "$ref" : "#/components/examples/taskSyncLicensesResponse"
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/OneOfTasks"
+                }
+              }
+            },
+            "description" : "Done - Task information"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "type" : "about:blank",
+                  "title" : "Http client error",
+                  "detail" : "Unauthorized (401)",
+                  "status" : 401,
+                  "instance" : "scheduler/admin",
+                  "mainDiagnosisCode" : "080E0200",
+                  "detailedDiagnosisCode" : "0C7A0203",
+                  "severity" : "Error"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "type" : "about:blank",
+                  "title" : "Http client error",
+                  "detail" : "Forbidden (403)",
+                  "status" : 403,
+                  "instance" : "scheduler/admin/state",
+                  "mainDiagnosisCode" : "080E0200",
+                  "detailedDiagnosisCode" : "0C7A0204",
+                  "severity" : "Error",
+                  "moreInfo" : {
+                    "requiredPermissions" : "rexroth-automation.datalayer.rw, rexroth-device.all.rwx"
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "type" : "about:blank",
+                  "title" : "Http client error",
+                  "detail" : "Not found (404)",
+                  "status" : 404,
+                  "instance" : "scheduler/not-available",
+                  "mainDiagnosisCode" : "080E0200",
+                  "detailedDiagnosisCode" : "0C7A0205",
+                  "severity" : "Error"
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "example" : {
+                  "type" : "about:blank",
+                  "title" : "Http server error",
+                  "detail" : "Internal server error (500)",
+                  "status" : 500,
+                  "instance" : "scheduler/admin",
+                  "mainDiagnosisCode" : "080F0200",
+                  "detailedDiagnosisCode" : "0C7A0200",
+                  "severity" : "Error",
+                  "moreInfo" : {
+                    "trace" : "ExampleClass.cpp#452 Null pointer exception"
+                  }
+                },
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "Tasks" ]
+      }
+    }
+  },
+  "components" : {
+    "examples" : {
+      "taskSyncLicensesRequest" : {
+        "value" : {
+          "action" : "syncLicenses",
+          "parameters" : {
+            "targetServer" : "FLOATING_LICENSE_SERVER"
+          }
+        }
+      },
+      "taskSyncLicensesResponse" : {
+        "value" : {
+          "id" : "123",
+          "state" : "done",
+          "progress" : 100,
+          "eta" : "2019-01-01T12:00:27.87+00:20",
+          "action" : "syncLicenses",
+          "parameters" : {
+            "targetServer" : "FLOATING_LICENSE_SERVER"
+          },
+          "result" : {
+            "type" : "Success",
+            "title" : "taskSyncLicenses",
+            "detail" : "Licenses synchronized successfully."
+          }
+        }
+      }
+    },
+    "parameters" : {
+      "licenseId" : {
+        "description" : "The unique id of an acquired license",
+        "explode" : false,
+        "in" : "path",
+        "name" : "licenseId",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "clientId" : {
+        "description" : "The unique id of the client",
+        "explode" : false,
+        "in" : "path",
+        "name" : "clientId",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "appId" : {
+        "description" : "The unique id of the application (read from package manifest)",
+        "explode" : false,
+        "in" : "path",
+        "name" : "appId",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "withChangeReport" : {
+        "description" : "If specified a report of newly added and removed capabilities will be returned",
+        "explode" : true,
+        "in" : "query",
+        "name" : "withChangeReport",
+        "required" : false,
+        "schema" : {
+          "type" : "boolean"
+        },
+        "style" : "form"
+      },
+      "supportsTrial" : {
+        "description" : "If specified, all applications supporting the license trial mode will be returned.\n",
+        "explode" : true,
+        "in" : "query",
+        "name" : "supportsTrial",
+        "required" : false,
+        "schema" : {
+          "type" : "boolean"
+        },
+        "style" : "form"
+      },
+      "signResponse" : {
+        "description" : "If set, the requesting entity wants the response to the license acquisition operation\nto be digitally signed. This allows the requesting entity to verify the signature\nand hence verify that the license is in fact received from a trusted ctrlX OS device.\nThe device will sign the license request using its device certificate's key and the\nverifying party will need to have the ctrlX OS root certificate installed.\n",
+        "explode" : true,
+        "in" : "query",
+        "name" : "signResponse",
+        "required" : false,
+        "schema" : {
+          "type" : "boolean"
+        },
+        "style" : "form"
+      },
+      "taskId" : {
+        "description" : "The unique task Id",
+        "explode" : false,
+        "in" : "path",
+        "name" : "taskId",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        },
+        "style" : "simple"
+      }
+    },
+    "responses" : {
+      "Unauthorized" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Not authorized to access this resource"
+      },
+      "Forbidden" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Access forbidden for this resource"
+      },
+      "BadRequest" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The request is incomplete or malformed"
+      },
+      "InternalServerError" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Something unexpected happened on the server"
+      },
+      "NotFound" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The resource was not found"
+      }
+    },
+    "schemas" : {
+      "Capability" : {
+        "example" : {
+          "app" : "rexroth-firewall",
+          "availableCount" : 1,
+          "finalExpirationDate" : "2019-01-01T12:00:27.87+00:20",
+          "origin" : "dongle",
+          "count" : 1,
+          "description" : "description",
+          "title" : "ctrlX OS - Firewall License",
+          "version" : "1.0",
+          "expiresInSeconds" : 5760,
+          "isPermanent" : true,
+          "startsInSeconds" : 300,
+          "name" : "SWL-XCx-FRW-FIREWALLxxxxx-NNNN",
+          "startDate" : "2019-01-01T12:00:27.87+00:20"
+        },
+        "properties" : {
+          "name" : {
+            "description" : "Technical identifier of the license",
+            "example" : "SWL-XCx-FRW-FIREWALLxxxxx-NNNN",
+            "type" : "string"
+          },
+          "title" : {
+            "description" : "Human readable name of the license",
+            "example" : "ctrlX OS - Firewall License",
+            "type" : "string"
+          },
+          "app" : {
+            "description" : "Name of the application the license belongs to",
+            "example" : "rexroth-firewall",
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "Description of the license",
+            "type" : "string"
+          },
+          "version" : {
+            "description" : "Current version of the application that asks for a license",
+            "example" : "1.0",
+            "type" : "string"
+          },
+          "count" : {
+            "description" : "Quantity of the capability",
+            "example" : 1,
+            "type" : "integer"
+          },
+          "availableCount" : {
+            "description" : "Quantity available for acquisition (i.e. currently not in use). When a license is\nacquired by an application the available count will decrease by one. This property\ndefines the number of licenses that can still be acquired by an application. A value\nof '0' means that no more license can be acquired anymore until an application releases\nthe license leading to the available count being increased again.\n",
+            "example" : 1,
+            "type" : "integer"
+          },
+          "isPermanent" : {
+            "example" : true,
+            "type" : "boolean"
+          },
+          "startDate" : {
+            "description" : "ETA in RFC 3339 format",
+            "example" : "2019-01-01T12:00:27.87+00:20",
+            "format" : "dateTime",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "finalExpirationDate" : {
+            "description" : "ETA in RFC 3339 format",
+            "example" : "2019-01-01T12:00:27.87+00:20",
+            "format" : "dateTime",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "startsInSeconds" : {
+            "description" : "Indicates the time remaining (in seconds) until the license becomes active. A positive value means the\nlicense is not active yet, as its start date is in the future whereas a value of '0' means that the\nlicense has become active.\n",
+            "example" : 300,
+            "readOnly" : true,
+            "type" : "integer"
+          },
+          "expiresInSeconds" : {
+            "description" : "Specifies the duration - in seconds - after which the license automatically expires. This property will\nonly contain valid information for time-based (non-permanent) licenses. The expiration duration is\ncalculated as the difference between the finalExpirationDate and the current date and time set on the\nsystem. Therefore, accurate information depends upon the correct configuration of the system's date\nand time settings. Permanent licenses that will not expire will have the value '0' for this property.\n",
+            "example" : 5760,
+            "type" : "integer"
+          },
+          "origin" : {
+            "description" : "* `dongle` The capability resides on the trusted storage of a licensing dongle.\n* `device` The capability resides on the device's internal trusted storage.\n* `server` The capability was retrieved from a (floating) license server.\n* `trial`  The capability was retrieved from the application's 10-day trial mode.\n",
+            "enum" : [ "dongle", "device", "server", "trial" ],
+            "type" : "string"
+          }
+        },
+        "required" : [ "app", "availableCount", "count", "description", "expiresInSeconds", "finalExpirationDate", "isPermanent", "name", "origin", "startDate", "startsInSeconds", "title", "version" ],
+        "type" : "object"
+      },
+      "Capabilities" : {
+        "items" : {
+          "$ref" : "#/components/schemas/Capability"
+        },
+        "type" : "array"
+      },
+      "Information" : {
+        "example" : {
+          "mode" : "NORMAL_OPERATION",
+          "remainingTime" : 10
+        },
+        "properties" : {
+          "mode" : {
+            "description" : "* During `NORMAL_OPERATION`, only licenses are granted that are available within license storage. The remainingTime attribute does not have any meaning inside this mode.\n* `4H_ENGINEERING_LICENSE` This mode is active when ctrlX OS is used for engineering purposes, e.g. within ctrlX Works. In this mode the license manager will grant all requested licenses for apps that support the 4H_ENGINEERING_LICENSE. An automatic shutdown is enforced after 4 hours.\n* `TEMPORARY_USAGE_MODE` When the temporary usage mode is activated, the license manager will successfully return all requested license(s). This mode is supposted to be used for recovery use-cases only (e.g. device replacement), can be activated via the settings once only and will be active for 10 days.\n",
+            "enum" : [ "NORMAL_OPERATION", "4H_ENGINEERING_LICENSE", "TEMPORARY_USAGE_MODE" ],
+            "type" : "string"
+          },
+          "remainingTime" : {
+            "description" : "This attribute describes how much time (in seconds) the ctrlX OS device will be in the corresponding mode.\n",
+            "example" : 10,
+            "readOnly" : true,
+            "type" : "integer"
+          }
+        },
+        "required" : [ "mode", "remainingTime" ],
+        "type" : "object"
+      },
+      "CapabilityChangeReport" : {
+        "description" : "The report of added and removed capabilities after the capability response was processed",
+        "example" : {
+          "removed" : [ {
+            "app" : "rexroth-firewall",
+            "availableCount" : 1,
+            "finalExpirationDate" : "2019-01-01T12:00:27.87+00:20",
+            "origin" : "dongle",
+            "count" : 1,
+            "description" : "description",
+            "title" : "ctrlX OS - Firewall License",
+            "version" : "1.0",
+            "expiresInSeconds" : 5760,
+            "isPermanent" : true,
+            "startsInSeconds" : 300,
+            "name" : "SWL-XCx-FRW-FIREWALLxxxxx-NNNN",
+            "startDate" : "2019-01-01T12:00:27.87+00:20"
+          }, {
+            "app" : "rexroth-firewall",
+            "availableCount" : 1,
+            "finalExpirationDate" : "2019-01-01T12:00:27.87+00:20",
+            "origin" : "dongle",
+            "count" : 1,
+            "description" : "description",
+            "title" : "ctrlX OS - Firewall License",
+            "version" : "1.0",
+            "expiresInSeconds" : 5760,
+            "isPermanent" : true,
+            "startsInSeconds" : 300,
+            "name" : "SWL-XCx-FRW-FIREWALLxxxxx-NNNN",
+            "startDate" : "2019-01-01T12:00:27.87+00:20"
+          } ],
+          "added" : [ {
+            "app" : "rexroth-firewall",
+            "availableCount" : 1,
+            "finalExpirationDate" : "2019-01-01T12:00:27.87+00:20",
+            "origin" : "dongle",
+            "count" : 1,
+            "description" : "description",
+            "title" : "ctrlX OS - Firewall License",
+            "version" : "1.0",
+            "expiresInSeconds" : 5760,
+            "isPermanent" : true,
+            "startsInSeconds" : 300,
+            "name" : "SWL-XCx-FRW-FIREWALLxxxxx-NNNN",
+            "startDate" : "2019-01-01T12:00:27.87+00:20"
+          }, {
+            "app" : "rexroth-firewall",
+            "availableCount" : 1,
+            "finalExpirationDate" : "2019-01-01T12:00:27.87+00:20",
+            "origin" : "dongle",
+            "count" : 1,
+            "description" : "description",
+            "title" : "ctrlX OS - Firewall License",
+            "version" : "1.0",
+            "expiresInSeconds" : 5760,
+            "isPermanent" : true,
+            "startsInSeconds" : 300,
+            "name" : "SWL-XCx-FRW-FIREWALLxxxxx-NNNN",
+            "startDate" : "2019-01-01T12:00:27.87+00:20"
+          } ]
+        },
+        "properties" : {
+          "added" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Capability"
+            },
+            "type" : "array"
+          },
+          "removed" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Capability"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "added", "removed" ],
+        "type" : "object"
+      },
+      "License" : {
+        "example" : {
+          "isPermanent" : true,
+          "tampered" : true,
+          "endDate" : "2019-01-01T12:00:27.87+00:20",
+          "name" : "XC_Runtime_ECM-ETHERCATMAS-BA",
+          "id" : "7983d875-38e8-4bb6-9f92-46096ef2dbc4",
+          "version" : "1.0",
+          "startDate" : "2019-01-01T12:00:27.87+00:20"
+        },
+        "properties" : {
+          "id" : {
+            "description" : "The unique id of the successfully acquried license",
+            "example" : "7983d875-38e8-4bb6-9f92-46096ef2dbc4",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "name" : {
+            "description" : "Name of the license",
+            "example" : "XC_Runtime_ECM-ETHERCATMAS-BA",
+            "type" : "string"
+          },
+          "version" : {
+            "description" : "Current version of the application that asks for a license",
+            "example" : "1.0",
+            "type" : "string"
+          },
+          "isPermanent" : {
+            "type" : "boolean"
+          },
+          "tampered" : {
+            "type" : "boolean"
+          },
+          "startDate" : {
+            "description" : "ETA in RFC 3339 format",
+            "example" : "2019-01-01T12:00:27.87+00:20",
+            "format" : "dateTime",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "endDate" : {
+            "description" : "ETA in RFC 3339 format",
+            "example" : "2019-01-01T12:00:27.87+00:20",
+            "format" : "dateTime",
+            "readOnly" : true,
+            "type" : "string"
+          }
+        },
+        "required" : [ "endDate", "id", "isPermanent", "name", "startDate", "version" ],
+        "type" : "object"
+      },
+      "LicenseRequest" : {
+        "example" : {
+          "name" : "XC_Runtime_ECM-ETHERCATMAS-BA",
+          "version" : "1.0"
+        },
+        "properties" : {
+          "name" : {
+            "description" : "Name of the license",
+            "example" : "XC_Runtime_ECM-ETHERCATMAS-BA",
+            "type" : "string"
+          },
+          "version" : {
+            "description" : "Current version of the application that ask for a license",
+            "example" : "1.0",
+            "type" : "string"
+          }
+        },
+        "required" : [ "name", "version" ],
+        "type" : "object"
+      },
+      "Anchors" : {
+        "items" : {
+          "$ref" : "#/components/schemas/Anchor"
+        },
+        "type" : "array"
+      },
+      "Anchor" : {
+        "description" : "Present hardware licensing anchor",
+        "example" : {
+          "serialnumber" : "serialnumber",
+          "available" : true,
+          "type" : "device"
+        },
+        "properties" : {
+          "type" : {
+            "enum" : [ "device", "dongle" ],
+            "type" : "string"
+          },
+          "available" : {
+            "description" : "Indicates if anchor is available. In case of dongle: False = plugged-out, True = plugged-in",
+            "type" : "boolean"
+          },
+          "serialnumber" : {
+            "description" : "Serial number of anchor",
+            "type" : "string"
+          }
+        },
+        "required" : [ "available", "serialnumber", "type" ],
+        "type" : "object"
+      },
+      "UploadCapabilityResponse" : {
+        "properties" : {
+          "file" : {
+            "format" : "binary",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "Settings" : {
+        "example" : {
+          "serverEndpointConfig" : {
+            "port" : 5858,
+            "mtlsConfig" : {
+              "certificate" : "certificate",
+              "certificateSelector" : "DEVICE",
+              "enabled" : true,
+              "key" : "key"
+            },
+            "host" : "192.168.1.2",
+            "enabled" : true
+          },
+          "temporaryUsageMode" : {
+            "expired" : true,
+            "activated" : true,
+            "remainingTime" : 70146
+          },
+          "licenseCenterEndpointConfig" : {
+            "endpoint" : "https://api.ctrlx-deviceportal.boschrexroth.com/licensing-service/v1.2",
+            "syncInterval" : 1440,
+            "enabled" : true,
+            "tlsConfig" : {
+              "skipServerCertificateVerification" : true,
+              "ca" : "ca"
+            }
+          }
+        },
+        "properties" : {
+          "temporaryUsageMode" : {
+            "$ref" : "#/components/schemas/TemporaryUsageMode"
+          },
+          "serverEndpointConfig" : {
+            "$ref" : "#/components/schemas/ServerEndpointConfig"
+          },
+          "licenseCenterEndpointConfig" : {
+            "$ref" : "#/components/schemas/LicenseCenterEndpointConfig"
+          }
+        },
+        "required" : [ "temporaryUsageMode" ],
+        "type" : "object"
+      },
+      "ServerSettings" : {
+        "description" : "Describes license server settings such as served licenses' expiration date, authentication scheme, etc.",
+        "example" : {
+          "borrowInterval" : 86400,
+          "renewalInterval" : 86400,
+          "clientAuthentication" : {
+            "caFiles" : [ "example_ca_1.crt", "example_ca_2.crt" ],
+            "enable" : true,
+            "authScheme" : "MTLS_VERIFY_ALWAYS"
+          }
+        },
+        "properties" : {
+          "borrowInterval" : {
+            "description" : "The borrow interval (in seconds) determines the lifespan of the served licenses",
+            "example" : 86400,
+            "type" : "integer"
+          },
+          "renewalInterval" : {
+            "description" : "The renewal interval (in seconds) is used by clients to determine when to renew their licenses",
+            "example" : 86400,
+            "type" : "integer"
+          },
+          "clientAuthentication" : {
+            "$ref" : "#/components/schemas/ServerSettings_clientAuthentication"
+          }
+        },
+        "required" : [ "borrowInterval", "clientAuthentication", "renewalInterval" ],
+        "type" : "object"
+      },
+      "ServerStatus" : {
+        "description" : "Describes basic license server status such as activation state and health.",
+        "example" : {
+          "activated" : true
+        },
+        "properties" : {
+          "activated" : {
+            "description" : "(De-)activate the license server - note that for activation of the license server all internal checks, i.e.\nlicense server license check, device certificate check, etc. must pass.\n",
+            "type" : "boolean"
+          }
+        },
+        "required" : [ "activated" ],
+        "type" : "object"
+      },
+      "Problem" : {
+        "description" : "This document defines a \"problem detail\" as a way  to carry machine-readable details of errors in a  HTTP response to avoid the need to define new error  response formats for HTTP APIs.\n",
+        "properties" : {
+          "type" : {
+            "default" : "about:blank",
+            "description" : "A URI reference [RFC3986] that identifies the problem type. \nThis specification encourages that, when dereferenced, \nit provide human-readable documentation for the problem type \n(e.g., using HTML [W3C.REC-html5-20141028]). When this member \nis not present, its value is assumed to be \"about:blank\".\n",
+            "example" : "https://example.com/probs/out-of-credit",
+            "format" : "uri",
+            "type" : "string"
+          },
+          "title" : {
+            "description" : "A short, human-readable summary of the problem type. \nIt SHOULD NOT change from occurrence to occurrence of the problem, \nexcept for purposes of localization (e.g., using proactive content \nnegotiation; see [RFC7231], Section 3.4).\nIf the response is a diagnostics message, it contains \nthe text associated with the mainDiagnosisCode.\n",
+            "example" : "You do not have enough credit.",
+            "type" : "string"
+          },
+          "status" : {
+            "description" : "The HTTP status code ([RFC7231], Section 6) generated by the \norigin server for this occurrence of the problem.\n",
+            "example" : 403,
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "detail" : {
+            "description" : "A human-readable explanation specific to this occurrence of the problem.\nIf the response is a diagnostics message, it contains the text associated with\nthe detailedDiagnosisCode.\n",
+            "example" : "Your current balance is 30, but that costs 50.",
+            "type" : "string"
+          },
+          "instance" : {
+            "description" : "A URI reference that identifies the specific occurrence of the problem.\nIt may or may not yield further information if dereferenced.\n",
+            "example" : "/account/12345/msgs/abc",
+            "type" : "string"
+          },
+          "code" : {
+            "deprecated" : true,
+            "description" : "An error code issued by the system that caused the original problem.\nThis code can be used to track down the root cause of the error.\n",
+            "example" : "F360001",
+            "type" : "string"
+          },
+          "mainDiagnosisCode" : {
+            "description" : "The main diagnosis code is issued by the system that caused the problem.\nThis code can be used to track down the root cause and source of the error.\nIt can be used to search in the documentation for a solution.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "080F0100",
+            "type" : "string"
+          },
+          "detailedDiagnosisCode" : {
+            "description" : "The detailed diagnosis code issued by the system that caused the problem.\nThis code can be used to track down the detailed cause and source of the error.\nIt can be used to search in the documentation for a solution.\nThe detailed diagnosis code gives additional information about the cause of the error.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "00666001",
+            "type" : "string"
+          },
+          "dynamicDescription" : {
+            "description" : "A dynamic description gives detailed information about the occurrence of a problem.\nIt can change between different occurrences of the same error.\n",
+            "example" : "value = -4.5",
+            "type" : "string"
+          },
+          "severity" : {
+            "description" : " Severity of a problem as defined RFC5424 of the Syslog standard, see https://tools.ietf.org/html/rfc5424",
+            "enum" : [ "Emergency", "Alert", "Critical", "Error", "Warning", "Notice", "Informational", "Debug" ],
+            "example" : "Error",
+            "type" : "string"
+          },
+          "links" : {
+            "description" : "Collection of links to fix the problem. E.g. links to online user manual,\nto an online community (using tags) or a developer chat (e.g. Slack).\n",
+            "items" : {
+              "example" : "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001",
+              "format" : "uri",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "moreInfo" : {
+            "additionalProperties" : true,
+            "description" : "The moreInfo field allows you to add additional information that might be necessary to debug or trace down the cause of an error.\nIt might also contain information what is needed to resolve the problem.\nThere are loosely specified fields for specific problems that can be used in these situations, e.g.:\n- On a 403 Forbidden error: The moreInfo can contain a field \"requiredPermissions\" with the required permissions seperated by comma\n- On a 402 Payment required: The moreInfo can contain a field \"requiredLicenses\" with the required licenses seperated by comma\n",
+            "example" : {
+              "trace" : "ExampleClass.cpp#452 Null pointer exception",
+              "class" : "ExampleClass"
+            },
+            "type" : "object"
+          },
+          "cause" : {
+            "description" : "Sometimes a problem might be caused by problems that occure in other components or are the root cause of a problem. In this\ncase the related problems can be added as a cause. Since it might be possible that multiple components have problems on a single\naction, cause is an array. E.g. Loading failed because several components where not able to load the configuration.\n",
+            "items" : {
+              "$ref" : "#/components/schemas/Problem"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "title", "type" ],
+        "type" : "object",
+        "x-version" : "1.0.0"
+      },
+      "LicenseReport" : {
+        "properties" : {
+          "appName" : {
+            "description" : "Offical name of the application",
+            "example" : "ctrlX CORE - Firewall App",
+            "type" : "string"
+          },
+          "materialNumber" : {
+            "description" : "The material number of the application",
+            "example" : "R911402883",
+            "type" : "string"
+          },
+          "issues" : {
+            "items" : {
+              "$ref" : "#/components/schemas/LicenseIssue"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "TaskSyncLicenses" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Task"
+        }, {
+          "$ref" : "#/components/schemas/TaskSyncLicenses_allOf"
+        } ],
+        "description" : "Synchronizes licenses between the device and a specified license server endpoint. The endpoint can either be the license center or a floating license server.\n",
+        "type" : "object"
+      },
+      "ServedDevice" : {
+        "description" : "Client currently served by / connected to the license server",
+        "example" : {
+          "identifier" : {
+            "clientId" : "74950383383950",
+            "clientName" : "ctrlX OS assembly line controller",
+            "clientIdType" : "STRING"
+          },
+          "features" : [ {
+            "app" : "rexroth-firewall",
+            "availableCount" : 1,
+            "finalExpirationDate" : "2019-01-01T12:00:27.87+00:20",
+            "origin" : "dongle",
+            "count" : 1,
+            "description" : "description",
+            "title" : "ctrlX OS - Firewall License",
+            "version" : "1.0",
+            "expiresInSeconds" : 5760,
+            "isPermanent" : true,
+            "startsInSeconds" : 300,
+            "name" : "SWL-XCx-FRW-FIREWALLxxxxx-NNNN",
+            "startDate" : "2019-01-01T12:00:27.87+00:20"
+          }, {
+            "app" : "rexroth-firewall",
+            "availableCount" : 1,
+            "finalExpirationDate" : "2019-01-01T12:00:27.87+00:20",
+            "origin" : "dongle",
+            "count" : 1,
+            "description" : "description",
+            "title" : "ctrlX OS - Firewall License",
+            "version" : "1.0",
+            "expiresInSeconds" : 5760,
+            "isPermanent" : true,
+            "startsInSeconds" : 300,
+            "name" : "SWL-XCx-FRW-FIREWALLxxxxx-NNNN",
+            "startDate" : "2019-01-01T12:00:27.87+00:20"
+          } ],
+          "reservations" : [ {
+            "app" : "rexroth-firewall",
+            "availableCount" : 1,
+            "finalExpirationDate" : "2019-01-01T12:00:27.87+00:20",
+            "origin" : "dongle",
+            "count" : 1,
+            "description" : "description",
+            "title" : "ctrlX OS - Firewall License",
+            "version" : "1.0",
+            "expiresInSeconds" : 5760,
+            "isPermanent" : true,
+            "startsInSeconds" : 300,
+            "name" : "SWL-XCx-FRW-FIREWALLxxxxx-NNNN",
+            "startDate" : "2019-01-01T12:00:27.87+00:20"
+          }, {
+            "app" : "rexroth-firewall",
+            "availableCount" : 1,
+            "finalExpirationDate" : "2019-01-01T12:00:27.87+00:20",
+            "origin" : "dongle",
+            "count" : 1,
+            "description" : "description",
+            "title" : "ctrlX OS - Firewall License",
+            "version" : "1.0",
+            "expiresInSeconds" : 5760,
+            "isPermanent" : true,
+            "startsInSeconds" : 300,
+            "name" : "SWL-XCx-FRW-FIREWALLxxxxx-NNNN",
+            "startDate" : "2019-01-01T12:00:27.87+00:20"
+          } ],
+          "id" : "3837489-847475594947-4847484-484849"
+        },
+        "properties" : {
+          "id" : {
+            "description" : "Distinct (system-generated) identifier for the device",
+            "example" : "3837489-847475594947-4847484-484849",
+            "type" : "string"
+          },
+          "identifier" : {
+            "$ref" : "#/components/schemas/DeviceIdentifier"
+          },
+          "features" : {
+            "description" : "The list contains the licenses / features that are currently served to the device.",
+            "items" : {
+              "$ref" : "#/components/schemas/Capability"
+            },
+            "type" : "array"
+          },
+          "reservations" : {
+            "description" : "Features currently reserved for the specific device. In general the floating license server\nserves licenses on a first come first serve basis. However it is also possible to setup\nreservations on the licene server to reserve certain licenses to specific devices or users.\n",
+            "items" : {
+              "$ref" : "#/components/schemas/Capability"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "features", "id", "identifier", "reservations" ],
+        "type" : "object"
+      },
+      "ServedDevices" : {
+        "description" : "List of clients currently served by / connected to the license server",
+        "items" : {
+          "$ref" : "#/components/schemas/ServedDevice"
+        },
+        "type" : "array"
+      },
+      "Application" : {
+        "description" : "Describes information such as trial-mode status about an application.",
+        "example" : {
+          "trialMode" : {
+            "finalExpirationDate" : "2019-01-01T12:00:27.87+00:20",
+            "status" : "ACTIVE"
+          },
+          "id" : "rexroth-firewall"
+        },
+        "properties" : {
+          "id" : {
+            "description" : "Unique identifier of the application in the backend (read from package manifest).",
+            "example" : "rexroth-firewall",
+            "type" : "string"
+          },
+          "trialMode" : {
+            "$ref" : "#/components/schemas/Application_trialMode"
+          }
+        },
+        "required" : [ "id", "trialMode" ],
+        "type" : "object"
+      },
+      "Applications" : {
+        "items" : {
+          "$ref" : "#/components/schemas/Application"
+        },
+        "type" : "array"
+      },
+      "OneOfTasks" : {
+        "oneOf" : [ {
+          "$ref" : "#/components/schemas/TaskSyncLicenses"
+        } ]
+      },
+      "Tasks" : {
+        "items" : {
+          "$ref" : "#/components/schemas/OneOfTasks"
+        },
+        "type" : "array"
+      },
+      "TemporaryUsageMode" : {
+        "example" : {
+          "expired" : true,
+          "activated" : true,
+          "remainingTime" : 70146
+        },
+        "properties" : {
+          "activated" : {
+            "description" : "Activate the temporarly usage rights. This allows to use every software on the device for 10 days. This mode can only be activated once and cannot be disabled! Note that when temporary usage mode is activated, the license manager will not contact any external server, even if a server was configured.\n",
+            "type" : "boolean"
+          },
+          "expired" : {
+            "description" : "Flag shows if the temporarly usage rights are expired",
+            "readOnly" : true,
+            "type" : "boolean"
+          },
+          "remainingTime" : {
+            "description" : "Remaining temporarly usage time in seconds",
+            "example" : 70146,
+            "readOnly" : true,
+            "type" : "integer"
+          }
+        },
+        "required" : [ "activated" ],
+        "type" : "object"
+      },
+      "ServerEndpointConfig" : {
+        "description" : "Defines the server endpoint, the client connects to in order to retrieve licenes.",
+        "example" : {
+          "port" : 5858,
+          "mtlsConfig" : {
+            "certificate" : "certificate",
+            "certificateSelector" : "DEVICE",
+            "enabled" : true,
+            "key" : "key"
+          },
+          "host" : "192.168.1.2",
+          "enabled" : true
+        },
+        "properties" : {
+          "enabled" : {
+            "description" : "Enables communicating to a configured floating license server. If activated applications that also support floating licenses will try to contact the configured floating license server in order to retrieve the license(s).\n",
+            "type" : "boolean"
+          },
+          "host" : {
+            "description" : "IP address or domain/host name of the floating license server to retrieve licenses from.",
+            "example" : "192.168.1.2",
+            "type" : "string"
+          },
+          "port" : {
+            "description" : "Host port of the floating license server.",
+            "example" : 5858,
+            "type" : "integer"
+          },
+          "mtlsConfig" : {
+            "$ref" : "#/components/schemas/MtlsConfig"
+          }
+        },
+        "required" : [ "enabled", "host", "mtlsConfig", "port" ],
+        "type" : "object"
+      },
+      "MtlsConfig" : {
+        "description" : "Describes how the client authenticates to the license server. If client authentication is enabled the client can choose\nthe corresponding certificate and key for mutual TLS. Note that this is a setting that the server demands and the client\nneeds to follow the settings configured on the license server. For example, if the server requires every client to authenticate\nitself, and client authentication was disabled, the server will refuse to process the client's license request.\n",
+        "example" : {
+          "certificate" : "certificate",
+          "certificateSelector" : "DEVICE",
+          "enabled" : true,
+          "key" : "key"
+        },
+        "properties" : {
+          "enabled" : {
+            "description" : "If enabled the client will have the option to authenticate itself via mutual TLS.\n",
+            "example" : true,
+            "type" : "boolean"
+          },
+          "certificateSelector" : {
+            "description" : "* `DEVICE` In case DEVICE the device is expected to have a corresponding device certificate (and key) which will be used for mutual TLS. The device\ncertificate and key will be under the certificate's managers certificate store 'permanent', under category 'own' called 'device.crt' / 'device.hsm'\nrespectively.\n\n* `INDIVIDUAL` In case INDIVIDUAL is chosen, the client can select an individual certifiate and key that must reside inside the certificate managers\ncertificate store 'licensing' and under category own.\n",
+            "enum" : [ "DEVICE", "INDIVIDUAL" ],
+            "example" : "DEVICE",
+            "type" : "string"
+          },
+          "certificate" : {
+            "description" : "File name of the client certificate used for the mutual TLS connection. The certificate needs to be present inside the certificate management's store\n'licensing' under category 'own'.\n",
+            "type" : "string"
+          },
+          "key" : {
+            "description" : "File name of the client key used for the mutual TLS connection. The key needs to be present inside the certificate management's store\n'licensing' under category 'own'.\n",
+            "type" : "string"
+          }
+        },
+        "required" : [ "certificateSelector", "enabled" ],
+        "type" : "object"
+      },
+      "LicenseCenterEndpointConfig" : {
+        "additionalProperties" : false,
+        "description" : "Defines the license center endpoint that the client connects to for license synchronization. When synchronization is successful, all license state changes are immediately exchanged between the device and the license center. Synchronization data may include newly activated licenses, revoked licenses, and other license state updates, which are immediately applied on the device.\n",
+        "example" : {
+          "endpoint" : "https://api.ctrlx-deviceportal.boschrexroth.com/licensing-service/v1.2",
+          "syncInterval" : 1440,
+          "enabled" : true,
+          "tlsConfig" : {
+            "skipServerCertificateVerification" : true,
+            "ca" : "ca"
+          }
+        },
+        "properties" : {
+          "enabled" : {
+            "description" : "Enables communication with the configured license center endpoint. When enabled, the license manager periodically contacts the license center at the specified synchronization interval to update the license state.\n",
+            "type" : "boolean"
+          },
+          "endpoint" : {
+            "description" : "URL of the license center endpoint.",
+            "example" : "https://api.ctrlx-deviceportal.boschrexroth.com/licensing-service/v1.2",
+            "format" : "uri",
+            "type" : "string"
+          },
+          "syncInterval" : {
+            "description" : "Synchronization interval in minutes for periodic license state synchronization with the license center.\n",
+            "example" : 1440,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "tlsConfig" : {
+            "$ref" : "#/components/schemas/LicenseCenterEndpointConfig_tlsConfig"
+          }
+        },
+        "required" : [ "enabled", "endpoint", "syncInterval", "tlsConfig" ],
+        "type" : "object"
+      },
+      "authScheme" : {
+        "default" : "MTLS_VERIFY_ALWAYS",
+        "description" : "* `MTLS_VERIFY_ALWAYS` In case MTLS_VERIFY_ALWAYS is chosen, the client needs to send a valid certificate during mutual TLS that will be verified against the ctrlX OS root CA certificate and / or an additional user-configurable CA file - and if verification is successful, the certificate will be put into the 'licensing' certificate store under category 'untrusted'. Manual intervention is required by the device administrator to move the certificate into category 'trusted'. The server will use the CA certificate(s) mentioned above in addition to all certificates in category 'trusted' to determine whether licenses are granted to the requesting client. In case a self-signed certificate is sent, the license server will also put it into category 'untrusted' and manual action is required.\n* `MTLS_TRUST_AND_VERIFY_CA` In case MTLS_TRUST_AND_VERIFY_CA is chosen, the client needs to send a valid certificate during mutual TLS that will be verified against the ctrlX OS root CA certificate and / or an additional user-configurable CA file and - if verification is successful, the certificate will be directly put into the category 'trusted' and no manual intervention is required by the device administrator.  The server will use the CA certificate(s) mentioned above in addition to all certificates in category 'trusted' to determine whether licenses are granted to the requesting client. In case a self-signed certificate is sent, the license server will also put it into category 'untrusted' and manual action is required.",
+        "enum" : [ "MTLS_VERIFY_ALWAYS", "MTLS_TRUST_AND_VERIFY_CA" ],
+        "example" : "MTLS_VERIFY_ALWAYS",
+        "type" : "string"
+      },
+      "LicenseIssue" : {
+        "properties" : {
+          "featureName" : {
+            "description" : "Name of the feature",
+            "example" : "SWL-XCx-FRW-FIREWALLxxxxx-NNNN",
+            "type" : "string"
+          },
+          "status" : {
+            "enum" : [ "NotAvailable", "NotSufficient" ],
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "DeviceIdentifier" : {
+        "description" : "Device identifier describing device's properties",
+        "example" : {
+          "clientId" : "74950383383950",
+          "clientName" : "ctrlX OS assembly line controller",
+          "clientIdType" : "STRING"
+        },
+        "properties" : {
+          "clientId" : {
+            "description" : "client id the device license(s) will be bound to",
+            "example" : "74950383383950",
+            "type" : "string"
+          },
+          "clientIdType" : {
+            "description" : "client's id type (i.e. STRING, USER, ETHERNET, USER-DEFINED, VMUID, etc.)",
+            "example" : "STRING",
+            "type" : "string"
+          },
+          "clientName" : {
+            "description" : "client's human-readable name set on the client and displayed on the server for better distinction",
+            "example" : "ctrlX OS assembly line controller",
+            "type" : "string"
+          }
+        },
+        "required" : [ "clientId", "clientIdType", "clientName" ],
+        "type" : "object"
+      },
+      "Task" : {
+        "discriminator" : {
+          "propertyName" : "action"
+        },
+        "properties" : {
+          "id" : {
+            "description" : "A server generated ID used to identify the task. This ID is unique.",
+            "example" : "123",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "state" : {
+            "description" : "The state of the task.",
+            "enum" : [ "pending", "failed", "done", "running" ],
+            "example" : "running",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "action" : {
+            "description" : "The action name executed by this task. This has to be inherited and overwritten by the application.",
+            "type" : "string"
+          },
+          "progress" : {
+            "description" : "Optional progress of the task in percentage.",
+            "example" : 10,
+            "maximum" : 100,
+            "minimum" : 0,
+            "readOnly" : true,
+            "type" : "integer"
+          },
+          "eta" : {
+            "description" : "Optional ETA in RFC 3339 format.",
+            "example" : "2019-01-01T12:00:27.87+00:20",
+            "format" : "dateTime",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "parameters" : {
+            "additionalProperties" : true,
+            "description" : "Optional map of additional parameters required by the request. Should be defined when inherited by an application.",
+            "type" : "object"
+          },
+          "result" : {
+            "additionalProperties" : true,
+            "description" : "Optional map reflecting the result of the task. May be empty until task completition. Should be defined when inherited by an application.",
+            "readOnly" : true,
+            "type" : "object"
+          }
+        },
+        "required" : [ "action", "id", "state" ],
+        "type" : "object"
+      },
+      "ServerSettings_clientAuthentication" : {
+        "example" : {
+          "caFiles" : [ "example_ca_1.crt", "example_ca_2.crt" ],
+          "enable" : true,
+          "authScheme" : "MTLS_VERIFY_ALWAYS"
+        },
+        "properties" : {
+          "enable" : {
+            "description" : "If true, the floating license server demands clients to authenticate themselves via mutual TLS. Refer to the description\nof the selected authentication scheme.\nIf false, no mutual TLS is required. In this case the client is implicitly authenticated as only clients with a valid\nctrlX OS client identity can form a valid (floating) license request.\n",
+            "example" : true,
+            "type" : "boolean"
+          },
+          "authScheme" : {
+            "$ref" : "#/components/schemas/authScheme"
+          },
+          "caFiles" : {
+            "description" : "The list of CA certificates, the license server will use for verifying incoming client requests. The corresponding certificates\nmust be present inside the license manager's certificate store under the category 'CA'. Note that the com.ctrlx-automation.os.crt\nis implicitly always used for incoming certificate verification. Additional certificates can be optionally defined here.\n",
+            "example" : [ "example_ca_1.crt", "example_ca_2.crt" ],
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "authScheme", "caFiles", "enable" ]
+      },
+      "TaskSyncLicenses_allOf_parameters" : {
+        "properties" : {
+          "targetServer" : {
+            "description" : "Specifies the type of license server endpoint to synchronize licenses with.\n",
+            "enum" : [ "LICENSE_CENTER", "FLOATING_LICENSE_SERVER" ],
+            "example" : "FLOATING_LICENSE_SERVER",
+            "type" : "string"
+          }
+        },
+        "required" : [ "targetServer" ]
+      },
+      "TaskSyncLicenses_allOf" : {
+        "properties" : {
+          "action" : {
+            "enum" : [ "syncLicenses" ],
+            "type" : "string"
+          },
+          "parameters" : {
+            "$ref" : "#/components/schemas/TaskSyncLicenses_allOf_parameters"
+          },
+          "result" : {
+            "$ref" : "#/components/schemas/Problem"
+          }
+        },
+        "required" : [ "action" ]
+      },
+      "Application_trialMode" : {
+        "description" : "Trial mode state for this application.",
+        "example" : {
+          "finalExpirationDate" : "2019-01-01T12:00:27.87+00:20",
+          "status" : "ACTIVE"
+        },
+        "properties" : {
+          "status" : {
+            "description" : "* `INACTIVE` — The trial mode has not been activated for this device yet.\n\n* `ACTIVE` — The trial mode is active and the application can use all eligible trial licenses.\n  This is the only status that can be set by the user (if eligible).\n\n* `EXPIRED` — The trial mode has expired and the application can no longer use the eligible trial licenses.\n",
+            "enum" : [ "INACTIVE", "ACTIVE", "EXPIRED" ],
+            "example" : "ACTIVE",
+            "type" : "string"
+          },
+          "finalExpirationDate" : {
+            "description" : "ETA in RFC 3339 format",
+            "example" : "2019-01-01T12:00:27.87+00:20",
+            "format" : "dateTime",
+            "readOnly" : true,
+            "type" : "string"
+          }
+        },
+        "required" : [ "finxalExpirationDate", "status" ]
+      },
+      "LicenseCenterEndpointConfig_tlsConfig" : {
+        "example" : {
+          "skipServerCertificateVerification" : true,
+          "ca" : "ca"
+        },
+        "properties" : {
+          "ca" : {
+            "description" : "The file name containing the trusted CA certificates required to validate the server certificate for the TLS connection.\nThe certificates need to be available as ca certificates (category 'ca') inside the 'licensing' certificate store.\n",
+            "type" : "string"
+          },
+          "skipServerCertificateVerification" : {
+            "description" : "Determines if the server's TLS certificate should be verified. Setting this to true bypasses verification. If false, the server\ncertificate undergoes validation using the specified CA certificate bundle.\n",
+            "type" : "boolean"
+          }
+        }
+      }
+    },
+    "securitySchemes" : {
+      "UsernamePassword" : {
+        "description" : "Enter username and password",
+        "flows" : {
+          "password" : {
+            "scopes" : {
+              "dummy" : "Dummy scope (scopes not used)"
+            },
+            "tokenUrl" : "/identity-manager/api/v2/auth/token"
+          }
+        },
+        "type" : "oauth2"
+      },
+      "Bearer" : {
+        "description" : "Alternatively&colon; Enter bearer token (without prefix 'Bearer')",
+        "scheme" : "bearer",
+        "type" : "http"
+      }
+    }
+  }
+}

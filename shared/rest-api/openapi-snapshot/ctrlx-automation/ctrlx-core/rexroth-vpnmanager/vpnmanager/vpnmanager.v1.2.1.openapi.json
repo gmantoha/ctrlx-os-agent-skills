@@ -1,0 +1,1345 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "contact" : {
+      "email" : "suppport@boschrexroth.com",
+      "name" : "Bosch Rexroth AG",
+      "url" : "https://www.boschrexroth.com"
+    },
+    "description" : "<p> The ctrlX OS VPN Client provides functionalities for VPN client connections with support for both OpenVPN and IPSec.",
+    "title" : "ctrlX OS VPN Client - VPN Client API",
+    "version" : "1.2.1"
+  },
+  "servers" : [ {
+    "description" : "Use this, if this page and the api are on the same server",
+    "url" : "/vpn-manager/api/v1"
+  }, {
+    "url" : "https://{host}/vpn-manager/api/{version}",
+    "variables" : {
+      "host" : {
+        "default" : "[fe80::dcad:beff:fe00:0001]",
+        "description" : "Hostname or ip address of the ctrlX device"
+      },
+      "version" : {
+        "default" : "v1",
+        "description" : "The version of the API",
+        "enum" : [ "v1" ]
+      }
+    }
+  } ],
+  "tags" : [ {
+    "description" : "These functions allow creating, retrieving, changing and deleting current VPN client configurations.\n",
+    "name" : "VPN Client Configurations"
+  }, {
+    "description" : "These functions allow configuring secrets that are required for the corresponding connection. These\nsecrets could be a TLS authentication certificate / key or a username / password combination.\n",
+    "name" : "Secret Management"
+  }, {
+    "description" : "These functions allow retrieving currently active VPN connections and corresponding connection info.\n",
+    "name" : "Connection Management"
+  }, {
+    "description" : "These functions allow retrieving currently support VPN configuration types, e.g. OpenVPN.\n",
+    "name" : "Policies"
+  } ],
+  "paths" : {
+    "/configs" : {
+      "get" : {
+        "description" : "Lists all vpn client configurations that are currently configured",
+        "operationId" : "GetConfigs",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json'" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/Config"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK, returning all configs"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ],
+        "summary" : "List all vpn client configurations",
+        "tags" : [ "VPN Client Configurations" ]
+      },
+      "post" : {
+        "description" : "Create a new VPN client configuration to establish a connection to a openvpn or ipsec vpn server",
+        "operationId" : "CreateConfig",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Config"
+              }
+            },
+            "multipart/form-data" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UploadConfig"
+              }
+            }
+          },
+          "description" : "Config to be created",
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Config"
+                }
+              }
+            },
+            "description" : "Config created successfully, returning created config",
+            "headers" : {
+              "Location" : {
+                "description" : "The location of the newly created VPN configuration",
+                "explode" : false,
+                "schema" : {
+                  "format" : "uri",
+                  "type" : "string"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ],
+        "summary" : "Create a new VPN client configuration",
+        "tags" : [ "VPN Client Configurations" ]
+      }
+    },
+    "/configs/{id}" : {
+      "delete" : {
+        "description" : "Delete a specific VPN client configuration",
+        "operationId" : "DeleteConfig",
+        "parameters" : [ {
+          "description" : "Id of config to be deleted",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Config deleted succesfully"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Delete a specific VPN client configuration",
+        "tags" : [ "VPN Client Configurations" ]
+      },
+      "get" : {
+        "description" : "Get a specific VPN client configuration",
+        "operationId" : "GetConfig",
+        "parameters" : [ {
+          "description" : "Id of config to be fetched",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Config"
+                }
+              }
+            },
+            "description" : "OK, returning specified config"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ],
+        "summary" : "Get a specific VPN client configuration",
+        "tags" : [ "VPN Client Configurations" ]
+      },
+      "put" : {
+        "description" : "Change a specific VPN client configuration",
+        "operationId" : "UpdateConfig",
+        "parameters" : [ {
+          "description" : "Id of config to be updated",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Config"
+              }
+            }
+          },
+          "description" : "New Config",
+          "required" : true
+        },
+        "responses" : {
+          "204" : {
+            "description" : "Config updated succesfully"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ],
+        "summary" : "Change a specific VPN client configuration",
+        "tags" : [ "VPN Client Configurations" ]
+      }
+    },
+    "/configs/{id}/status" : {
+      "put" : {
+        "description" : "Starts or stops connections based on config",
+        "operationId" : "SetRequiredStatus",
+        "parameters" : [ {
+          "description" : "Id of config to be started or stopped",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "example" : "connected",
+                "type" : "string"
+              }
+            }
+          },
+          "description" : "Expected connection status",
+          "required" : true
+        },
+        "responses" : {
+          "204" : {
+            "description" : "Status changed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ],
+        "summary" : "Start or stop connections based on config",
+        "tags" : [ "VPN Client Configurations" ]
+      }
+    },
+    "/configs/{id}/secrets" : {
+      "get" : {
+        "description" : "Get all secrets stored on the device",
+        "operationId" : "GetSecrets",
+        "parameters" : [ {
+          "description" : "Id of config",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Secrets"
+                }
+              }
+            },
+            "description" : "OK, returning all secrets"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ],
+        "summary" : "Get all secrets",
+        "tags" : [ "Secret Management" ]
+      },
+      "post" : {
+        "description" : "Create a new secret",
+        "operationId" : "CreateSecret",
+        "parameters" : [ {
+          "description" : "Id of config",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UploadSecret"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Secret"
+                }
+              }
+            },
+            "description" : "Task created",
+            "headers" : {
+              "Location" : {
+                "explode" : false,
+                "schema" : {
+                  "description" : "Location of the created task",
+                  "format" : "uri",
+                  "type" : "string"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ],
+        "summary" : "Create a new secret",
+        "tags" : [ "Secret Management" ]
+      }
+    },
+    "/configs/{id}/secrets/{name}" : {
+      "delete" : {
+        "description" : "Update a secret stored on the device",
+        "operationId" : "DeleteSecret",
+        "parameters" : [ {
+          "description" : "Id of config",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Name of the secret to be fetched",
+          "explode" : false,
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Secret deleted succesfully"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ],
+        "summary" : "Update a secret",
+        "tags" : [ "Secret Management" ]
+      },
+      "get" : {
+        "description" : "Get a sepcefic secret stored on the device",
+        "operationId" : "GetSecret",
+        "parameters" : [ {
+          "description" : "Id of config",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Name of the secret to be updated",
+          "explode" : false,
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Secret"
+                }
+              }
+            },
+            "description" : "OK, returning all secrets"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ],
+        "summary" : "Get a specfiic secret",
+        "tags" : [ "Secret Management" ]
+      },
+      "put" : {
+        "description" : "Update a secret stored on the device",
+        "operationId" : "SetSecret",
+        "parameters" : [ {
+          "description" : "Id of config",
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Name of the secret to be fetched",
+          "explode" : false,
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Secret"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Secret"
+                }
+              }
+            },
+            "description" : "OK, returning all secrets"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ],
+        "summary" : "Update a secret",
+        "tags" : [ "Secret Management" ]
+      }
+    },
+    "/connections" : {
+      "get" : {
+        "description" : "lists all active connections of all active vpn-clients",
+        "operationId" : "GetConnections",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/Connection"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK, returning all active connections"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ],
+        "summary" : "List active connections",
+        "tags" : [ "Connection Management" ]
+      }
+    },
+    "/policies/supportedvpntypes" : {
+      "get" : {
+        "description" : "Get supported vpn types",
+        "operationId" : "GetSupportedVpnTypes",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "example" : [ "strongswan", "openvpn" ],
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK, returning supported vpn types"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "security" : [ {
+          "BearerAuth" : [ ]
+        } ],
+        "summary" : "Get supported vpn types",
+        "tags" : [ "Policies" ]
+      }
+    }
+  },
+  "components" : {
+    "responses" : {
+      "BadRequest" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The request is incomplete or malformed"
+      },
+      "Unauthorized" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Not authorized to access this resource"
+      },
+      "Forbidden" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Access forbidden for this resource"
+      },
+      "NotFound" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The resource was not found"
+      },
+      "InternalServerError" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Something unexpected happened on the server"
+      }
+    },
+    "schemas" : {
+      "Config" : {
+        "example" : {
+          "data" : [ "data", "data" ],
+          "dataLayerControl" : {
+            "connectionControlNode" : "connectionControlNode",
+            "connectionStatusNode" : "connectionStatusNode",
+            "connectionControlEnabled" : true,
+            "connectionStatusEnabled" : true
+          },
+          "name" : "name",
+          "autoconnect" : true,
+          "id" : "id",
+          "type" : "type"
+        },
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "autoconnect" : {
+            "type" : "boolean"
+          },
+          "dataLayerControl" : {
+            "$ref" : "#/components/schemas/DataLayerControl"
+          },
+          "data" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "autoconnect", "data", "id", "name", "type" ],
+        "type" : "object"
+      },
+      "DataLayerControl" : {
+        "example" : {
+          "connectionControlNode" : "connectionControlNode",
+          "connectionStatusNode" : "connectionStatusNode",
+          "connectionControlEnabled" : true,
+          "connectionStatusEnabled" : true
+        },
+        "properties" : {
+          "connectionControlEnabled" : {
+            "description" : "Enables or disables the connection control via data layer if set to true or false respectively.\nThat means, if the data layer node specified in connectionControlNode has the value true, the vpn connection will be started.\nIf it has the value false the vpn connection will be stopped.\n",
+            "type" : "boolean"
+          },
+          "connectionControlNode" : {
+            "description" : "Specifies the address of a boolean data layer node that will control the vpn connection.\n",
+            "type" : "string"
+          },
+          "connectionStatusEnabled" : {
+            "description" : "Enables or disables the connection status propagation to data layer if set to true or false respectively.\nThat means, if the vpn connection is established the data layer node specified in connectionStatusNode will be set to true.\nIf the vpn connection is disconnected it will be set to false.\n",
+            "type" : "boolean"
+          },
+          "connectionStatusNode" : {
+            "description" : "Specifies the address of a boolean data layer node that will receive the connected status of the vpn connection.\n",
+            "type" : "string"
+          }
+        },
+        "required" : [ "connectionControlEnabled", "connectionControlNode", "connectionStatusEnabled", "connectionStatusNode" ],
+        "type" : "object"
+      },
+      "Connection" : {
+        "example" : {
+          "configName" : "configName",
+          "configId" : "configId",
+          "id" : "id",
+          "type" : "type",
+          "remote" : "remote",
+          "local" : "local",
+          "status" : "status"
+        },
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "type" : {
+            "type" : "string"
+          },
+          "configId" : {
+            "type" : "string"
+          },
+          "configName" : {
+            "type" : "string"
+          },
+          "local" : {
+            "type" : "string"
+          },
+          "remote" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "configId", "configName", "id", "local", "remote", "status", "type" ],
+        "type" : "object"
+      },
+      "Secret" : {
+        "example" : {
+          "name" : "name",
+          "type" : "TlsAuthKey",
+          "content" : "{}"
+        },
+        "properties" : {
+          "name" : {
+            "description" : "Name of the secret. Will be stored as file with the given name. This name has to be used in the VPN configuration.",
+            "type" : "string"
+          },
+          "type" : {
+            "enum" : [ "TlsAuthKey", "UserPassword" ],
+            "type" : "string"
+          },
+          "content" : {
+            "oneOf" : [ {
+              "$ref" : "#/components/schemas/UserPassword"
+            }, {
+              "$ref" : "#/components/schemas/TlsAuthKey"
+            } ],
+            "type" : "object",
+            "writeOnly" : true
+          }
+        },
+        "required" : [ "content", "name" ],
+        "type" : "object"
+      },
+      "Secrets" : {
+        "items" : {
+          "$ref" : "#/components/schemas/Secret"
+        },
+        "type" : "array"
+      },
+      "UserPassword" : {
+        "properties" : {
+          "username" : {
+            "type" : "string"
+          },
+          "password" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "password", "username" ],
+        "type" : "object"
+      },
+      "TlsAuthKey" : {
+        "properties" : {
+          "content" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "content" ],
+        "type" : "object"
+      },
+      "UploadSecret" : {
+        "properties" : {
+          "file" : {
+            "format" : "binary",
+            "type" : "string"
+          },
+          "type" : {
+            "enum" : [ "TlsAuthKey", "UserPassword" ],
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "UploadConfig" : {
+        "properties" : {
+          "file" : {
+            "format" : "binary",
+            "type" : "string"
+          },
+          "type" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "file", "type" ],
+        "type" : "object"
+      },
+      "Problem" : {
+        "description" : "This document defines a \"problem detail\" as a way  to carry machine-readable details of errors in a  HTTP response to avoid the need to define new error  response formats for HTTP APIs.\n",
+        "properties" : {
+          "type" : {
+            "default" : "about:blank",
+            "description" : "A URI reference [RFC3986] that identifies the problem type. \nThis specification encourages that, when dereferenced, \nit provide human-readable documentation for the problem type \n(e.g., using HTML [W3C.REC-html5-20141028]). When this member \nis not present, its value is assumed to be \"about:blank\".\n",
+            "example" : "https://example.com/probs/out-of-credit",
+            "format" : "uri",
+            "type" : "string"
+          },
+          "title" : {
+            "description" : "A short, human-readable summary of the problem type. \nIt SHOULD NOT change from occurrence to occurrence of the problem, \nexcept for purposes of localization (e.g., using proactive content \nnegotiation; see [RFC7231], Section 3.4).\nIf the response is a diagnostics message, it contains \nthe text associated with the mainDiagnosisCode.\n",
+            "example" : "You do not have enough credit.",
+            "type" : "string"
+          },
+          "status" : {
+            "description" : "The HTTP status code ([RFC7231], Section 6) generated by the \norigin server for this occurrence of the problem.\n",
+            "example" : 403,
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "detail" : {
+            "description" : "A human-readable explanation specific to this occurrence of the problem.\nIf the response is a diagnostics message, it contains the text associated with\nthe detailedDiagnosisCode.\n",
+            "example" : "Your current balance is 30, but that costs 50.",
+            "type" : "string"
+          },
+          "instance" : {
+            "description" : "A URI reference that identifies the specific occurrence of the problem.\nIt may or may not yield further information if dereferenced.\n",
+            "example" : "/account/12345/msgs/abc",
+            "type" : "string"
+          },
+          "code" : {
+            "deprecated" : true,
+            "description" : "An error code issued by the system that caused the original problem.\nThis code can be used to track down the root cause of the error.\n",
+            "example" : "F360001",
+            "type" : "string"
+          },
+          "mainDiagnosisCode" : {
+            "description" : "The main diagnosis code is issued by the system that caused the problem.\nThis code can be used to track down the root cause and source of the error.\nIt can be used to search in the documentation for a solution.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "080F0100",
+            "type" : "string"
+          },
+          "detailedDiagnosisCode" : {
+            "description" : "The detailed diagnosis code issued by the system that caused the problem.\nThis code can be used to track down the detailed cause and source of the error.\nIt can be used to search in the documentation for a solution.\nThe detailed diagnosis code gives additional information about the cause of the error.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "00666001",
+            "type" : "string"
+          },
+          "dynamicDescription" : {
+            "description" : "A dynamic description gives detailed information about the occurrence of a problem.\nIt can change between different occurrences of the same error.\n",
+            "example" : "value = -4.5",
+            "type" : "string"
+          },
+          "severity" : {
+            "description" : " Severity of a problem as defined RFC5424 of the Syslog standard, see https://tools.ietf.org/html/rfc5424",
+            "enum" : [ "Emergency", "Alert", "Critical", "Error", "Warning", "Notice", "Informational", "Debug" ],
+            "example" : "Error",
+            "type" : "string"
+          },
+          "links" : {
+            "description" : "Collection of links to fix the problem. E.g. links to online user manual,\nto an online community (using tags) or a developer chat (e.g. Slack).\n",
+            "items" : {
+              "example" : "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001",
+              "format" : "uri",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "moreInfo" : {
+            "additionalProperties" : true,
+            "description" : "The moreInfo field allows you to add additional information that might be necessary to debug or trace down the cause of an error.\nIt might also contain information what is needed to resolve the problem.\nThere are loosely specified fields for specific problems that can be used in these situations, e.g.:\n- On a 403 Forbidden error: The moreInfo can contain a field \"requiredPermissions\" with the required permissions seperated by comma\n- On a 402 Payment required: The moreInfo can contain a field \"requiredLicenses\" with the required licenses seperated by comma\n",
+            "example" : {
+              "trace" : "ExampleClass.cpp#452 Null pointer exception",
+              "class" : "ExampleClass"
+            },
+            "type" : "object"
+          },
+          "cause" : {
+            "description" : "Sometimes a problem might be caused by problems that occure in other components or are the root cause of a problem. In this\ncase the related problems can be added as a cause. Since it might be possible that multiple components have problems on a single\naction, cause is an array. E.g. Loading failed because several components where not able to load the configuration.\n",
+            "items" : {
+              "$ref" : "#/components/schemas/Problem"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "title", "type" ],
+        "type" : "object",
+        "x-version" : "1.0.0"
+      }
+    },
+    "securitySchemes" : {
+      "BearerAuth" : {
+        "scheme" : "bearer",
+        "type" : "http"
+      }
+    }
+  }
+}

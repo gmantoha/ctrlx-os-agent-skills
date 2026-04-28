@@ -1,0 +1,503 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "contact" : {
+      "email" : "suppport@boschrexroth.com",
+      "name" : "Bosch Rexroth AG",
+      "url" : "https://www.boschrexroth.com"
+    },
+    "description" : "<p> The ctrlX SSH API provides functionalities to configure the SSH server. </p> <p>Usage&colon;</p> <ul> <li>Click 'Authorize' to open the 'Available authorizations' dialog.</li> <li>Enter 'username' and 'password'. The 'Client credentials location' selector together with the 'client_id' and 'client_secret' fields as well as the 'Bearer' section can be ignored.</li> <li>Click 'Authorize' and then 'Close' to close the 'Available authorizations' dialog.</li> <li>Try out those GET, PUT, ... operations you're interested in.</li> </ul>",
+    "license" : {
+      "name" : "MIT"
+    },
+    "title" : "ctrlX OS - SSH API",
+    "version" : "1.0.8"
+  },
+  "servers" : [ {
+    "url" : "/ssh/api/v1"
+  }, {
+    "url" : "https://{host}/ssh/api/v1",
+    "variables" : {
+      "host" : {
+        "default" : "[fe80::dcad:beff:fe00:0001]",
+        "description" : "Hostname or ip address of the ctrlX OS system"
+      }
+    }
+  } ],
+  "security" : [ {
+    "UsernamePassword" : [ ]
+  }, {
+    "Bearer" : [ ]
+  } ],
+  "tags" : [ {
+    "description" : "Configure the SSH Server",
+    "name" : "SSH"
+  } ],
+  "paths" : {
+    "/status" : {
+      "get" : {
+        "description" : "Get current status of the SSH protocol",
+        "operationId" : "getStatus",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Status"
+                }
+              }
+            },
+            "description" : "Current status of the SSH protocol"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "SSH" ]
+      },
+      "put" : {
+        "description" : "Change status of the SSH protocol",
+        "operationId" : "setProtocolStatus",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Status"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Status"
+                }
+              }
+            },
+            "description" : "Returns the successfully changed protocol"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "SSH" ]
+      }
+    },
+    "/configuration" : {
+      "get" : {
+        "description" : "Get current configuration of the SSH protocol",
+        "operationId" : "getConfiguration",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Config"
+                }
+              }
+            },
+            "description" : "Current configuration of the SSH protocol"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "SSH" ]
+      },
+      "put" : {
+        "description" : "Change configuration of the SSH protocol",
+        "operationId" : "setProtocolConfiguration",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Config"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Config"
+                }
+              }
+            },
+            "description" : "Returns the successfully changed protocol"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "tags" : [ "SSH" ]
+      }
+    }
+  },
+  "components" : {
+    "responses" : {
+      "Unauthorized" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Not authorized to access this resource"
+      },
+      "Forbidden" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Access forbidden for this resource"
+      },
+      "BadRequest" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The request is incomplete or malformed"
+      },
+      "InternalServerError" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Something unexpected happened on the server"
+      },
+      "NotFound" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The resource was not found"
+      }
+    },
+    "schemas" : {
+      "Status" : {
+        "example" : {
+          "state" : "activated"
+        },
+        "properties" : {
+          "state" : {
+            "description" : "Represents the activation status of the ssh protocol",
+            "enum" : [ "activated", "deactivated" ],
+            "type" : "string"
+          }
+        },
+        "required" : [ "state" ],
+        "type" : "object"
+      },
+      "Config" : {
+        "example" : {
+          "clientAliveInterval" : 0,
+          "maxSessions" : 1,
+          "maxStartups" : 5,
+          "banner" : "banner",
+          "maxAuthTries" : 5,
+          "clientAliveCountMax" : 6
+        },
+        "properties" : {
+          "clientAliveInterval" : {
+            "description" : "Auto logout interval (in seconds) is calculated by clientAliveInterval * clientAliveCountMax",
+            "type" : "integer"
+          },
+          "clientAliveCountMax" : {
+            "description" : "Auto logout interval (in seconds) is calculated by clientAliveInterval * clientAliveCountMax",
+            "type" : "integer"
+          },
+          "maxSessions" : {
+            "description" : "Maximum number of open sessions per connection",
+            "type" : "integer"
+          },
+          "maxAuthTries" : {
+            "description" : "Maximum number of authentication attempts per connection",
+            "type" : "integer"
+          },
+          "maxStartups" : {
+            "description" : "Maximum number of concurrent unauthenticated connections",
+            "type" : "integer"
+          },
+          "banner" : {
+            "description" : "Login banner text",
+            "type" : "string"
+          }
+        },
+        "required" : [ "banner", "clientAliveCountMax", "clientAliveInterval", "maxAuthTries", "maxSessions", "maxStartups" ],
+        "type" : "object"
+      },
+      "Problem" : {
+        "description" : "This document defines a \"problem detail\" as a way  to carry machine-readable details of errors in a  HTTP response to avoid the need to define new error  response formats for HTTP APIs.\n",
+        "properties" : {
+          "type" : {
+            "default" : "about:blank",
+            "description" : "A URI reference [RFC3986] that identifies the problem type. \nThis specification encourages that, when dereferenced, \nit provide human-readable documentation for the problem type \n(e.g., using HTML [W3C.REC-html5-20141028]). When this member \nis not present, its value is assumed to be \"about:blank\".\n",
+            "example" : "https://example.com/probs/out-of-credit",
+            "format" : "uri",
+            "type" : "string"
+          },
+          "title" : {
+            "description" : "A short, human-readable summary of the problem type. \nIt SHOULD NOT change from occurrence to occurrence of the problem, \nexcept for purposes of localization (e.g., using proactive content \nnegotiation; see [RFC7231], Section 3.4).\nIf the response is a diagnostics message, it contains \nthe text associated with the mainDiagnosisCode.\n",
+            "example" : "You do not have enough credit.",
+            "type" : "string"
+          },
+          "status" : {
+            "description" : "The HTTP status code ([RFC7231], Section 6) generated by the \norigin server for this occurrence of the problem.\n",
+            "example" : 403,
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "detail" : {
+            "description" : "A human-readable explanation specific to this occurrence of the problem.\nIf the response is a diagnostics message, it contains the text associated with\nthe detailedDiagnosisCode.\n",
+            "example" : "Your current balance is 30, but that costs 50.",
+            "type" : "string"
+          },
+          "instance" : {
+            "description" : "A URI reference that identifies the specific occurrence of the problem.\nIt may or may not yield further information if dereferenced.\n",
+            "example" : "/account/12345/msgs/abc",
+            "type" : "string"
+          },
+          "code" : {
+            "deprecated" : true,
+            "description" : "An error code issued by the system that caused the original problem.\nThis code can be used to track down the root cause of the error.\n",
+            "example" : "F360001",
+            "type" : "string"
+          },
+          "mainDiagnosisCode" : {
+            "description" : "The main diagnosis code is issued by the system that caused the problem.\nThis code can be used to track down the root cause and source of the error.\nIt can be used to search in the documentation for a solution.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "080F0100",
+            "type" : "string"
+          },
+          "detailedDiagnosisCode" : {
+            "description" : "The detailed diagnosis code issued by the system that caused the problem.\nThis code can be used to track down the detailed cause and source of the error.\nIt can be used to search in the documentation for a solution.\nThe detailed diagnosis code gives additional information about the cause of the error.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "00666001",
+            "type" : "string"
+          },
+          "dynamicDescription" : {
+            "description" : "A dynamic description gives detailed information about the occurrence of a problem.\nIt can change between different occurrences of the same error.\n",
+            "example" : "value = -4.5",
+            "type" : "string"
+          },
+          "severity" : {
+            "description" : " Severity of a problem as defined RFC5424 of the Syslog standard, see https://tools.ietf.org/html/rfc5424",
+            "enum" : [ "Emergency", "Alert", "Critical", "Error", "Warning", "Notice", "Informational", "Debug" ],
+            "example" : "Error",
+            "type" : "string"
+          },
+          "links" : {
+            "description" : "Collection of links to fix the problem. E.g. links to online user manual,\nto an online community (using tags) or a developer chat (e.g. Slack).\n",
+            "items" : {
+              "example" : "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001",
+              "format" : "uri",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "moreInfo" : {
+            "additionalProperties" : true,
+            "description" : "The moreInfo field allows you to add additional information that might be necessary to debug or trace down the cause of an error.\nIt might also contain information what is needed to resolve the problem.\nThere are loosely specified fields for specific problems that can be used in these situations, e.g.:\n- On a 403 Forbidden error: The moreInfo can contain a field \"requiredPermissions\" with the required permissions seperated by comma\n- On a 402 Payment required: The moreInfo can contain a field \"requiredLicenses\" with the required licenses seperated by comma\n",
+            "example" : {
+              "trace" : "ExampleClass.cpp#452 Null pointer exception",
+              "class" : "ExampleClass"
+            },
+            "type" : "object"
+          },
+          "cause" : {
+            "description" : "Sometimes a problem might be caused by problems that occure in other components or are the root cause of a problem. In this\ncase the related problems can be added as a cause. Since it might be possible that multiple components have problems on a single\naction, cause is an array. E.g. Loading failed because several components where not able to load the configuration.\n",
+            "items" : {
+              "$ref" : "#/components/schemas/Problem"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "title", "type" ],
+        "type" : "object",
+        "x-version" : "1.0.0"
+      }
+    },
+    "securitySchemes" : {
+      "UsernamePassword" : {
+        "description" : "Enter username and password",
+        "flows" : {
+          "password" : {
+            "scopes" : {
+              "dummy" : "Dummy scope (scopes not used)"
+            },
+            "tokenUrl" : "/identity-manager/api/v2/auth/token"
+          }
+        },
+        "type" : "oauth2"
+      },
+      "Bearer" : {
+        "description" : "Alternatively&colon; Enter bearer token (without prefix 'Bearer')",
+        "scheme" : "bearer",
+        "type" : "http"
+      }
+    }
+  }
+}

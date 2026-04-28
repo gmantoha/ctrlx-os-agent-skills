@@ -1,0 +1,1525 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "contact" : {
+      "email" : "support@boschrexroth.com",
+      "name" : "Bosch Rexroth AG",
+      "url" : "https://www.boschrexroth.com"
+    },
+    "description" : "<p> The Setup API provides functionalities for creating and applying setups/backups on ctrlX OS devices. <p/><p> A setup/backup is a file that contains settings and resources of a device like network settings, users and permissions, apps, configurations and certificates. <p/><p> It can be created from a device to collect the current device settings and resources. <br/>By applying a setup/backup, the contained settings and resources can be set to a device. <p/><p> The Setup API can be used e.g. for serial commissioning of devices, periodical backups of device settings or updating specific device settings (add user, set timezone, ...). </p>",
+    "title" : "ctrlX OS - Setup API",
+    "version" : "1.7.0"
+  },
+  "servers" : [ {
+    "url" : "/setup/api/v1"
+  }, {
+    "url" : "https://[fe80::dcad:beff:fe00:1]/setup/api/v1"
+  }, {
+    "url" : "https://{host}/setup/api/v1",
+    "variables" : {
+      "host" : {
+        "default" : "[fe80::dcad:beff:fe00:0001]",
+        "description" : "Hostname or ip address of the ctrlX OS device"
+      }
+    }
+  } ],
+  "security" : [ {
+    "UsernamePassword" : [ ]
+  }, {
+    "Bearer" : [ ]
+  } ],
+  "tags" : [ {
+    "description" : "Create and apply setups/backups.",
+    "name" : "Setup"
+  }, {
+    "description" : "Provides information about setups/backups that have been applied to the device.",
+    "name" : "History"
+  }, {
+    "description" : "Contains information about running tasks for asynchronous request handling.",
+    "name" : "Tasks"
+  } ],
+  "paths" : {
+    "/create" : {
+      "post" : {
+        "description" : "<p> Creating a setup/backup file is implemented as an asynchronous task and can take some time. Options, like a password for encrypting secret parts or flags to define the setup/backup content, can be set in the body (see examples). Progress information is provided in the corresponding task returned in the location header. After the setup/backup file is created successfully, it can be downloaded using the 'setups' endpoint. Previously created setup/backup files that are stored on the device are deleted. To save a setup/backup to an external medium, use the parameter path. </p><p> Returns an error if another task is running. Creating a setup/backup file does not change the state of the device. </p>",
+        "operationId" : "createSetup",
+        "parameters" : [ {
+          "description" : "Stores the setup/backup in the given path. Must be a path to an external medium connected to the device.",
+          "example" : "/media/sdb2/",
+          "explode" : true,
+          "in" : "query",
+          "name" : "path",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "examples" : {
+                "fullSetup" : {
+                  "summary" : "Full setup/backup (settings, apps, certificates, configurations)",
+                  "value" : {
+                    "$password" : "secret"
+                  }
+                },
+                "setupWithoutApps" : {
+                  "summary" : "Setup without app files",
+                  "value" : {
+                    "$password" : "secret",
+                    "packageManagement" : {
+                      "$content" : "items"
+                    }
+                  }
+                },
+                "setupWithAppsOnly" : {
+                  "summary" : "Setup including only app settings and files",
+                  "value" : {
+                    "$content" : "none",
+                    "$format" : "zip",
+                    "packageManagement" : {
+                      "$content" : "files"
+                    }
+                  }
+                },
+                "setupWithoutArchivedConfigurations" : {
+                  "summary" : "Setup including active configuration files, but excluding archived configurations",
+                  "value" : {
+                    "$password" : "secret",
+                    "configurations" : {
+                      "active" : {
+                        "$content" : "files"
+                      },
+                      "archive" : {
+                        "$content" : "none"
+                      }
+                    }
+                  }
+                },
+                "setupWithSettingsOnly" : {
+                  "summary" : "Setup including only settings",
+                  "value" : {
+                    "$format" : "json"
+                  }
+                }
+              },
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateOptions"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created",
+            "headers" : {
+              "Location" : {
+                "explode" : false,
+                "schema" : {
+                  "example" : "/tasks/create_abc123",
+                  "type" : "string"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request conflicts with the current state of the resource."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Creates a task which writes a setup/backup file based on the current state of a ctrlX OS device",
+        "tags" : [ "Setup" ]
+      }
+    },
+    "/createoptions" : {
+      "get" : {
+        "description" : "Parts of the setup/backup need extended rights to be read from the device. The returned create options exclude parts, which cannot be accessed with the current user permissions.",
+        "operationId" : "getCreateOptions",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CreateOptions"
+                }
+              }
+            },
+            "description" : "Create options available for the requesting user"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Gets the create options available for the requesting user",
+        "tags" : [ "Setup" ]
+      }
+    },
+    "/apply" : {
+      "post" : {
+        "description" : "<p> Applying a setup/backup is implemented as an asynchronous task and can take some time. Progress information is provided in the corresponding task returned in the location header. Depending on the kind of changes, applying a setup/backup might require that the device is in a safe state. </p><p> Returns an error if another task is running. </p>",
+        "operationId" : "applySetup",
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ApplyOptions"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created",
+            "headers" : {
+              "Location" : {
+                "explode" : false,
+                "schema" : {
+                  "example" : "/tasks/apply_abc123",
+                  "type" : "string"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request is incomplete or malformed"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The request conflicts with the current state of the resource."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Creates a task which sets up a ctrlX OS device as specified by the given setup/backup file",
+        "tags" : [ "Setup" ]
+      }
+    },
+    "/setupinfo" : {
+      "get" : {
+        "description" : "Returns the json part of the device setup/backup. It is a simplified access to setup/backup informations suitable for UI support. Getting the setupinfo does not affect the list of setups/backups.",
+        "operationId" : "getSetupInfo",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "The setup/backup as json object, see https://github.com/boschrexroth/json-schema/blob/master/ctrlx-automation/ctrlx-core/apps/rexroth-setup/setup.v1.schema.json"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Gets partial setup/backup information of the device",
+        "tags" : [ "Setup" ]
+      }
+    },
+    "/setups" : {
+      "get" : {
+        "description" : "Gets a list of available setups/backups on the device. Use the query parameter path to search for setups/backups on external media that are connected to the device.",
+        "operationId" : "getSetups",
+        "parameters" : [ {
+          "description" : "Get setups/backups in the given path. Must be a path to an external medium connected to the device.",
+          "example" : "/media/sdb2/",
+          "explode" : true,
+          "in" : "query",
+          "name" : "path",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Setups"
+                }
+              }
+            },
+            "description" : "Setups"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Gets information about setups/backups on the device",
+        "tags" : [ "Setup" ]
+      }
+    },
+    "/setups/{fileName}" : {
+      "delete" : {
+        "description" : "Deletes the specified setup/backup from the device. Deleted setups/backups can no longer be downloaded. To delete a setup/backup from an external medium, use the path parameter.",
+        "operationId" : "deleteSetup",
+        "parameters" : [ {
+          "description" : "name of setup/backup file",
+          "explode" : false,
+          "in" : "path",
+          "name" : "fileName",
+          "required" : true,
+          "schema" : {
+            "example" : "2022-03-28_07-27-47_ctrlx-setup.zip",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Delete setup/backup with the given file name from the given path. Must be a path to an external medium connected to the device.",
+          "example" : "/media/sdb2/",
+          "explode" : true,
+          "in" : "query",
+          "name" : "path",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Setup deleted successfully"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Deletes the specified setup/backup from the device",
+        "tags" : [ "Setup" ]
+      },
+      "get" : {
+        "description" : "The file name is provided in the corresponding create task. Only one setup/backup file is stored on the ctrlX OS device. To download a setup/backup from an external medium, use the path parameter.",
+        "operationId" : "getSetupByFileName",
+        "parameters" : [ {
+          "description" : "name of setup/backup file",
+          "explode" : false,
+          "in" : "path",
+          "name" : "fileName",
+          "required" : true,
+          "schema" : {
+            "example" : "2022-03-28_07-27-47_ctrlx-setup.zip",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Download setup/backup with the given file name from the given path. Must be a path to an external medium connected to the device.",
+          "example" : "/media/sdb2/",
+          "explode" : true,
+          "in" : "query",
+          "name" : "path",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/zip" : {
+                "schema" : {
+                  "format" : "binary",
+                  "type" : "string"
+                }
+              },
+              "application/json" : {
+                "schema" : {
+                  "format" : "binary",
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "Setup file successfully downloaded"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Downloads the setup/backup file with the given file name",
+        "tags" : [ "Setup" ]
+      },
+      "put" : {
+        "description" : "Only one setup/backup file is stored on the ctrlX OS device. To upload a setup/backup to an external medium, use the path parameter.",
+        "operationId" : "uploadSetup",
+        "parameters" : [ {
+          "description" : "name of setup/backup file",
+          "explode" : false,
+          "in" : "path",
+          "name" : "fileName",
+          "required" : true,
+          "schema" : {
+            "example" : "2022-03-28_07-27-47_ctrlx-setup.zip",
+            "type" : "string"
+          },
+          "style" : "simple"
+        }, {
+          "description" : "Uploads setup/backup with the given file name to the given path. Must be a path to an external medium connected to the device.",
+          "example" : "/media/sdb2/",
+          "explode" : true,
+          "in" : "query",
+          "name" : "path",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/zip" : {
+              "schema" : {
+                "format" : "binary",
+                "type" : "string"
+              }
+            },
+            "application/json" : {
+              "schema" : {
+                "format" : "binary",
+                "type" : "string"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Setup file successfully uploaded"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Uploads the setup/backup file with the given file name",
+        "tags" : [ "Setup" ]
+      }
+    },
+    "/history" : {
+      "get" : {
+        "description" : "Returns an object containing a list of history entries. The list of history entries is empty if no setup/backup has been applied yet. The id of a history entry can be used to get or delete the entry.",
+        "operationId" : "getHistory",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/History"
+                }
+              }
+            },
+            "description" : "History"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Gets the history of setups/backups that have been applied to the device",
+        "tags" : [ "History" ]
+      }
+    },
+    "/history/{historyEntryId}" : {
+      "delete" : {
+        "description" : "Deletes the entry with the given id from the device's setup/backup history",
+        "operationId" : "deleteHistoryEntry",
+        "parameters" : [ {
+          "description" : "id of setup/backup history entry",
+          "explode" : false,
+          "in" : "path",
+          "name" : "historyEntryId",
+          "required" : true,
+          "schema" : {
+            "example" : "1",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "History entry deleted successfully"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Deletes the entry with the given id from the device's setup/backup history",
+        "tags" : [ "History" ]
+      },
+      "get" : {
+        "description" : "Gets the entry with the given id from the device's setup/backup history",
+        "operationId" : "getHistoryEntry",
+        "parameters" : [ {
+          "description" : "id of setup/backup history entry",
+          "explode" : false,
+          "in" : "path",
+          "name" : "historyEntryId",
+          "required" : true,
+          "schema" : {
+            "example" : "1",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/HistoryEntry"
+                }
+              }
+            },
+            "description" : "Entry of a setup/backup history"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Gets the entry with the given id from the device's setup/backup history",
+        "tags" : [ "History" ]
+      }
+    },
+    "/tasks" : {
+      "get" : {
+        "description" : "Receives a list of tasks",
+        "operationId" : "getTasks",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Tasks"
+                }
+              }
+            },
+            "description" : "List of Tasks"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Receives a list of tasks",
+        "tags" : [ "Tasks" ]
+      }
+    },
+    "/tasks/{taskId}" : {
+      "get" : {
+        "description" : "Receives information about a task",
+        "operationId" : "getTask",
+        "parameters" : [ {
+          "description" : "task id",
+          "explode" : false,
+          "in" : "path",
+          "name" : "taskId",
+          "required" : true,
+          "schema" : {
+            "example" : "abc123",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Task"
+                }
+              }
+            },
+            "description" : "Task information"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Not authorized to access this resource"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Access forbidden for this resource"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "The resource was not found"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description" : "Something unexpected happened on the server"
+          }
+        },
+        "summary" : "Receives information about a task",
+        "tags" : [ "Tasks" ]
+      }
+    }
+  },
+  "components" : {
+    "parameters" : {
+      "historyEntryId" : {
+        "description" : "id of setup/backup history entry",
+        "explode" : false,
+        "in" : "path",
+        "name" : "historyEntryId",
+        "required" : true,
+        "schema" : {
+          "example" : "1",
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "taskId" : {
+        "description" : "task id",
+        "explode" : false,
+        "in" : "path",
+        "name" : "taskId",
+        "required" : true,
+        "schema" : {
+          "example" : "abc123",
+          "type" : "string"
+        },
+        "style" : "simple"
+      },
+      "fileName" : {
+        "description" : "name of setup/backup file",
+        "explode" : false,
+        "in" : "path",
+        "name" : "fileName",
+        "required" : true,
+        "schema" : {
+          "example" : "2022-03-28_07-27-47_ctrlx-setup.zip",
+          "type" : "string"
+        },
+        "style" : "simple"
+      }
+    },
+    "responses" : {
+      "BadRequest" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The request is incomplete or malformed"
+      },
+      "Unauthorized" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Not authorized to access this resource"
+      },
+      "Forbidden" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Access forbidden for this resource"
+      },
+      "NotFound" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The resource was not found"
+      },
+      "Conflict" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "The request conflicts with the current state of the resource."
+      },
+      "InternalServerError" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description" : "Something unexpected happened on the server"
+      }
+    },
+    "schemas" : {
+      "CreateOptions" : {
+        "description" : "Specifies format and content of the setup/backup file",
+        "example" : {
+          "$content" : "none,",
+          "$password" : "secret",
+          "$format" : "zip"
+        },
+        "properties" : {
+          "$format" : {
+            "default" : "zip",
+            "description" : "Format of the setup/backup file. Supported values are 'zip' and 'json'. The zip format allows to store settings and additional resources like apps and certificates. The json format only stores settings.",
+            "format" : "string",
+            "type" : "string"
+          },
+          "$password" : {
+            "description" : "Password for encrypting secret parts of the setup/backup file.",
+            "example" : "secret",
+            "format" : "password",
+            "type" : "string"
+          },
+          "$content" : {
+            "description" : "Defines the setup/backup content. The flag can be used as top-level element and for sub-elements. Entries for sub-elements override parent elements. Defaults to 'files' if format of setup/backup file is zip, otherwise 'items'.\n  * `none` - the element (and sub-elements) are not created\n  * `items` - the element (and sub-elements) are created in the json structure\n  * `files` - the element (and sub-elements) are created in the json structure. Associated resource files are also created.\n",
+            "enum" : [ "none,", "items", "files" ],
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "ApplyOptions" : {
+        "properties" : {
+          "setup" : {
+            "description" : "Setup/Backup content to apply. Cannot be used together with parameter 'path'.",
+            "format" : "binary",
+            "type" : "string"
+          },
+          "path" : {
+            "description" : "Path to the setup/backup to apply (e.g. /media/sdb2/mySetup.zip). Must be a path to an external media connected to the device. Cannot be used together with parameter 'setup'.",
+            "format" : "string",
+            "type" : "string"
+          },
+          "options" : {
+            "description" : "JSON content describing what to add, update or delete. Cannot be used together with parameter 'password' and/or 'mode'.",
+            "format" : "binary",
+            "type" : "string"
+          },
+          "password" : {
+            "default" : "",
+            "description" : "Password for decrypting secret parts of the setup/backup. Cannot be used together with parameter 'options'.",
+            "example" : "secret",
+            "format" : "password",
+            "type" : "string"
+          },
+          "mode" : {
+            "default" : "merge",
+            "description" : "Mode of the apply operation. Cannot be used together with parameter 'options'.\n  * In `merge` mode all settings that are not included in the setup/backup file are kept unchanged. This is the default.\n  * In `restore` mode all settings that are not included in the setup/backup file will be reset to their default values.\n",
+            "enum" : [ "merge", "restore" ],
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "Setups" : {
+        "example" : {
+          "setups" : [ {
+            "fileName" : "2022-03-28_07-27-47_ctrlx-setup.zip",
+            "size" : 32768,
+            "modified" : "2022-03-28T09:27:47.87+02:00"
+          }, {
+            "fileName" : "2022-03-28_07-27-47_ctrlx-setup.zip",
+            "size" : 32768,
+            "modified" : "2022-03-28T09:27:47.87+02:00"
+          } ]
+        },
+        "properties" : {
+          "setups" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Setup"
+            },
+            "readOnly" : true,
+            "type" : "array"
+          }
+        },
+        "required" : [ "setups" ],
+        "type" : "object"
+      },
+      "History" : {
+        "example" : {
+          "historyEntries" : [ {
+            "fileName" : "ctrlx-setup.zip",
+            "log" : [ {
+              "severity" : "INFO",
+              "time" : "2017-07-21T17:32:28Z",
+              "message" : "Setup started"
+            }, {
+              "severity" : "INFO",
+              "time" : "2017-07-21T17:32:28Z",
+              "message" : "Setup started"
+            } ],
+            "name" : "Proxy settings",
+            "id" : "1",
+            "warningCount" : 0,
+            "version" : "v1",
+            "user" : "Joe",
+            "errorCount" : 0,
+            "timestamp" : "2017-07-21T17:32:28Z"
+          }, {
+            "fileName" : "ctrlx-setup.zip",
+            "log" : [ {
+              "severity" : "INFO",
+              "time" : "2017-07-21T17:32:28Z",
+              "message" : "Setup started"
+            }, {
+              "severity" : "INFO",
+              "time" : "2017-07-21T17:32:28Z",
+              "message" : "Setup started"
+            } ],
+            "name" : "Proxy settings",
+            "id" : "1",
+            "warningCount" : 0,
+            "version" : "v1",
+            "user" : "Joe",
+            "errorCount" : 0,
+            "timestamp" : "2017-07-21T17:32:28Z"
+          } ]
+        },
+        "properties" : {
+          "historyEntries" : {
+            "description" : "List of history entries",
+            "items" : {
+              "$ref" : "#/components/schemas/HistoryEntry"
+            },
+            "readOnly" : true,
+            "type" : "array"
+          }
+        },
+        "required" : [ "historyEntries" ],
+        "type" : "object"
+      },
+      "HistoryEntry" : {
+        "example" : {
+          "fileName" : "ctrlx-setup.zip",
+          "log" : [ {
+            "severity" : "INFO",
+            "time" : "2017-07-21T17:32:28Z",
+            "message" : "Setup started"
+          }, {
+            "severity" : "INFO",
+            "time" : "2017-07-21T17:32:28Z",
+            "message" : "Setup started"
+          } ],
+          "name" : "Proxy settings",
+          "id" : "1",
+          "warningCount" : 0,
+          "version" : "v1",
+          "user" : "Joe",
+          "errorCount" : 0,
+          "timestamp" : "2017-07-21T17:32:28Z"
+        },
+        "properties" : {
+          "id" : {
+            "description" : "Unique identifier of the history entry",
+            "example" : "1",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "timestamp" : {
+            "description" : "Time in RFC 3339 format when the history entry has been created",
+            "example" : "2017-07-21T17:32:28Z",
+            "format" : "date-time",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "fileName" : {
+            "description" : "Name of the applied setup/backup file",
+            "example" : "ctrlx-setup.zip",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "errorCount" : {
+            "description" : "Number of errors that have occurred when the setup/backup has been applied",
+            "example" : 0,
+            "format" : "int32",
+            "readOnly" : true,
+            "type" : "integer"
+          },
+          "warningCount" : {
+            "description" : "Number of warnings that have occurred when the setup/backup has been applied",
+            "example" : 0,
+            "format" : "int32",
+            "readOnly" : true,
+            "type" : "integer"
+          },
+          "name" : {
+            "description" : "Name of the applied setup/backup",
+            "example" : "Proxy settings",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "version" : {
+            "description" : "Version of the applied setup/backup",
+            "example" : "v1",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "user" : {
+            "description" : "User who applied the setup/backup",
+            "example" : "Joe",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "log" : {
+            "description" : "Collection of events that have been logged when the setup/backup has been applied",
+            "items" : {
+              "$ref" : "#/components/schemas/ProtocolEntry"
+            },
+            "readOnly" : true,
+            "type" : "array"
+          }
+        },
+        "required" : [ "errorCount", "fileName", "id", "timestamp", "warningCount" ],
+        "type" : "object"
+      },
+      "Task" : {
+        "example" : {
+          "fileName" : "fileName",
+          "protocol" : [ {
+            "severity" : "INFO",
+            "time" : "2017-07-21T17:32:28Z",
+            "message" : "Setup started"
+          }, {
+            "severity" : "INFO",
+            "time" : "2017-07-21T17:32:28Z",
+            "message" : "Setup started"
+          } ],
+          "eta" : "2019-01-01T12:00:27.87+00:20",
+          "progress" : 10,
+          "action" : "running setup for identity managment",
+          "id" : "abc123",
+          "state" : "running",
+          "error" : "error"
+        },
+        "properties" : {
+          "id" : {
+            "description" : "The temporary id of a task",
+            "example" : "abc123",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "state" : {
+            "enum" : [ "pending", "failed", "done", "running" ],
+            "example" : "running",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "progress" : {
+            "description" : "Progress of the task",
+            "example" : 10,
+            "maximum" : 100,
+            "minimum" : 0,
+            "readOnly" : true,
+            "type" : "integer"
+          },
+          "eta" : {
+            "description" : "ETA in RFC 3339 format",
+            "example" : "2019-01-01T12:00:27.87+00:20",
+            "format" : "dateTime",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "action" : {
+            "example" : "running setup for identity managment",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "error" : {
+            "description" : "Error occurred in the task",
+            "type" : "string"
+          },
+          "fileName" : {
+            "description" : "name of setup/backup file",
+            "type" : "string"
+          },
+          "protocol" : {
+            "description" : "Protocol collects events that occur while the task is processed",
+            "items" : {
+              "$ref" : "#/components/schemas/ProtocolEntry"
+            },
+            "readOnly" : true,
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "Tasks" : {
+        "items" : {
+          "$ref" : "#/components/schemas/Task"
+        },
+        "type" : "array"
+      },
+      "Problem" : {
+        "description" : "This document defines a \"problem detail\" as a way  to carry machine-readable details of errors in a  HTTP response to avoid the need to define new error  response formats for HTTP APIs.\n",
+        "properties" : {
+          "type" : {
+            "default" : "about:blank",
+            "description" : "A URI reference [RFC3986] that identifies the problem type. \nThis specification encourages that, when dereferenced, \nit provide human-readable documentation for the problem type \n(e.g., using HTML [W3C.REC-html5-20141028]). When this member \nis not present, its value is assumed to be \"about:blank\".\n",
+            "example" : "https://example.com/probs/out-of-credit",
+            "format" : "uri",
+            "type" : "string"
+          },
+          "title" : {
+            "description" : "A short, human-readable summary of the problem type. \nIt SHOULD NOT change from occurrence to occurrence of the problem, \nexcept for purposes of localization (e.g., using proactive content \nnegotiation; see [RFC7231], Section 3.4).\nIf the response is a diagnostics message, it contains \nthe text associated with the mainDiagnosisCode.\n",
+            "example" : "You do not have enough credit.",
+            "type" : "string"
+          },
+          "status" : {
+            "description" : "The HTTP status code ([RFC7231], Section 6) generated by the \norigin server for this occurrence of the problem.\n",
+            "example" : 403,
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "detail" : {
+            "description" : "A human-readable explanation specific to this occurrence of the problem.\nIf the response is a diagnostics message, it contains the text associated with\nthe detailedDiagnosisCode.\n",
+            "example" : "Your current balance is 30, but that costs 50.",
+            "type" : "string"
+          },
+          "instance" : {
+            "description" : "A URI reference that identifies the specific occurrence of the problem.\nIt may or may not yield further information if dereferenced.\n",
+            "example" : "/account/12345/msgs/abc",
+            "type" : "string"
+          },
+          "code" : {
+            "deprecated" : true,
+            "description" : "An error code issued by the system that caused the original problem.\nThis code can be used to track down the root cause of the error.\n",
+            "example" : "F360001",
+            "type" : "string"
+          },
+          "mainDiagnosisCode" : {
+            "description" : "The main diagnosis code is issued by the system that caused the problem.\nThis code can be used to track down the root cause and source of the error.\nIt can be used to search in the documentation for a solution.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "080F0100",
+            "type" : "string"
+          },
+          "detailedDiagnosisCode" : {
+            "description" : "The detailed diagnosis code issued by the system that caused the problem.\nThis code can be used to track down the detailed cause and source of the error.\nIt can be used to search in the documentation for a solution.\nThe detailed diagnosis code gives additional information about the cause of the error.\nIt SHOULD NOT change from occurrence to occurrence of the same problem.\n",
+            "example" : "00666001",
+            "type" : "string"
+          },
+          "dynamicDescription" : {
+            "description" : "A dynamic description gives detailed information about the occurrence of a problem.\nIt can change between different occurrences of the same error.\n",
+            "example" : "value = -4.5",
+            "type" : "string"
+          },
+          "severity" : {
+            "description" : " Severity of a problem as defined RFC5424 of the Syslog standard, see https://tools.ietf.org/html/rfc5424",
+            "enum" : [ "Emergency", "Alert", "Critical", "Error", "Warning", "Notice", "Informational", "Debug" ],
+            "example" : "Error",
+            "type" : "string"
+          },
+          "links" : {
+            "description" : "Collection of links to fix the problem. E.g. links to online user manual,\nto an online community (using tags) or a developer chat (e.g. Slack).\n",
+            "items" : {
+              "example" : "https://stackoverflow.com/questions/tagged/boschrexroth+controlx+f360001",
+              "format" : "uri",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "moreInfo" : {
+            "additionalProperties" : true,
+            "description" : "The moreInfo field allows you to add additional information that might be necessary to debug or trace down the cause of an error.\nIt might also contain information what is needed to resolve the problem.\nThere are loosely specified fields for specific problems that can be used in these situations, e.g.:\n- On a 403 Forbidden error: The moreInfo can contain a field \"requiredPermissions\" with the required permissions seperated by comma\n- On a 402 Payment required: The moreInfo can contain a field \"requiredLicenses\" with the required licenses seperated by comma\n",
+            "example" : {
+              "trace" : "ExampleClass.cpp#452 Null pointer exception",
+              "class" : "ExampleClass"
+            },
+            "type" : "object"
+          },
+          "cause" : {
+            "description" : "Sometimes a problem might be caused by problems that occure in other components or are the root cause of a problem. In this\ncase the related problems can be added as a cause. Since it might be possible that multiple components have problems on a single\naction, cause is an array. E.g. Loading failed because several components where not able to load the configuration.\n",
+            "items" : {
+              "$ref" : "#/components/schemas/Problem"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "title", "type" ],
+        "type" : "object",
+        "x-version" : "1.0.0"
+      },
+      "Setup" : {
+        "example" : {
+          "fileName" : "2022-03-28_07-27-47_ctrlx-setup.zip",
+          "size" : 32768,
+          "modified" : "2022-03-28T09:27:47.87+02:00"
+        },
+        "properties" : {
+          "fileName" : {
+            "description" : "name of setup/backup file",
+            "example" : "2022-03-28_07-27-47_ctrlx-setup.zip",
+            "type" : "string"
+          },
+          "size" : {
+            "description" : "Size of the backup file in bytes",
+            "example" : 32768,
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "modified" : {
+            "description" : "Date of last modification. Timestamp in RFC 3339 format.",
+            "example" : "2022-03-28T09:27:47.87+02:00",
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "ProtocolEntry" : {
+        "example" : {
+          "severity" : "INFO",
+          "time" : "2017-07-21T17:32:28Z",
+          "message" : "Setup started"
+        },
+        "properties" : {
+          "severity" : {
+            "description" : "Severity of the event described by the protocol entry",
+            "example" : "INFO",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "time" : {
+            "description" : "Time in RFC 3339 format when the event described by the protocol entry occurred",
+            "example" : "2017-07-21T17:32:28Z",
+            "format" : "date-time",
+            "readOnly" : true,
+            "type" : "string"
+          },
+          "message" : {
+            "description" : "Message describing the event that occurred",
+            "example" : "Setup started",
+            "readOnly" : true,
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      }
+    },
+    "securitySchemes" : {
+      "UsernamePassword" : {
+        "description" : "Enter username and password",
+        "flows" : {
+          "password" : {
+            "scopes" : {
+              "dummy" : "Dummy scope (scopes not used)"
+            },
+            "tokenUrl" : "/identity-manager/api/v2/auth/token"
+          }
+        },
+        "type" : "oauth2"
+      },
+      "Bearer" : {
+        "description" : "Alternatively&colon; Enter bearer token (without prefix 'Bearer')",
+        "scheme" : "bearer",
+        "type" : "http"
+      }
+    }
+  }
+}
