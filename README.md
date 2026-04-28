@@ -56,13 +56,13 @@ This repository is structured for three equal goals:
 For live development, install by symlinking this repository as the `ctrlx` skill:
 
 ```bash
-ln -s /home/bea1fc/projects/ctrlx-os-agent-skills ~/.agents/skills/ctrlx
+ln -s "$(pwd)" "$HOME/.agents/skills/ctrlx"
 ```
 
 For Claude Code as well:
 
 ```bash
-ln -s /home/bea1fc/projects/ctrlx-os-agent-skills ~/.claude/skills/ctrlx
+ln -s "$(pwd)" "$HOME/.claude/skills/ctrlx"
 ```
 
 See `INSTALL.md` for details and verification steps.

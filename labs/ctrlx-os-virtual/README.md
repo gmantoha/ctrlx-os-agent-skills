@@ -12,13 +12,10 @@ The virtual image itself is intentionally not tracked. Copy VM image files into 
 cp labs/ctrlx-os-virtual/run/env.example labs/ctrlx-os-virtual/run/.env
 ```
 
-2. Copy VM image files into an ignored asset folder:
+2. Put VM image files into the ignored asset folder inside this skill:
 
 ```bash
 mkdir -p labs/ctrlx-os-virtual/assets/4.6.0
-cp /home/bea1fc/ctrlX/virtual_core/copies/4.6.0/kernel.img labs/ctrlx-os-virtual/assets/4.6.0/
-cp /home/bea1fc/ctrlX/virtual_core/copies/4.6.0/initrd.img labs/ctrlx-os-virtual/assets/4.6.0/
-cp /home/bea1fc/ctrlX/virtual_core/copies/4.6.0/virtual-control.base.qcow2 labs/ctrlx-os-virtual/assets/4.6.0/
 ```
 
 The `assets/` directory is ignored by git. Keep all VM images, mutable disks, PID files, and QEMU logs there.
@@ -65,7 +62,7 @@ Each VM folder under `assets/` must contain at least:
 - `initrd.img`
 - `virtual-control.base.qcow2`
 
-Optional image files such as `bn1yhwxp.user.qcow2` may also be stored there if needed by a local QEMU setup, but the default launcher uses the same base image layout as `/home/bea1fc/ctrlX/virtual_core/start.sh`.
+Optional image files such as `bn1yhwxp.user.qcow2` may also be stored there if needed by a local QEMU setup, but the default launcher uses the base image layout documented above.
 
 ## Agent Usage
 

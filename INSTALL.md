@@ -7,13 +7,13 @@ This repository is an installable agent skill named `ctrlx`.
 Install with a symlink so repository edits are immediately visible to the agent:
 
 ```bash
-ln -s /home/bea1fc/projects/ctrlx-os-agent-skills ~/.agents/skills/ctrlx
+ln -s "$(pwd)" "$HOME/.agents/skills/ctrlx"
 ```
 
 Verify:
 
 ```bash
-test -f ~/.agents/skills/ctrlx/SKILL.md
+test -f "$HOME/.agents/skills/ctrlx/SKILL.md"
 ```
 
 ## Claude Code
@@ -21,13 +21,13 @@ test -f ~/.agents/skills/ctrlx/SKILL.md
 Optionally install the same skill for Claude Code:
 
 ```bash
-ln -s /home/bea1fc/projects/ctrlx-os-agent-skills ~/.claude/skills/ctrlx
+ln -s "$(pwd)" "$HOME/.claude/skills/ctrlx"
 ```
 
 Verify:
 
 ```bash
-test -f ~/.claude/skills/ctrlx/SKILL.md
+test -f "$HOME/.claude/skills/ctrlx/SKILL.md"
 ```
 
 ## Expected Usage
