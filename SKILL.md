@@ -24,6 +24,8 @@ Never perform persistent changes on a real ctrlX device without explicit user co
 
 For real-device changes, inspect first, propose exact commands or UI actions, wait for confirmation, apply the change, verify the result, and report what changed.
 
+Always check and report the virtual lab instance status at the start and end of any session that uses it. Stop the virtual instance after testing completes unless the user explicitly asks to keep it running.
+
 ## Routing
 
 Use `workflows/debug-issue.md` for crashes, OOM, service failures, logs, token verifier floods, Data Layer disconnects, and performance investigations.
