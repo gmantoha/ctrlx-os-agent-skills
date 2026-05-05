@@ -9,9 +9,22 @@ Use this workflow for installing, updating, removing, inspecting, and troublesho
 - Relevant services and logs.
 - Whether the app package is available locally or must be obtained elsewhere.
 
+## Local App Packages
+
+App packages for version 4.6.0 are available locally under:
+
+```
+labs/app-packages/DC_App_Paket_4.6.0/          ← user apps
+labs/app-packages/DC_App_Paket_4.6.0/SYSTEM_APPS/   ← system apps
+```
+
+Note: `.app` files are git-ignored. Check whether the folder is populated before assuming packages are present.
+
+Release notes for all 4.6.0 apps are in `reference/docs/release-notes/4.6.0/EN/` and can be read to determine what changed in a given version.
+
 ## Rules
 
-- Do not assume app packages are available in this repository.
+- Check `labs/app-packages/` before assuming a package must be downloaded.
 - App lifecycle changes on real devices require confirmation before execution.
 - Verify service state and logs after changes.
 

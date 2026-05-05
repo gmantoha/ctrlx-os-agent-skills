@@ -64,6 +64,19 @@ Each VM folder under `assets/` must contain at least:
 
 Optional image files such as `bn1yhwxp.user.qcow2` may also be stored there if needed by a local QEMU setup, but the default launcher uses the base image layout documented above.
 
+## App Packages
+
+Locally available `.app` packages for installation on this virtual lab are stored under:
+
+```
+labs/app-packages/DC_App_Paket_4.6.0/          ← user apps
+labs/app-packages/DC_App_Paket_4.6.0/SYSTEM_APPS/   ← system apps
+```
+
+These files are git-ignored. Check that the folder is populated before referencing a package path.
+
+Release notes for version 4.6.0 are in `reference/docs/release-notes/4.6.0/EN/`.
+
 ## Agent Usage
 
 Agents should use this lab to verify workflows against a virtual target before touching a real ctrlX CORE when practical. Use `workflows/use-virtual-core.md` for lifecycle handling, then switch to the relevant REST, Web UI, SSH, Data Layer, app, or debug workflow for the task itself.
