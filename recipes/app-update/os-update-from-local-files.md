@@ -16,7 +16,7 @@ Read TAR headers (512 bytes per entry) to extract the snap filename without unpa
 
 - Endpoint: `POST /package-manager/api/v1/packages`
 - Content type: `multipart/form-data`
-- Fields: `file` (binary snap data) + `update=true` (string)
+- Fields: `file` (the `.app` file payload, uploaded as downloaded; do not extract the inner `.snap`) + `update=true` (string)
 - Returns HTTP 202 with a `Location` header pointing to the task.
 - **Use `curl.exe` on Windows for files >10 MB.** PowerShell `Invoke-WebRequest` and `Invoke-RestMethod` reset the connection on large uploads.
 
