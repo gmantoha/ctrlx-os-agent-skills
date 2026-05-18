@@ -50,6 +50,8 @@ Use `workflows/use-virtual-core.md` for launching, stopping, monitoring, and tes
 
 Use `workflows/answer-customer.md` when the primary output is a customer or colleague technical answer.
 
+Use `workflows/update-os.md` for upgrading ctrlX OS from local .app files, including system snap ordering, version polling, reboot handling, and core22 removal via remodel.
+
 ## Common Recipes
 
 Use concrete playbooks under `recipes/` when available. For example, use `recipes/vpn/route-through-plc.md` when configuring a VPN route through a ctrlX CORE to a PLC/SPS network.
