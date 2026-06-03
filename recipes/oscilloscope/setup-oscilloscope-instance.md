@@ -112,11 +112,33 @@ GET /automation/api/v2/nodes/oscilloscope/instances/wienerOsc/state/opstate
 GET /automation/api/v2/nodes/oscilloscope/instances/wienerOsc/rec-values/allsignals
 ```
 
+## Schritt 4b: Diagram-Views anlegen (Pflicht vor Start!)
+
+Views müssen **vor dem Start** angelegt werden — sonst schlägt `cmd/start` mit `DL_SUBMODULE_FAILURE` fehl.
+Das `color`-Feld ist **Pflicht** (ohne Farbe → Flatbuffer-Deserialisierungsfehler).
+
+```http
+POST /automation/api/v2/nodes/oscilloscope/instances/wienerOsc/cfg/diagrams/Diagram_0/views
+Content-Type: application/json
+
+{
+  "type": "object",
+  "value": {
+    "source": "NRTpos1",
+    "color": "#9789f4",
+    "visible": true,
+    "connectionType": "LINE"
+  }
+}
+```
+
+Für jeden Kanal einmal wiederholen. Farben frei wählbar (Hex).
+
 ## Bekannte Fehler
 
 | Fehler | Ursache | Lösung |
 |--------|---------|--------|
-| `DL_TYPE_MISMATCH` bei `cfg/diagrams/.../views` POST | Flatbuffer-Format, nicht JSON-schreibbar | Views werden automatisch von Kanälen befüllt — nicht manuell schreiben |
-| `DL_SUBMODULE_FAILURE` bei `cmd/start` | Kanäle als RT statt NRT | Kanäle als `"type":"NRT"` anlegen |
+| `DL_TYPE_MISMATCH` bei `cfg/diagrams/.../views` POST | `color`-Feld fehlt | `color` als Hex-String mitgeben (Pflichtfeld!) |
+| `DL_SUBMODULE_FAILURE` bei `cmd/start` | Kanäle als RT statt NRT, oder keine Views angelegt | Kanäle als `"type":"NRT"` und Views mit `color` anlegen |
 | WebDAV PUT → 400 | Datei ist während aktiver Instanz gesperrt | Instanz erst löschen (DELETE), dann Datei schreiben, dann neu erstellen |
 | `DL_INVALID_VALUE` bei Instanzname | Bindestriche oder Unterstriche im Namen | Nur camelCase verwenden |
