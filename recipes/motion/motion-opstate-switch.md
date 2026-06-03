@@ -69,6 +69,21 @@ GET /automation/api/v2/nodes/motion/axs/{AXSNAME}/state/opstate/plcopen
 `DISABLED` ist der korrekte Ausgangszustand nach dem Hochfahren.
 Die Achsen werden durch das PLC-Programm per `Power`-Kommando aktiviert.
 
+## Alternative: scheduler/admin/state (UI-Methode)
+
+Die Motion App UI verwendet intern diesen Pfad (verifiziert 2026-06-03, ctrlX OS 4.6):
+
+```
+PUT /automation/api/v2/nodes/scheduler/admin/state
+Body (Running):       {"type":"object","value":{"state":"OPERATING"}}
+Body (Configuration): {"type":"object","value":{"state":"SETUP"}}
+
+GET /automation/api/v2/nodes/scheduler/admin/state
+→ {"type":"object","value":{"state":"OPERATING"}}
+```
+
+Sichtbarer Effekt: `GVL_CORE.ctrlX_CORE_Status.State[3].e` (motion.core) wechselt OPERATING ↔ SETUP.
+
 ## Hinweise
 
 - `motion/cmd/opstate` unterstützt nur `POST` (onCreate), kein `GET` / `PUT`.
