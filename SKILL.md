@@ -42,6 +42,8 @@ Use `workflows/use-datalayer.md` for on-device IPC, PLC-to-service communication
 
 Use `workflows/use-web-ui.md` for UI-driven configuration, browser validation, screenshots, and Playwright-backed workflows.
 
+Use `workflows/learn-from-ui.md` when the correct Data Layer payload format is unknown, a REST write fails with type errors, or the user performs a UI action and you want to learn the underlying API calls via Data Layer Diff.
+
 Use `workflows/use-webdav.md` for file transfer and app data inspection through WebDAV.
 
 Use `workflows/work-with-plc.md` for PLC Engineering, ST examples, and PLC integration guidance.
@@ -54,7 +56,11 @@ Use `workflows/update-os.md` for upgrading ctrlX OS from local .app files, inclu
 
 ## Common Recipes
 
-Use concrete playbooks under `recipes/` when available. For example, use `recipes/vpn/route-through-plc.md` when configuring a VPN route through a ctrlX CORE to a PLC/SPS network.
+Use concrete playbooks under `recipes/` when available. For example:
+- `recipes/vpn/route-through-plc.md` — VPN-Route durch ctrlX CORE zu PLC/SPS-Netz
+- `recipes/motion/axis-velocity-limits.md` — Achsgeschwindigkeitsgrenzen lesen/schreiben
+- `recipes/motion/motion-opstate-switch.md` — Motion von Configuration → Running schalten
+- `recipes/oscilloscope/setup-oscilloscope-instance.md` — Oszilloskop-Instanz einrichten und starten
 
 ## Evidence Order
 
