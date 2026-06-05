@@ -4,6 +4,8 @@
 - REST API upstream repository: https://github.com/boschrexroth/rest-api-description
 - ctrlX CORE REST API overview: https://boschrexroth.github.io/rest-api-description/ctrlx-automation/ctrlx-core/index.html
 - ctrlX WORKS REST API overview: https://boschrexroth.github.io/rest-api-description/ctrlx-automation/ctrlx-works/index.html
+- ctrlX WORKS IO Engineering REST API overview: https://boschrexroth.github.io/rest-api-description/ctrlx-automation/ctrlx-works/index.html
+- ctrlX WORKS IO Engineering OpenAPI JSON: https://boschrexroth.github.io/rest-api-description/ctrlx-automation/ctrlx-works/io-engineering/io-engineering.v2.10.0.openapi.json
 - Local fallback snapshot: `openapi-snapshot/`
 - Official product docs: https://docs.automation.boschrexroth.com/welcome/
 - SDK docs: https://boschrexroth.github.io/ctrlx-automation-sdk/4.6.0/
