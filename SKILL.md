@@ -61,6 +61,7 @@ Use concrete playbooks under `recipes/` when available. For example:
 - `recipes/motion/axis-velocity-limits.md` — Achsgeschwindigkeitsgrenzen lesen/schreiben
 - `recipes/motion/motion-opstate-switch.md` — Motion von Configuration → Running schalten
 - `recipes/oscilloscope/setup-oscilloscope-instance.md` — Oszilloskop-Instanz einrichten und starten
+- `recipes/io-engineering/project-and-ethercat-topology.md` — IO Engineering Projekt anlegen und EtherCAT-Topologie mit ctrlX I/O aufbauen
 
 ## Evidence Order
 
