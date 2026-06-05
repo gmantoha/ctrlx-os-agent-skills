@@ -16,3 +16,4 @@ For USB mount operations on ctrlX OS 4.4 or newer, PLC code should use the ctrlX
 ## Details
 
 See `ANSWER.md`, `references.md`, and `recipes/plc/usb-mount-via-datalayer.md`.
+Published article in `raw/blogpost-usb-mount-ctrlx-plc.md` — customer-facing format, not needed for analysis.

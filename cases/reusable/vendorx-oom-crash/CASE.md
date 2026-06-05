@@ -18,3 +18,5 @@ The analyzed crash was not an OOM kill. The root cause was an InfluxDB timeout d
 ## Details
 
 See `Analyse-apidata-crash-2026-04-17.md`.
+For log evidence see `raw/key-evidence.md` (distilled, ~2 KB).
+Full raw log in `raw/Explore-logs-2026-04-17 13_36_22.txt` (103 KB) — read only if the key-evidence is insufficient.
