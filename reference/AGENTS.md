@@ -24,6 +24,12 @@
 - Do not store employee-specific or customer-specific secrets in tracked files.
 - Prefer example files and placeholders for anything non-default.
 
+## Known Devices
+
+Device-specific connection details and service accounts are documented under `reference/devices/`.
+
+- `reference/devices/192.168.1.1.md` — primäres Arbeitsgerät; Service-Account `aiuser` für alle Skill-Operationen verwenden.
+
 ## Change Policy
 
 On real devices, ask before changing persistent state.
