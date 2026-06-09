@@ -107,3 +107,14 @@ Invoke-RestMethod "$base/motion/axs/Axis_4" -Method DELETE -Headers $h
 - `POST motion/axs/{name}` with a body → `DL_INVALID_ADDRESS` (wrong pattern)
 - Browse `motion/axs` (GET) → `DL_INVALID_ADDRESS` (can't list axes this way)
 - To list axes: poll known names individually or read from PLC GVL
+- `axsCategory: "VIRTUAL"` → `DL_TYPE_MISMATCH` (unknown enum value). Use `DRIVEAXS` + `ignore-axisprofile=true` for axes without physical drive.
+- Velocity unit for LINEAR axes: **mm/min** (not mm/s). 1000 mm in 10 s = 100 mm/s = **6000 mm/min**.
+- After creation without a physical drive, set `ignore-axisprofile=true` before switching back to OPERATING, then save and reboot if necessary (see `switch-to-running-mode.md`).
+
+## Velocity Reference
+
+| Travel | Time | mm/s | mm/min (velPos) |
+|--------|------|------|-----------------|
+| 1000 mm | 10 s | 100 | **6000** |
+| 1000 mm | 5 s  | 200 | 12000 |
+| 500 mm  | 10 s | 50  | 3000 |
