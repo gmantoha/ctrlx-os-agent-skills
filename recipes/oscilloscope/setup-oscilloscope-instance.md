@@ -142,3 +142,33 @@ Für jeden Kanal einmal wiederholen. Farben frei wählbar (Hex).
 | `DL_SUBMODULE_FAILURE` bei `cmd/start` | Kanäle als RT statt NRT, oder keine Views angelegt | Kanäle als `"type":"NRT"` und Views mit `color` anlegen |
 | WebDAV PUT → 400 | Datei ist während aktiver Instanz gesperrt | Instanz erst löschen (DELETE), dann Datei schreiben, dann neu erstellen |
 | `DL_INVALID_VALUE` bei Instanzname | Bindestriche oder Unterstriche im Namen | Nur camelCase verwenden |
+| DELETE Instanz → `DL_FAILED` | Instanz läuft noch | Erst `cmd/stop` senden, dann 1–2 s warten, dann DELETE |
+| `DL_TYPE_MISMATCH: unknown enum value: CIRCULAR` | `bufferType: "CIRCULAR"` nicht gültig | Nur `"SINGLESHOT"` verwenden |
+| `DL_INVALID_ADDRESS` bei `rec-values/{channelName}` | Kanal-Einzelabruf nicht unterstützt | Nur `rec-values/allsignals` verwenden |
+| Diagramm heißt `Diagram_1`, nicht `Diagram_0` | Automatische Benennung beginnt bei 1 | Vor dem Views-POST immer `cfg/diagrams?type=browse` abfragen |
+
+---
+
+## ⚠ Bekanntes Problem: SINGLESHOT + NRT bleibt in State 3
+
+**Symptom:** `state/opstate` bleibt dauerhaft auf `3` (Recording), erreicht nie `4` (Done).  
+`rec-values/allsignals` liefert 1 leeres Sample — auch nach Ablauf der `recordingTime`.
+
+**Ursache (Stand 2026-06-09, ctrlX OS 4.6):** NRT-Kanäle subscriben auf Data Layer Updates — nicht auf RT-Takt. SINGLESHOT erwartet offenbar eine RT-Quelle um den Puffer vollzuschreiben. Das Fenster läuft nie ab.
+
+**Workaround:** Oszi nach der Bewegung manuell per `cmd/stop` beenden, dann `allsignals` lesen. Die Daten sind dann vorhanden (State nach Stop = 1, nicht 4).
+
+```powershell
+# Bewegung abwarten
+do { Start-Sleep 1; $plc = ... } while ($plc -eq "DISCRETE_MOTION")
+
+# Oszi stoppen
+Invoke-RestMethod ".../cmd/stop" -Method POST -Headers $h -SkipCertificateCheck -Body '{"type":"bool8","value":true}' | Out-Null
+Start-Sleep 2
+
+# Daten lesen
+$data = Invoke-RestMethod ".../rec-values/allsignals" -Headers $h -SkipCertificateCheck
+```
+
+**TODO:** Mit RT-Kanälen testen — möglicherweise funktioniert SINGLESHOT nur mit `"type":"RT"`.
+

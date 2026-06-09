@@ -63,9 +63,18 @@ Content-Type: application/json
 ```
 
 - `axsPos` — target position in degrees (or units configured on axis)
-- `vel` — velocity in rpm (rotary) or mm/s (linear)
+- `vel` — **mm/min for LINEAR axes** (not mm/s!). Example: 6010 mm/min = 100.17 mm/s
+- `acc`/`dec` — **m/s²** (same unit as `cfg/lim/acc`)
 - During motion: PLCopen state = `DISCRETE_MOTION`
 - On arrival: PLCopen state = `STANDSTILL`
+
+### Unit Summary for LINEAR Axes
+
+| Parameter | Unit in cmd/pos-abs | Unit in cfg/lim | Notes |
+|-----------|--------------------|--------------------|-------|
+| vel       | mm/min             | mm/min             | 6010 mm/min = 100.17 mm/s |
+| acc/dec   | m/s²               | m/s²               | 10 m/s² = 10 000 mm/s² |
+| axsPos    | mm                 | —                  | — |
 
 ---
 
@@ -83,3 +92,25 @@ GET /automation/api/v2/nodes/motion/axs/{axisName}/state/values/actual
 ## Why `{"drive":{"enable":true}}` Fails
 
 The Data Layer node `cmd/power` expects a scalar `bool8`, not an object. Passing `{"drive":{"enable":true}}` returns `DL_TYPE_MISMATCH: unknown field: drive`.
+
+---
+
+## REST Polling as Fallback Timing Method
+
+The ctrlX Oscilloscope (with NRT channels) currently does not reliably complete a SINGLESHOT recording — `state/opstate` stays at `3` (Recording) indefinitely and `rec-values/allsignals` returns only 1 sample.
+
+Until the oscilloscope issue is resolved, use REST polling to measure travel time:
+
+```powershell
+# Achse auf Startposition bringen, dann messen:
+$sw = [System.Diagnostics.Stopwatch]::StartNew()
+Invoke-RestMethod "$base/motion/axs/my_axis/cmd/pos-abs" -Method POST -Headers $h -SkipCertificateCheck -Body $move | Out-Null
+do {
+    Start-Sleep -Milliseconds 150   # REST-Latenz ~100-180ms pro Abfrage
+    $plc = (Invoke-RestMethod "$base/motion/axs/my_axis/state/opstate/plcopen" -Headers $h -SkipCertificateCheck).value
+} while ($plc -eq "DISCRETE_MOTION" -and $sw.Elapsed.TotalSeconds -lt 30)
+$sw.Stop()
+Write-Host "Fahrtzeit (inkl. REST-Overhead): $([math]::Round($sw.Elapsed.TotalSeconds,2)) s"
+```
+
+> **Hinweis:** REST-Latenz beträgt ~100–180 ms pro Lesung. Die gemessene Zeit enthält daher 1–3 Extra-Samples Overhead. Für präzise Zeitmessung → Oszilloskop oder PLC-seitiges Logging bevorzugen.
