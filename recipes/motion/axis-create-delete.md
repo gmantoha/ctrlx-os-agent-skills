@@ -36,7 +36,7 @@ Content-Type: application/json
 }
 ```
 
-- `axsType`: `"LINEAR"` or `"ROTARY"`
+- `axsType`: `"LINEAR"` or `"ROTATIONAL"` (⚠️ not `"ROTARY"` — rejected on ctrlX OS 4.6)
 - `modulo`: `true` for modulo axes (e.g. rotary 0–360°)
 - `axsCategory`: `"DRIVEAXS"` (real drive) or `"VIRTUAL"` (no hardware)
 
