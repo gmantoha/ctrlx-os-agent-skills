@@ -214,20 +214,18 @@ try {
     Write-Warning "Finales Passwort konnte nicht gesetzt werden: $errMsg"
 }
 
-# ── 3d. Berechtigungen setzen (Scopes vom Admin-User übernehmen) ──────────────
-Write-Host "[3d] Setze Berechtigungen..." -NoNewline
+# ── 3d. Berechtigungen setzen (explizit rexroth-device.all.rwx) ──────────────
+# Scopes vom Admin-User zu kopieren ist nicht zuverlässig — die API gibt
+# manchmal nur "identitymanager.own_credential.w" zurück, sodass der neue
+# User keinen Gerätezugriff hat (Data Layer, Motion, REST alle gesperrt).
+# Deshalb wird rexroth-device.all.rwx immer explizit gesetzt.
+# (verified 2026-06-10, ctrlX OS 4.6)
+Write-Host "[3d] Setze Berechtigungen (rexroth-device.all.rwx)..." -NoNewline
 try {
-    $adminScopes = Invoke-RestMethod "$base/identity-manager/api/v2/users/$($template.id)/scopes" `
-        -Headers $h @irm
-    # API erwartet ein Array — normalisiere Einzelobjekt und Array
-    $scopesArray = @($adminScopes)
-    $scopeBody = $scopesArray | ConvertTo-Json -Compress
-    # Bei einem einzelnen Element kein Array-Wrapper vergessen
-    if ($scopesArray.Count -eq 1) { $scopeBody = "[$scopeBody]" }
-
+    $scopeBody = '[{"identifier":"rexroth-device.all.rwx"}]'
     Invoke-RestMethod "$base/identity-manager/api/v2/users/$($created.id)/scopes" `
         -Method PUT -Headers $h -Body $scopeBody @irm | Out-Null
-    Write-Host " OK ($($scopesArray | ForEach-Object { $_.identifier }) )" -ForegroundColor Green
+    Write-Host " OK (rexroth-device.all.rwx)" -ForegroundColor Green
 } catch {
     $errMsg = ($_.ErrorDetails.Message | ConvertFrom-Json -ErrorAction SilentlyContinue).dynamicDescription
     Write-Host " FEHLER" -ForegroundColor Red
