@@ -110,6 +110,9 @@ Invoke-RestMethod "$base/motion/axs/Axis_4" -Method DELETE -Headers $h
 - `axsCategory: "VIRTUAL"` → `DL_TYPE_MISMATCH` (unknown enum value). Use `DRIVEAXS` + `ignore-axisprofile=true` for axes without physical drive.
 - Velocity unit for LINEAR axes: **mm/min** (not mm/s). 1000 mm in 10 s = 100 mm/s = **6000 mm/min**.
 - After creation without a physical drive, set `ignore-axisprofile=true` before switching back to OPERATING, then save and reboot if necessary (see `switch-to-running-mode.md`).
+- `cmd/set-pos` → `DL_INVALID_ADDRESS` — position reset node does not exist on standard axes (verified 2026-06-10).
+- **PowerShell pitfall:** never name a helper function `Move` — it collides with the `Move-Item` alias and tries to move filesystem paths. Use `Send-Move` or similar.
+- **Axes must be powered off (DISABLED) before deleting them in Configuration mode.** If axes are STANDSTILL when you switch to SETUP, Motion silently stays in Running and DELETE returns `DL_INVALID_CONFIGURATION`.
 
 ## Velocity Reference
 

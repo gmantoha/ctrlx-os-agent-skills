@@ -90,3 +90,5 @@ Sichtbarer Effekt: `GVL_CORE.ctrlX_CORE_Status.State[3].e` (motion.core) wechsel
 - `GET` auf `motion/cmd/opstate` liefert `DL_UNSUPPORTED` — das ist normal.
 - Nach dem Wechsel in Running werden ungespeicherte Konfigurationsänderungen **nicht** automatisch verworfen.
 - ctrlX OS zeigt „partially operating" solange Motion in `Configuration` ist.
+- **Achsen müssen vor dem Moduswechsel abgeschaltet sein (DISABLED).** Sind Achsen eingeschaltet (STANDSTILL), bleibt Motion trotz SETUP-Kommando in `Running` — ohne Fehlermeldung. Erst nach `cmd/power false` + DISABLED-State wechselt Motion zuverlässig in `Configuration` (verified 2026-06-10, ctrlX OS 4.6, real hardware).
+- **Kein Neustart erforderlich** für Achskonfigurationsänderungen auf realer Hardware. Save + Moduswechsel genügt.
