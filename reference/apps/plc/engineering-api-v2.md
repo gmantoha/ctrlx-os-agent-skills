@@ -196,9 +196,27 @@ post_job({"jobType": "ProjectJob", "jobParameters": {"action": "Save"}})
 
 ---
 
+## GVL anlegen
+
+GVLs werden wie POUs über `POST /devices/{appPath}` angelegt, aber mit `elementType: "GVL"`:
+
+```json
+{
+  "name": "GVL",
+  "elementType": "GVL",
+  "language": "ST",
+  "declaration": "VAR_GLOBAL\n    Zaehlerinput1 AT %IX10.0 : BOOL;\nEND_VAR"
+}
+```
+
+> ⚠️ `elementType: "POU"` für eine GVL erzeugt ein falsches Element. Immer `"GVL"` verwenden.
+
+---
+
 ## Bekannte Eigenheiten
 
 - `BuildJob` ohne `action`-Parameter bleibt im State `Running` — korrekt: `action: "GenerateCodeJob"` setzen
 - Pfade mit URL-Encoding: `%2F` für `/`, `%20` für Leerzeichen
 - Projekt muss offen sein für `/pous`, `/devices`, etc. — sonst 404
 - Die Visu kann nur über die IDE angelegt werden, nicht via REST API
+- **Keine Umlaute in Variablennamen:** `ä → ae`, `ö → oe`, `ü → ue` (IEC 61131-3)

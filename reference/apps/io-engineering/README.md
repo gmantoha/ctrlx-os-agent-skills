@@ -109,6 +109,18 @@ Devices (Root)
 
 Version-String immer: `Revision=16#00000100` (außer XB-EC-31: `16#00000200`)
 
+## EtherCAT I/O-Adressen (verifiziert 2026-06-11)
+
+Topologie: XB-EC-12 → XF71 → IO-Module (Reihenfolge wie eingefügt)
+
+| Position | Modul | Erste Adresse |
+|---|---|---|
+| 1. Modul nach XB-EC-12 | XI110116 (16x DI) | `%IX10.0` |
+| 2. Modul | XI211116 (16x DO) | `%QX12.0` |
+
+> Adressen können per IO Engineering API abgefragt werden:
+> `GET /devices/Device/ethercatmaster/XB_EC_12/XF71/{ModulName}` → `ioMapping[0].address`
+
 ## Bekannte Einschränkungen / Erkenntnisse
 
 ### Channel-IDs bei XI110208
