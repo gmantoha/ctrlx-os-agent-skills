@@ -10,7 +10,8 @@ ctrlX WORKS IO Engineering (IoStudio) ist das PC-basierte Engineering-Tool für 
 | IO Engineering OpenAPI JSON (v2.10.0) | https://boschrexroth.github.io/rest-api-description/ctrlx-automation/ctrlx-works/io-engineering/io-engineering.v2.10.0.openapi.json |
 | REST API Upstream Repository | https://github.com/boschrexroth/rest-api-description |
 
-> **Hinweis:** Die OpenAPI-Spezifikation beschreibt Version 2.10.0. Die installierte Software kann eine ältere Version sein (z.B. 2.1.0). Einige Felder oder Jobs können dann abweichen.
+> **Offline-Fallback:** Die lokale OpenAPI-Spec liegt in der Installation:
+> `C:\Program Files\ctrlX WORKS\ctrlX IO Engineering\{version}\Studio\Help\OpenAPI\io-engineering-api-v2.json`
 
 ## Lokale Basis-URL
 
@@ -22,9 +23,10 @@ Der Port muss bei der Installation gewählt werden. Typisch: `9003`.
 
 ## Installationsort
 
-```
-C:\Program Files\Rexroth\ctrlX WORKS(1)\StudioIo\Common\ctrlX-IO-Engineering.exe
-```
+| Version | Pfad |
+|---|---|
+| v4.6.x (ctrlX WORKS neu) | `C:\Program Files\ctrlX WORKS\ctrlX IO Engineering\4.6.1\Studio\Common\ctrlX-IO-Engineering.exe` |
+| v2.x (ctrlX WORKS alt) | `C:\Program Files\Rexroth\ctrlX WORKS(1)\StudioIo\Common\ctrlX-IO-Engineering.exe` |
 
 ## Geräte-Cache
 
@@ -39,15 +41,36 @@ Unterordner-Schema: `{deviceType}\{deviceId}\{encodedVersion}\`
 - `deviceType 65` = EtherCAT Slave
 - ctrlX IO-Geräte haben IDs der Form `24_00242A*`
 
+## NewProjectJob – korrekte Parameter (v4.6.x)
+
+Ab ctrlX WORKS v4.6 hat sich das Schema für `NewProjectJob` geändert:
+
+```json
+{
+  "jobType": "NewProjectJob",
+  "jobParameters": {
+    "filePath": "C:\\Users\\<User>\\Documents\\My ctrlX",
+    "fileName": "MeinIOProjekt",
+    "template": "ctrlXOSIO"
+  }
+}
+```
+
+- `filePath` = **Zielordner** (nicht der vollständige Dateipfad!)
+- `fileName` = Projektname ohne Dateiendung
+- `template` = Enum-Wert: `ctrlXOSIO` oder `EmptyProject`
+
+> **Versionsunterschiede:**
+> - v4.6.x: Parameter `filePath` + `fileName` + `template`; Template-Wert `ctrlXOSIO` ✅
+> - v2.1.0: Parameter `projectFolder` + `projectName` + `templateKey`; Template-Wert `ctrlXCOREIO`
+
 ## Projekt-Templates
 
-Beim Anlegen neuer Projekte über `POST /jobs` mit `NewProjectJob`:
-
-| Template-Key | Beschreibung |
-|---|---|
-| `ctrlXCOREIO` | Standardprojekt für ctrlX I/O (ctrlX CORE I/O Configuration) |
-
-> **Achtung:** Der in der OpenAPI-Spezifikation genannte Beispiel-Key `ctrlXOSIO` funktioniert **nicht**. Der korrekte Key `ctrlXCOREIO` wurde durch String-Extraktion aus `Studio.RestApi.dll` ermittelt.
+| Template | Version | Beschreibung |
+|---|---|---|
+| `ctrlXOSIO` | v4.6.x | Standardprojekt ctrlX I/O (verifiziert 2026-06-11) |
+| `EmptyProject` | v4.6.x | Leeres Projekt |
+| `ctrlXCOREIO` | v2.1.0 | Standardprojekt ctrlX I/O (ältere Installation) |
 
 ## Projektstruktur (Standardtemplate)
 
@@ -79,8 +102,10 @@ Devices (Root)
 | XI110208 | `24_00242A0300000100` | 8-Kanal Digital Input 24V 3ms |
 | XI110116 | `24_00242A0400000100` | 16-Kanal Digital Input 24V |
 | XI211208 | `24_00242A0100000100` | 8-Kanal Digital Input (erweitert) |
+| XI211116 | `24_00242A0200000100` | 16-Kanal Digital Output 24V/0.5A |
+| XI312204 | `24_00242A0C00000100` | 4-Kanal Analog Input 0-10V 16Bit DIFF |
 | XI422204 | `24_00242A0700000100` | 4-Kanal Analog Output |
-| XI412204 | `24_00242A0800000100` | 4-Kanal Analog Input |
+| XI412204 | `24_00242A0800000100` | 4-Kanal Analog Output 0-10V 16Bit BIPOLAR |
 
 Version-String immer: `Revision=16#00000100` (außer XB-EC-31: `16#00000200`)
 
