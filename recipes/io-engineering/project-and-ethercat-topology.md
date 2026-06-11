@@ -16,16 +16,14 @@ Dieses Rezept zeigt, wie man per REST API ein neues IO Engineering-Projekt anleg
 $base = "http://localhost:9003/io/engineering/api/v2"
 $h = @{ "Content-Type" = "application/json" }
 
-$job = Invoke-RestMethod "$base/jobs" -Method POST -Headers $h -Body @"
-{
-  "jobType": "NewProjectJob",
-  "jobParameters": {
-    "projectName": "MeinIOProjekt",
-    "projectFolder": "C:\\Users\\<User>\\Documents\\My ctrlX",
-    "templateKey": "ctrlXCOREIO"
-  }
-}
-"@
+$job = Invoke-RestMethod "$base/jobs" -Method POST -Headers $h -Body (@{
+    jobType = "NewProjectJob"
+    jobParameters = @{
+        filePath = "C:\Users\$env:USERNAME\Documents\My ctrlX"  # Zielordner (muss existieren)
+        fileName = "MeinIOProjekt"                               # Projektname ohne Extension
+        template = "ctrlXOSIO"                                   # v4.6.x
+    }
+} | ConvertTo-Json)
 
 # Warten bis Job abgeschlossen
 do {
@@ -36,7 +34,11 @@ do {
 Write-Host "Status: $($result.state) - $($result.jobResultInfo)"
 ```
 
-> **Wichtig:** Template-Key ist `ctrlXCOREIO` (nicht `ctrlXOSIO` wie im OpenAPI-Beispiel).
+> **Wichtig (v4.6.x):** `filePath` ist der **Ordner**, `fileName` der Projektname. Template-Enum: `ctrlXOSIO`.
+> Für ältere Installationen (v2.1.0): Parameter `projectFolder` + `projectName` + `templateKey: ctrlXCOREIO`.
+>
+> Die lokale OpenAPI-Spec liegt unter:
+> `C:\Program Files\ctrlX WORKS\ctrlX IO Engineering\{version}\Studio\Help\OpenAPI\io-engineering-api-v2.json`
 
 ---
 
