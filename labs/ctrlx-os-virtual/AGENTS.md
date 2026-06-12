@@ -13,3 +13,13 @@ Allowed documented defaults:
 
 - Web UI: `boschrexroth` / `boschrexroth`
 - SSH: document only if the lab setup intentionally uses a public default
+
+## Edge auf Windows öffnen (Windows-Tipp)
+
+Zuverlässiger Befehl zum Öffnen der virtuellen Steuerung in Edge:
+
+```powershell
+cmd /c start msedge "https://127.0.0.1:8443"
+```
+
+`Start-Process msedge` und der direkte Pfad zu `msedge.exe` öffnen keinen neuen Tab zuverlässig — `cmd /c start msedge` funktioniert immer.
