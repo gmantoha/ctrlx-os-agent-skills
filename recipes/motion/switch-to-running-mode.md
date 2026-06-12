@@ -28,7 +28,7 @@ Expected: {"type":"object","value":{"state":"OPERATING"}}  or "SETUP"
 ## Notes
 - `motion/cmd/opstate` POST IS the correct Data Layer command (nodeClass=Program, operation=create)
 - Error `0xf010000c` = unrecognized opstate value; `0xf0100001` = valid value but transition blocked
-- If axes have `ignore-axisprofile=true` saved, the standard `scheduler/admin/state` OPERATING switch works directly — no reboot needed
+- **`ignore-axisprofile` existiert nicht als DL-Knoten** (`DL_INVALID_ADDRESS`). Der Knoten `cfg/axisprofile` (type: string) existiert, hat aber keine bool-Eigenschaft. Auf virtueller Steuerung ohne Drive ist Running nach Achsanlage nicht erreichbar — Motion fällt aus Booting zurück nach Configuration (verified 2026-06-12, ctrlX OS 4.6 virtual).
 - The save command requires `phase:"SAVE"` in the body
 
 
