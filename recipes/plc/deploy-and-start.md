@@ -17,6 +17,20 @@ Vollständige Reihenfolge für **Build → Download → Start** einer PLC-Applik
 
 ---
 
+## Voraussetzungen
+
+Bevor die Sequenz startet, muss das Projekt offen sein:
+
+```powershell
+# Prüfen ob Projekt offen
+$current = Invoke-RestMethod "$engBase/projects/current" -ErrorAction SilentlyContinue
+if (-not $current) {
+    Submit-Job @{ jobType="ProjectJob"; jobParameters=@{ action="Open"; path="C:\...\PLC_Thomas.plc.project" } }
+}
+```
+
+---
+
 ## PowerShell-Skript (vollständig)
 
 ```powershell

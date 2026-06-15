@@ -100,17 +100,22 @@ Invoke-RestMethod "$base/devices/$(Encode-Path $path)" -Method PUT -Headers $h -
 
 ---
 
-## Projekt speichern
+## Projekt speichern, bauen und verifizieren
 
 ```powershell
-$job = Invoke-RestMethod "$base/jobs" -Method POST -Headers $h -Body (@{
-    jobType = "ProjectJob"
-    jobParameters = @{ action = "Save" }
-} | ConvertTo-Json)
-do { Start-Sleep 1; $r = Invoke-RestMethod "$base/jobs/$($job.id)" }
-while ($r.state -eq "Running" -or $r.state -eq "Pending")
-Write-Host "$($r.state)"
+# Speichern
+Submit-Job @{ jobType="ProjectJob"; jobParameters=@{ action="Save" } }
+
+# Build prüfen — 0 errors erforderlich
+$b = Submit-Job @{ jobType="BuildJob"; jobParameters=@{ action="GenerateCode" } }
+Write-Host "Build: $($b.state) - $($b.jobResultInfo)"
+
+# Optional: POU zurücklesen zur Verifikation
+Invoke-RestMethod "$base/devices/$(Encode-Path 'Device/Plc Logic/Application/FB_EdgeCounter')" |
+    Select-Object name, declaration
 ```
+
+→ Für Download und Start: `recipes/plc/deploy-and-start.md`
 
 ---
 

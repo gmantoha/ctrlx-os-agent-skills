@@ -10,7 +10,10 @@ CODESYS Script Engine built into **ctrlX WORKS / ctrlX PLC Engineering**.
 - Launcher: `C:\Program Files\ctrlX WORKS\ctrlxworks.Studio.Launcher.exe`
 - Kein `CODESYS\`-Unterordner mit Skript-Engine
 
-→ **Für Automatisierung die Engineering REST API (Port 9002) verwenden** — siehe `deploy-and-start.md`
+→ **Für Automatisierung die Engineering REST API (port 9002) verwenden:**
+- Build, Download, Start: `recipes/plc/deploy-and-start.md`
+- POUs/GVLs anlegen und editieren: `recipes/plc/create-pou-gvl.md`
+- API-Referenz (alle Job-Typen, Ports, nodeUrl): `reference/apps/plc/engineering-api-v2.md`
 
 Falls `CODESYSScript.exe` doch vorhanden ist (andere Installation):
 
