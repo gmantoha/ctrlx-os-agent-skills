@@ -21,6 +21,22 @@ http://localhost:{port}/io/engineering/api/v2
 
 Der Port muss bei der Installation gewählt werden. Typisch: `9003`.
 
+### Port-Erkennung (schnellster Test)
+
+```powershell
+Invoke-RestMethod "http://localhost:9003/io/engineering/api/v2/product/info"
+# → {"versionText":"4.6.1"}  ✅
+```
+
+Wenn IO Engineering noch nicht gestartet ist, zuerst starten:
+
+```powershell
+Start-Process "C:\Program Files\ctrlX WORKS\ctrlX IO Engineering\4.6.1\Studio\Common\ctrlX-IO-Engineering.exe"
+Start-Sleep 10
+```
+
+Der Swagger-Port `9003` ist **nur die Doku-Seite** (`/` → Swagger UI). Die API-Endpunkte liegen unter `/io/engineering/api/v2/...`.
+
 ## Installationsort
 
 | Version | Pfad |
@@ -137,3 +153,43 @@ POST /devices/Device/ethercatmaster/XB_EC_12/XF71  → DI_Modul (XI110208)
 ### Topologie-Pfade
 
 IO-Module können **nicht direkt** unter `ethercatmaster` eingefügt werden, wenn ein Buskoppler vorhanden ist. Sie müssen unter dem `XF71` (Explicit Connector) des Buskopplers eingefügt werden.
+
+### EtherCAT Master App vs. Instanz
+
+**App installieren reicht nicht!** Nach der Installation der App `rexroth-ethercatmaster` muss zusätzlich eine **Instanz** im Data Layer angelegt werden:
+
+```powershell
+$body = @{
+    type  = "object"
+    value = @{
+        request = @{
+            instanceName = "ethercatmaster"
+            port         = "eth1"
+        }
+    }
+} | ConvertTo-Json -Depth 5
+
+Invoke-RestMethod "https://{IP}/automation/api/v2/nodes/fieldbuses/ethercat/master/instances" `
+    -Method POST -Headers $h -Body $body -SkipCertificateCheck
+```
+
+Ohne diese Instanz schlägt `TransferFieldbusConfigJob` mit _"EtherCAT-Master-Instanz 'ethercatmaster' ist nicht vorhanden"_ fehl.
+
+### Package Manager API (verifiziert 2026-06-12)
+
+| Endpunkt | Beschreibung |
+|---|---|
+| `GET /package-manager/api/v1/packages` | Installierte Snaps auflisten ✅ |
+| `GET /package-manager/api/v2/applications` | Gibt HTML zurück (UI-Route) ❌ |
+| `GET /package-manager/api/v3/applications` | Gibt HTML zurück ❌ |
+
+Immer `Accept: application/json` Header setzen, sonst kommt die Web-UI zurück.
+
+### PDF-Extraktion
+
+Für PDF-Dateien direkt `pdfplumber` verwenden (nicht erst Rohbytes versuchen):
+
+```powershell
+pip install pdfplumber -q
+python -c "import pdfplumber; ..."
+```

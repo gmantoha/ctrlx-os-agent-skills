@@ -62,6 +62,10 @@ Use concrete playbooks under `recipes/` when available. For example:
 - `recipes/motion/motion-opstate-switch.md` — Motion von Configuration → Running schalten
 - `recipes/oscilloscope/setup-oscilloscope-instance.md` — Oszilloskop-Instanz einrichten und starten
 - `recipes/io-engineering/project-and-ethercat-topology.md` — IO Engineering Projekt anlegen und EtherCAT-Topologie mit ctrlX I/O aufbauen
+- `recipes/plc/deploy-and-start.md` — PLC Build → Download → Start via Engineering REST API (vollständige Job-Sequenz, Ports, Troubleshooting)
+- `recipes/plc/axis-interface-motion.md` — AxisInterface (CXA_MotionInterface) ST-Muster: Init, Power, Move, Diagnose
+- `recipes/plc/create-pou-gvl.md` — POUs und GVLs per REST API anlegen und aktualisieren
+- `recipes/plc/engineering-scripting.md` — CODESYSScript (Verfügbarkeit prüfen!) vs. REST API
 
 ## Evidence Order
 
