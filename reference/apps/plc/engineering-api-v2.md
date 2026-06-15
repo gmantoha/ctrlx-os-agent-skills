@@ -87,10 +87,23 @@ Lange Operationen laufen als Jobs:
 |---------|-----------|-------------|
 | `NewProjectJob` | `filePath`, `fileName`, `template` | Neues Projekt (templates: `EmptyProject`, `ctrlXOSARM64`, `ctrlXOSx64`, `EmptyLibrary`, `StandardLibrary`) |
 | `ProjectJob` | `action`: `Open`/`Close`/`Save` | Projekt öffnen/schließen/speichern |
-| `BuildJob` | `action`: `GenerateCodeJob` | Anwendung kompilieren |
+| `BuildJob` | `action`: `GenerateCode` | Anwendung kompilieren |
+| `CommunicationSettingsJob` | `nodeUrl`, `ipAddress`, `httpsPort`, `plcPort` | Verbindung zum Gerät setzen |
+| `DeviceUserLoginJob` | `nodeUrl`, `username`, `password` | Benutzer-Login am Gerät (vor ApplicationLoginJob!) |
+| `DeviceUserLogoutJob` | `nodeUrl` | Benutzer-Logout vom Gerät |
 | `ApplicationLoginJob` | `nodeUrl`, `loginOption` | Verbinden (options: `LoginWithOnlineChange`, `LoginWithDownload`, `LoginWithoutAnyChange`) |
 | `ApplicationJob` | `nodeUrl`, `action`: `Start`/`Stop`/`Logout` | Starten/Stoppen/Trennen |
+| `ResetApplicationJob` | `nodeUrl`, `action` | Anwendung resetten |
 | `PreCompileJob` | `action`: `Enable`/`Disable` | Vor/nach Import-Operationen deaktivieren |
+
+### ⚠️ Kritische Korrekturen (aus Praxis, 2026-06-15)
+
+- `BuildJob` action heißt `"GenerateCode"` — **nicht** `"GenerateCodeJob"` (läuft sonst ewig ohne Fehler)
+- `plcPort` für ctrlX WORKS (lokal, virtuell) = **`8740`** — nicht 11740
+- **`DeviceUserLoginJob` ist Pflicht** vor `ApplicationLoginJob` wenn die Verbindung neu ist
+  - Falls "User is already loggedIn" → weiter mit `ApplicationLoginJob` (ist OK)
+- `nodeUrl` Format: **ohne** führenden Slash: `"devices/Device/Plc Logic/Application"`
+  - Ausnahme `CommunicationSettingsJob`/`DeviceUserLoginJob`: `"/devices/Device"` (mit Slash)
 
 ---
 
@@ -215,8 +228,11 @@ GVLs werden wie POUs über `POST /devices/{appPath}` angelegt, aber mit `element
 
 ## Bekannte Eigenheiten
 
-- `BuildJob` ohne `action`-Parameter bleibt im State `Running` — korrekt: `action: "GenerateCodeJob"` setzen
+- `BuildJob` action heißt `"GenerateCode"` — nicht `"GenerateCodeJob"` (läuft sonst ewig ohne Fehler)
+- `plcPort` für ctrlX WORKS (lokal, virtuell) = **8740** — Port 8740 ist offen, 11740 nicht
+- `httpsPort` für ctrlX CORE = **8443**
 - Pfade mit URL-Encoding: `%2F` für `/`, `%20` für Leerzeichen
 - Projekt muss offen sein für `/pous`, `/devices`, etc. — sonst 404
 - Die Visu kann nur über die IDE angelegt werden, nicht via REST API
 - **Keine Umlaute in Variablennamen:** `ä → ae`, `ö → oe`, `ü → ue` (IEC 61131-3)
+- Nur ein Job gleichzeitig ausführbar — "A blocking operation is in progress" wenn parallel gesendet

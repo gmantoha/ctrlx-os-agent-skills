@@ -23,3 +23,15 @@ cmd /c start msedge "https://127.0.0.1:8443"
 ```
 
 `Start-Process msedge` und der direkte Pfad zu `msedge.exe` öffnen keinen neuen Tab zuverlässig — `cmd /c start msedge` funktioniert immer.
+## Login-Workflow (aiuser, bevorzugt)
+
+1. Passwort aus `Core4_6\aiUserPasswort` lesen und in die Zwischenablage kopieren:
+   ```powershell
+   $pw = (Get-Content "C:\Users\jmu1but\OneDrive - Bosch Group\MY_Daten\GitHub\Core4_6\aiUserPasswort" | Where-Object { $_ -match 'Passwort' }) -replace '.*:\s*'
+   Set-Clipboard -Value $pw
+   ```
+2. Edge mit der URL öffnen:
+   ```powershell
+   cmd /c start msedge "https://127.0.0.1:8443"
+   ```
+3. Benutzer `aiuser` eintippen, ins Passwortfeld klicken → **Ctrl+V** → Einloggen.

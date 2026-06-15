@@ -26,9 +26,12 @@
 
 ## Known Devices
 
-Device-specific connection details and service accounts are documented under `reference/devices/`.
+**Regel:** Gerätespezifische Infos (IP, Credentials, Service-Accounts, Gerätedateien) gehören NIE in den Skill.
+Sie liegen im jeweiligen Projektarbeitsverzeichnis, direkt unter dem Arbeitsverzeichnis des Projekts.
 
-- `reference/devices/192.168.1.1.md` — primäres Arbeitsgerät; Service-Account `aiuser` für alle Skill-Operationen verwenden.
+- Beim Anlegen einer Gerätedatei immer fragen, in welchem Arbeitsverzeichnis sie liegen soll, falls nicht eindeutig.
+- Beispiel aktuelles Projekt: `C:\Users\jmu1but\OneDrive - Bosch Group\MY_Daten\GitHub\Core4_6\device-192.168.1.1.md`
+- Der Skill enthält keine Gerätedateien unter `reference/devices/`.
 
 ## Change Policy
 
