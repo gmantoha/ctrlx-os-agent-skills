@@ -14,6 +14,30 @@ POST /library-repositories/{repo}
 
 ---
 
+## Voraussetzungen
+
+1. **Motion App in Running mode** — `recipes/motion/motion-opstate-switch.md`
+2. **Axis vorhanden** — Achsname in `GVL.AxisName` muss mit der Motion-Konfiguration übereinstimmen
+3. **Bibliothek hinzugefügt** — `CXA_MotionInterface` im Library Manager des Projekts
+
+### Bibliothek-Repository ermitteln und hinzufügen
+
+```powershell
+$engBase = "http://localhost:9002/plc/engineering/api/v2"
+# Verfügbare Repos auflisten
+Invoke-RestMethod "$engBase/library-repositories" | ConvertTo-Json -Depth 3
+# Typischer Repo-Name: "System"
+Invoke-RestMethod "$engBase/library-repositories/System" -Method POST -ContentType "application/json" -Body (@{
+    name    = "CXA_MotionInterface"
+    version = "4.6.2.0"
+    company = "Bosch Rexroth AG"
+} | ConvertTo-Json)
+```
+
+> Auf virtueller Steuerung ohne Motion-App schlägt `MB_AxisInit` zur Laufzeit fehl — kein PLC-Fehler, solange `gEnable := FALSE` bleibt.
+
+---
+
 ## Achsreferenz (GVL)
 
 ```iecst
