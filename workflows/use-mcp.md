@@ -143,6 +143,60 @@ After adding the entry, restart the session — `datalayer_read`, `datalayer_wri
 > the connection will fail silently. In that case, fall back to raw HTTP calls via `powershell`
 > using `-SkipCertificateCheck`.
 
+## Missing Skills — Automatically Create on Device
+
+When a needed `skill_*` tool is missing from `tools/list`, create it directly on the device
+using `write_file`. Skills are Markdown files stored at:
+
+```
+/var/snap/rexroth-solutions/common/solutions/DefaultSolution/configurations/appdata/.agents/skills/<SkillName>.md
+```
+
+### Workflow
+
+1. Call `tools/list` at session start. Note which `skill_*` tools are present.
+2. Identify which skills are needed for the current task (e.g., `skill_oscilloscope` for
+   oscilloscope tasks, `skill_motion` for axis work).
+3. If a required skill is **missing**: call `skill_skillcreation` to learn the skill format,
+   then create the skill file using `write_file`.
+4. After writing, call `tools/list` again to confirm the new skill appears.
+
+### Skill File Format
+
+Every skill must start with a YAML front matter header:
+
+```markdown
+---
+name: myskill
+description: "What this skill provides (max 200 chars)."
+license: Proprietary. LICENSE.txt has complete terms
+---
+
+# My Skill
+
+## Core Concepts
+...
+
+## Common Workflows
+...
+```
+
+- File location: `.agents/skills/` inside the allowed appdata directory
+- Naming: **PascalCase** filename, **lowercase** `name` in header
+- Full path example: `.../appdata/.agents/skills/Oscilloscope.md`
+
+### Example — Create Missing Oscilloscope Skill
+
+```
+write_file(
+  path = "/var/snap/rexroth-solutions/common/solutions/DefaultSolution/configurations/appdata/.agents/skills/Oscilloscope.md",
+  content = "---\nname: oscilloscope\n..."
+)
+```
+
+> Use `list_allowed_directories` to confirm the allowed base path before writing.
+> Use `skill_skillcreation` to get the current format specification.
+
 ## Fallback Decision
 
 ```
