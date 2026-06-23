@@ -12,29 +12,35 @@ app is installed on the target ctrlX device.
 
 ### Method 1 — REST API (preferred, no SSH required)
 
-```bash
-# Replace <IP> and <TOKEN> with the device address and a valid bearer token
-curl -sk -H "Authorization: Bearer <TOKEN>" \
-  https://<IP>/api/v1/package-manager/applications \
-  | jq '.[] | select(.name | test("mcp"; "i")) | {name, version, state}'
+The correct package-manager endpoint on ctrlX OS 4.x is `/package-manager/api/v1/packages/<name>`:
+
+```powershell
+$token = (Invoke-WebRequest -Uri "https://<IP>/identity-manager/api/v1/auth/token" `
+  -SkipCertificateCheck -Method POST -ContentType "application/json" `
+  -Body '{"name":"boschrexroth","password":"boschrexroth"}' -UseBasicParsing |
+  ConvertFrom-Json).access_token
+
+Invoke-WebRequest -Uri "https://<IP>/package-manager/api/v1/packages/ctrlx-ai" `
+  -SkipCertificateCheck -Headers @{Authorization="Bearer $token"} -UseBasicParsing |
+  ConvertFrom-Json | Select-Object name, title, installed
 ```
 
-If the output contains an MCP app entry → **MCP is available. Use MCP for all further operations.**
+If `installed: true` → **MCP is available. Use MCP for all further operations.**
 
-If the output is empty → MCP is not installed → continue with the standard workflows.
+If 404 → MCP is not installed → continue with the standard workflows.
 
-### Method 2 — SSH fallback
+> **Note:** The snap name is `ctrlx-ai`. The MCP server component inside is `ctrlx-mcp-server`.
+> Do NOT use `/api/v1/package-manager/applications` — that path returns HTML on ctrlX OS 4.6.
+
+### Method 2 — Web UI
+
+Open `https://<IP>` → **Apps** → search for "ctrlx-ai". If it appears as installed, MCP is available.
+
+### Method 3 — SSH fallback
 
 ```bash
-ssh boschrexroth@<IP> "snap list | grep -i mcp"
+ssh -p 8022 boschrexroth@<IP> "snap list ctrlx-ai"
 ```
-
-An entry like `ctrlx-mcp-server  <version>  …` confirms MCP is installed.
-
-### Method 3 — Web UI
-
-Open `https://<IP>` → **Apps** → search for "mcp". If an MCP app appears in the installed list,
-it is available.
 
 ## When MCP Is Available
 
@@ -108,6 +114,34 @@ Send initialize + notifications/initialized + tools/list in a single batch POST:
 
 > **Note:** Sequential single requests require passing `Mcp-Session-Id` from the initialize
 > response header in all subsequent requests. The batch approach avoids this complexity.
+
+## Copilot CLI Integration (mcp.json)
+
+To use ctrlX MCP tools natively as agent tools (without manual HTTP calls), register the server
+in `~/.copilot/mcp.json`:
+
+```json
+{
+  "servers": {
+    "ctrlx": {
+      "type": "http",
+      "url": "https://127.0.0.1:8443/mcp",
+      "headers": {
+        "CTRLX_USERNAME": "boschrexroth",
+        "CTRLX_PASSWORD": "boschrexroth"
+      }
+    }
+  }
+}
+```
+
+Adjust `url` to match the actual device IP/port. Use `/mcp` in the CLI to open this file.
+After adding the entry, restart the session — `datalayer_read`, `datalayer_write`,
+`datalayer_browse`, `skill_motion`, `skill_oscilloscope` etc. become available as native tools.
+
+> **Self-signed certificate:** ctrlX OS uses a self-signed TLS certificate. If the CLI rejects it,
+> the connection will fail silently. In that case, fall back to raw HTTP calls via `powershell`
+> using `-SkipCertificateCheck`.
 
 ## Fallback Decision
 
