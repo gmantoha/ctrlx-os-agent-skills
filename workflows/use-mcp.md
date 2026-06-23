@@ -115,18 +115,90 @@ Send initialize + notifications/initialized + tools/list in a single batch POST:
 > **Note:** Sequential single requests require passing `Mcp-Session-Id` from the initialize
 > response header in all subsequent requests. The batch approach avoids this complexity.
 
-## Copilot CLI Integration (mcp.json)
+## Copilot CLI Integration (mcp-config.json)
 
-To use ctrlX MCP tools natively as agent tools (without manual HTTP calls), register the server
-in `~/.copilot/mcp.json`:
+ctrlX OS uses a **self-signed TLS certificate** and requires `Accept: text/event-stream` on every
+GET request. The Copilot CLI HTTP transport does not handle these reliably, so use a **Node.js
+stdio proxy** instead.
+
+### Step 1 — Create the proxy script
+
+Save as `~/.copilot/mcp-proxy/ctrlx-proxy.mjs`:
+
+```js
+#!/usr/bin/env node
+// ⚠️ CRITICAL: Use async for-await over readline — NOT event-based stdin.on("data", async ...)
+// The event-based approach exits before the fetch() resolves, producing no output.
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
+import { createInterface } from "readline";
+
+const BASE_URL = process.env.CTRLX_URL || "https://127.0.0.1:8443/mcp";
+const USERNAME = process.env.CTRLX_USERNAME || "boschrexroth";
+const PASSWORD = process.env.CTRLX_PASSWORD || "boschrexroth";
+
+let sessionId = null;
+
+async function sendMessage(body) {
+  const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json, text/event-stream",
+    "CTRLX_USERNAME": USERNAME,
+    "CTRLX_PASSWORD": PASSWORD,
+  };
+  if (sessionId) headers["Mcp-Session-Id"] = sessionId;
+
+  const res = await fetch(BASE_URL, { method: "POST", headers, body: JSON.stringify(body) });
+
+  const sid = res.headers.get("mcp-session-id");
+  if (sid) sessionId = sid;
+
+  const text = await res.text();
+  for (const line of text.split("\n")) {
+    const t = line.trim();
+    if (t.startsWith("data: ")) {
+      const json = t.slice(6).trim();
+      if (json) process.stdout.write(json + "\n");
+    } else if (t.startsWith("{")) {
+      process.stdout.write(t + "\n");
+    }
+  }
+}
+
+const rl = createInterface({ input: process.stdin, crlfDelay: Infinity });
+
+(async () => {
+  for await (const line of rl) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+    try {
+      await sendMessage(JSON.parse(trimmed));
+    } catch (e) {
+      process.stderr.write("error: " + e.message + "\n");
+    }
+  }
+})();
+```
+
+**Verify it works before registering:**
+```powershell
+echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}}}' | node ctrlx-proxy.mjs
+# Expected: {"jsonrpc":"2.0","id":1,"result":{"serverInfo":{"name":"ctrlx-mcp-server 🚀",...}}}
+```
+
+### Step 2 — Configure mcp-config.json
+
+`~/.copilot/mcp-config.json`:
 
 ```json
 {
-  "servers": {
+  "mcpServers": {
     "ctrlx": {
-      "type": "http",
-      "url": "https://127.0.0.1:8443/mcp",
-      "headers": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["C:\\Users\\<USER>\\.copilot\\mcp-proxy\\ctrlx-proxy.mjs"],
+      "env": {
+        "CTRLX_URL": "https://127.0.0.1:8443/mcp",
         "CTRLX_USERNAME": "boschrexroth",
         "CTRLX_PASSWORD": "boschrexroth"
       }
@@ -135,13 +207,12 @@ in `~/.copilot/mcp.json`:
 }
 ```
 
-Adjust `url` to match the actual device IP/port. Use `/mcp` in the CLI to open this file.
-After adding the entry, restart the session — `datalayer_read`, `datalayer_write`,
-`datalayer_browse`, `skill_motion`, `skill_oscilloscope` etc. become available as native tools.
+After saving, restart the Copilot CLI session. Use `/mcp` to verify `ctrlx` shows as connected.
+All MCP tools (`datalayer_read`, `skill_motion`, `logbook_list_entries`, etc.) are then available
+as native agent tools.
 
-> **Self-signed certificate:** ctrlX OS uses a self-signed TLS certificate. If the CLI rejects it,
-> the connection will fail silently. In that case, fall back to raw HTTP calls via `powershell`
-> using `-SkipCertificateCheck`.
+> **Why stdio instead of http type?** The `http` transport in Copilot CLI does not add custom
+> `Accept` headers and rejects self-signed certificates. The stdio proxy handles both.
 
 ## Missing Skills — Automatically Create on Device
 

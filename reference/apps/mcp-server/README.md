@@ -39,7 +39,64 @@ If `installed: true` → MCP is available at `https://<IP>/mcp`.
 | Endpoint | `https://<IP>/mcp` |
 | Auth header | `CTRLX_TOKEN: <token>` |
 | Alt auth | `CTRLX_USERNAME` + `CTRLX_PASSWORD` headers |
-| Required `Accept` | `application/json, text/event-stream` |
+| Required `Accept` | `text/event-stream` (GET requests **must** include this — server rejects without it) |
+
+## Troubleshooting: "Accept must contain 'text/event-stream'"
+
+The MCP endpoint uses Streamable HTTP transport (two-phase handshake):
+
+1. **POST** to `/mcp` to initialize → server returns `Mcp-Session-Id` header
+2. **GET** to `/mcp` with `Mcp-Session-Id` → opens SSE stream
+
+GET requests **must** include `Accept: text/event-stream` (server returns 400 without it).
+GET requests **must** include `Mcp-Session-Id` from the POST response (server returns 400 without it).
+
+**Step 1 — Initialize session (POST):**
+```bash
+curl -k -X POST \
+  -H "Accept: application/json, text/event-stream" \
+  -H "Content-Type: application/json" \
+  -H "CTRLX_USERNAME: boschrexroth" \
+  -H "CTRLX_PASSWORD: boschrexroth" \
+  -D - \
+  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}}}' \
+  https://<IP>/mcp
+# → Response header: Mcp-Session-Id: <SESSION_ID>
+```
+
+**Step 2 — Open SSE stream (GET):**
+```bash
+curl -k \
+  -H "Accept: text/event-stream" \
+  -H "CTRLX_USERNAME: boschrexroth" \
+  -H "CTRLX_PASSWORD: boschrexroth" \
+  -H "Mcp-Session-Id: <SESSION_ID>" \
+  https://<IP>/mcp
+```
+
+**GitHub Copilot CLI — use stdio proxy (NOT `type: http`)**
+
+The Copilot CLI `http` transport does not set custom `Accept` headers and rejects self-signed
+certificates. Use a Node.js stdio proxy instead. See `workflows/use-mcp.md` for the full setup.
+
+```json
+{
+  "mcpServers": {
+    "ctrlx": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["C:\\Users\\<USER>\\.copilot\\mcp-proxy\\ctrlx-proxy.mjs"],
+      "env": {
+        "CTRLX_URL": "https://<IP>/mcp",
+        "CTRLX_USERNAME": "boschrexroth",
+        "CTRLX_PASSWORD": "boschrexroth"
+      }
+    }
+  }
+}
+```
+
+> After saving `mcp-config.json`, do `/restart` in Copilot CLI, then verify with `/mcp`.
 
 ## Available Tools
 
