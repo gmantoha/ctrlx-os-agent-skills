@@ -19,6 +19,23 @@ Use this workflow for in-device interactions with ctrlX services, including PLC-
 5. For real-device writes or calls that change state, ask before execution.
 6. Verify the resulting node state or service behavior.
 
+## Path Lookup → Verify → Write Pattern
+
+```
+# 1. Browse to find exact path
+ctrlx-datalayer_browse("motion/axs")
+→ ["motion/axs/MyAxis", ...]
+
+# 2. Read metadata to get type and schema
+ctrlx-datalayer_metadata("motion/axs/MyAxis/state/values/actual/vel")
+→ {"type":"double", "unit":"mm/s", ...}
+
+# 3. Write with correct type
+ctrlx-datalayer_write("motion/axs/MyAxis/cfg/...", '{"type":"double","value":100.0}')
+```
+
+> Never guess paths from docs alone — paths vary between ctrlX OS versions. Always browse first.
+
 ## Useful Recipes
 
 - `recipes/datalayer/storage-mount.md`

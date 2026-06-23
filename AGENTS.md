@@ -1,59 +1,54 @@
 # ctrlX OS Agent Skill Repository
 
-## Purpose
+## Start Here
 
-This repository is an installable `ctrlx` agent skill for Bosch Rexroth employees using coding agents such as OpenCode or Claude Code.
+1. **Device involved?** → Check MCP first: `tool_search_tool_regex("datalayer|ctrlx")`
+   - Tools found → use them directly, skip REST/curl
+   - Not found → use workflows below
+2. **Pick workflow** from `workflows/` that matches the task
+3. **Read** `reference/AGENTS.md` for platform rules before making assumptions
+4. **Use recipe** from `recipes/` when a concrete playbook exists
+5. **Confirm** before any persistent change on a real device
 
-Use it for:
+## Routing
 
-- building ctrlX apps and iterating on them
-- configuring and operating ctrlX OS devices
-- debugging issues on real or virtual systems
-- answering customer technical questions with verified evidence
+| Task | Workflow |
+|---|---|
+| Device interaction (MCP available) | `workflows/use-mcp.md` |
+| Crash / OOM / service failure / logs | `workflows/debug-issue.md` |
+| Network / VPN / firewall / users / certs | `workflows/configure-device.md` |
+| App install / update / remove | `workflows/manage-apps.md` |
+| Snap build / Data Layer app / SDK | `workflows/build-app.md` |
+| REST automation / external client | `workflows/use-rest-api.md` |
+| Data Layer reads / writes / PLC IPC | `workflows/use-datalayer.md` |
+| File transfer / app data | `workflows/use-webdav.md` |
+| UI config / Playwright | `workflows/use-web-ui.md` |
+| Customer / colleague answer | `workflows/answer-customer.md` |
+| ctrlX OS update | `workflows/update-os.md` |
+| Virtual lab | `workflows/use-virtual-core.md` |
+
+## Safety Rules
+
+**Safe without confirmation:** reading docs, logs, local files, drafting commands/code/answers.
+
+**Require confirmation on real device:**
+- app install / remove / update
+- network / firewall / VPN / certificates / users / storage changes
+- service restarts, reboots
+- any config write via REST, SSH, WebDAV, or Web UI
 
 ## Folder Intent
 
-- `SKILL.md`: root skill manifest, routing table, and safety policy
-- `workflows/`: agent workflow entry points such as build, configure, debug, and answer
-- `reference/`: common ctrlX knowledge, references, and best practices
-- `recipes/`: concrete task playbooks for recurring ctrlX procedures
-- `templates/`: reusable output templates
-- `labs/`: local virtual ctrlX usage guides and helper scripts
-- `cases/`: sanitized reusable investigations and solved examples
-- `customers/`: private local workspaces excluded from git
+- `workflows/`: agent entry points per task type
+- `reference/`: platform knowledge, best practices, app references
+- `recipes/`: concrete playbooks for recurring procedures
+- `labs/`: virtual ctrlX lab guides and scripts
+- `cases/`: reusable sanitized investigations
+- `customers/`: private workspaces, excluded from git
 
-## Global Rules
+## Evidence Order
 
-1. Read `reference/AGENTS.md` before making technical assumptions.
-2. Prefer the workflow under `workflows/` that matches the task.
-3. Treat real-device changes as sensitive.
-4. Ask for confirmation before persistent changes on a real device.
-5. Never store customer-specific secrets in tracked files.
-6. Default public credentials may be documented when intentionally required for labs or defaults.
-
-## Safe vs Confirmed Actions
-
-Safe without confirmation:
-
-- reading docs and local files
-- analyzing logs and cases
-- drafting code, examples, and customer answers
-- preparing commands for SSH, REST, WebDAV, or UI automation
-
-Require confirmation on a real device:
-
-- installing, removing, or updating apps
-- changing network, firewall, certificates, users, or storage settings
-- restarting services that may affect running systems
-- rebooting the device
-- writing configuration through Web UI, REST, WebDAV, or SSH
-
-## Operating Principle
-
-Prefer evidence over assumptions:
-
-- docs and PDFs first
-- existing reusable cases second
-- direct verification on a virtual or real ctrlX system third
-
-When possible, provide example code, commands, or reproducible steps.
+1. Official docs / OpenAPI / product PDFs
+2. `reference/` notes
+3. `cases/reusable/`
+4. Direct device verification (virtual or real, with safety policy)

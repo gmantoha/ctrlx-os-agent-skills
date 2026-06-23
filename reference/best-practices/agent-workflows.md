@@ -1,28 +1,32 @@
 # Agent Workflows
 
-Agents should work in this order:
+## Standard Order
 
-1. identify the workflow in `workflows/`
-2. read the matching `AGENTS.md`
-3. pull shared platform context from `reference/`
-4. verify on a lab or device if needed
-5. produce commands, code, evidence, and a concise conclusion
+1. Pick workflow from `workflows/` matching the task
+2. Read `reference/AGENTS.md` for platform rules
+3. Use recipe from `recipes/` when available
+4. Verify on device if needed
+5. Produce commands, code, evidence, conclusion
 
-## MCP-First Rule (when device is involved)
+## MCP-First Rule
 
-**Before using curl/PowerShell/REST for any device interaction:**
+**Before any device interaction — check for MCP tools first:**
 
-1. Call `tool_search_tool_regex` with pattern `datalayer|ctrlx|oscilloscope|motion|logbook` to discover available MCP tools.
-2. If `ctrlx-datalayer_read`, `ctrlx-datalayer_write` etc. are available → use them directly. Never fall back to curl when MCP tools are loaded.
-3. Only use `powershell` + curl if MCP tools are NOT available.
+```
+tool_search_tool_regex("datalayer|ctrlx")
+```
 
-**Why this matters:**
-- MCP tools save ~50% tokens vs. curl (no session handling, no JSON escaping, no SSE parsing)
-- curl-based MCP calls are error-prone (wrong paths, async issues, missed session IDs)
-- The `tool_search_tool_regex` call costs ~10 tokens — skipping it and using curl costs ~500+
+- Tools found → **use `ctrlx-datalayer_*` directly** — no curl, no REST
+- Not found → fall back to REST/SSH/curl
+- Cost: ~10 tokens to check. Skipping and using curl costs ~500+ tokens.
+
+See `workflows/use-mcp.md` and `reference/apps/mcp-server/README.md` for setup.
 
 ## Efficiency Rules
 
-- **Browse before writing**: use `ctrlx-datalayer_browse` to verify exact node paths before creating channels/configs. Never guess paths from documentation alone — ctrlX versions differ (e.g. `actual/vel` not `actual/actualVel`).
-- **Parallel tool calls**: issue independent reads/browses in one response, not sequentially.
-- **Check existing state first**: before creating an oscilloscope instance or motion config, browse `oscilloscope/instances` or `motion/axs` to see what already exists.
+| Rule | Why |
+|---|---|
+| Browse before write/create | Paths vary between ctrlX versions — never guess |
+| Parallel tool calls | Issue independent reads in one response |
+| Check existing state first | Avoid creating duplicates (instances, axes, channels) |
+| `actual/vel` not `actual/actualVel` | Verified path on ctrlX OS 4.6 |
