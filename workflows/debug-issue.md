@@ -11,6 +11,34 @@ Use this workflow for ctrlX app, service, performance, crash, OOM, token verifie
 5. Cross-check `reference/`, product PDFs, reusable cases under `cases/reusable/`, and known platform pitfalls.
 6. Report root cause, confidence, evidence, and the next action.
 
+## Evidence Checklists by Problem Class
+
+### Crash / OOM
+- `ctrlx-logbook_list_entries` with levels `Emergency,Alert,Critical,Error`, last 30 min
+- `ctrlx-datalayer_read` → `system/resources/memory/usage`
+- `ctrlx-apps_list_installed` → snap versions
+- Look for: OOM-killer lines, segfaults, snap restarts
+
+### Token Verifier Timeouts / Auth Floods
+- Logbook filter: type=`Diagnosis`, level=`Warning,Error`
+- Look for: repeated `token verifier` entries → symptom of overload, not root cause
+- Check CPU/memory load: `system/resources/cpu`, `system/resources/memory`
+
+### Data Layer Disconnects
+- Logbook: `Critical,Error` last 15 min
+- Look for: `DL_FAILED`, `provider disconnected`, snap crash preceding disconnect
+- Often a downstream symptom — find which snap crashed first
+
+### Service / App Not Starting
+- `ctrlx-apps_get_details` → check `state`, `health`
+- Logbook: filter by app snap name in message
+- Look for: AppArmor denials (normal confinement — check if path is allowed), missing interfaces
+
+### Performance / High Load
+- `ctrlx-datalayer_read` → `system/resources/cpu/usage`, `system/resources/memory/usage`
+- `ctrlx-datalayer_subscribe` → watch load over 10s
+- Look for: runaway snap, subscription floods, excessive Data Layer polling
+
 ## Useful References
 
 - `reference/best-practices/debugging-method.md`

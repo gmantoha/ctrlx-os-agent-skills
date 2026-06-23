@@ -2,6 +2,24 @@
 
 Lernquelle: UI-Tracking am echten Gerät (192.168.1.1), Kanal-Konfiguration per Browser beobachtet via Data Layer Diff.
 
+## Minimal Working Example (via MCP, ctrlX OS 4.6)
+
+```
+ctrlx-datalayer_create("oscilloscope/instances", '{"type":"string","value":"myOsc"}')
+ctrlx-datalayer_write("oscilloscope/instances/myOsc/cfg/buffer",
+  '{"type":"object","value":{"bufferType":"REPEAT","recordingInterval":{"value":10000000},"recordingTime":{"value":5000000000}}}')
+ctrlx-datalayer_create("oscilloscope/instances/myOsc/cfg/channels",
+  '{"type":"object","value":{"name":"NRTvelMyAxis","alias":"motion/axs/MyAxis/state/values/actual/vel","source":"motion/axs/MyAxis/state/values/actual/vel","type":"NRT","unit":"mm/s"}}')
+ctrlx-datalayer_write("oscilloscope/instances/myOsc/cfg/trigger",
+  '{"type":"object","value":{"triggerType":"RisingEdge","name":"NRTvelMyAxis","level":"50","preTrigger":500}}')
+# Browse diagram name first — always Diagram_1, not Diagram_0
+ctrlx-datalayer_browse("oscilloscope/instances/myOsc/cfg/diagrams")
+ctrlx-datalayer_create("oscilloscope/instances/myOsc/cfg/diagrams/Diagram_1/views",
+  '{"type":"object","value":{"source":"NRTvelMyAxis","color":"#3498db","visible":true,"connectionType":"LINE"}}')
+ctrlx-datalayer_create("oscilloscope/instances/myOsc/cmd/start", '{"type":"bool8","value":true}')
+# → state/opstate should be "WAIT_FOR_TRIGGER"
+```
+
 ## Überblick
 
 Das Oszilloskop wird über den ctrlX Data Layer konfiguriert. Die wichtigste Erkenntnis aus dem UI-Tracking:

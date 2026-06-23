@@ -1,19 +1,14 @@
 # Use MCP Server
 
-Use this workflow when the ctrlX MCP Server app is (or may be) installed on the target device.
-MCP (Model Context Protocol) is the preferred interaction layer when available — it exposes ctrlX
-REST, Data Layer, and device management as structured MCP tools that the agent can call directly
-without manually constructing HTTP requests or SSH commands.
+Preferred interaction layer when ctrlX AI app is installed. Use MCP tools instead of REST/SSH/curl.
 
-## MCP Detection (Run First on Every Device Session)
+## Step 1 — Are MCP Tools Available?
 
-Before using any other access method (REST, SSH, WebDAV, Web UI), check whether the MCP Server
-app is installed on the target ctrlX device.
+**In Copilot CLI:** call `tool_search_tool_regex("datalayer|ctrlx")`.
+- Tools found (`ctrlx-datalayer_read` etc.) → **use them directly, go to Step 2**
+- Not found → set up Copilot CLI integration → `reference/apps/mcp-server/README.md`
 
-### Method 1 — REST API (preferred, no SSH required)
-
-The correct package-manager endpoint on ctrlX OS 4.x is `/package-manager/api/v1/packages/<name>`:
-
+**On a new device:** check if `ctrlx-ai` snap is installed:
 ```powershell
 $token = (Invoke-WebRequest -Uri "https://<IP>/identity-manager/api/v1/auth/token" `
   -SkipCertificateCheck -Method POST -ContentType "application/json" `
@@ -22,272 +17,44 @@ $token = (Invoke-WebRequest -Uri "https://<IP>/identity-manager/api/v1/auth/toke
 
 Invoke-WebRequest -Uri "https://<IP>/package-manager/api/v1/packages/ctrlx-ai" `
   -SkipCertificateCheck -Headers @{Authorization="Bearer $token"} -UseBasicParsing |
-  ConvertFrom-Json | Select-Object name, title, installed
+  ConvertFrom-Json | Select-Object name, installed
 ```
+- `installed: true` → MCP available at `https://<IP>/mcp`
+- 404 → not installed → use `workflows/use-rest-api.md` or `workflows/use-datalayer.md`
 
-If `installed: true` → **MCP is available. Use MCP for all further operations.**
+## Step 2 — Use MCP Tools
 
-If 404 → MCP is not installed → continue with the standard workflows.
+| Task | Tool |
+|---|---|
+| Read Data Layer node | `ctrlx-datalayer_read` |
+| Write Data Layer node | `ctrlx-datalayer_write` |
+| Browse node tree | `ctrlx-datalayer_browse` |
+| Create node / call method | `ctrlx-datalayer_create` |
+| Delete node | `ctrlx-datalayer_delete` |
+| Read metadata / type info | `ctrlx-datalayer_metadata` |
+| Subscribe to changes | `ctrlx-datalayer_subscribe` |
+| List installed apps | `ctrlx-apps_list_installed` |
+| Read logbook | `ctrlx-logbook_list_entries` |
+| Motion guidance | `ctrlx-skill_motion` |
+| Oscilloscope guidance | `ctrlx-skill_oscilloscope` |
+| PLC info | `ctrlx-skill_plc` |
+| Rexroth docs search | `ctrlx-askrexroth_documentation_search` |
 
-> **Note:** The snap name is `ctrlx-ai`. The MCP server component inside is `ctrlx-mcp-server`.
-> Do NOT use `/api/v1/package-manager/applications` — that path returns HTML on ctrlX OS 4.6.
+> **Before writing:** always browse the node path first to verify it exists and get the correct schema.
 
-### Method 2 — Web UI
+## Step 3 — Missing skill_* Tools?
 
-Open `https://<IP>` → **Apps** → search for "ctrlx-ai". If it appears as installed, MCP is available.
-
-### Method 3 — SSH fallback
-
-```bash
-ssh -p 8022 boschrexroth@<IP> "snap list ctrlx-ai"
+Create them on the device with `ctrlx-write_file`:
 ```
-
-## When MCP Is Available
-
-Use the MCP tools provided by the MCP Server app for **all** of the following instead of direct
-REST calls, SSH commands, or WebDAV:
-
-| Task | Without MCP | With MCP |
-|---|---|---|
-| Read/write Data Layer nodes | REST `GET/PUT /api/v1/...` | `datalayer_read`, `datalayer_write` MCP tools |
-| Browse Data Layer tree | SSH + ctrlx-datalayer-client | `datalayer_browse` MCP tool |
-| Read device state, apps, logs | REST `/api/v1/...` | MCP system/device tools |
-| Manage apps | REST package-manager API | MCP app-management tools |
-| Diagnose services | SSH journalctl | MCP log/diagnostic tools |
-
-> The exact MCP tool names depend on the installed MCP Server app version. Browse the available
-> MCP tools at session start with the agent's built-in MCP tool listing.
-
-## MCP Connection Setup
-
-### Endpoint
-
+/var/snap/rexroth-solutions/common/solutions/DefaultSolution/configurations/appdata/.agents/skills/<Name>.md
 ```
-https://<IP>/mcp
-```
-
-The app name on ctrlX OS is **`ctrlx-ai`**. Detect it via:
-
-```powershell
-Invoke-WebRequest -Uri "https://<IP>/package-manager/api/v1/packages/ctrlx-ai" `
-  -SkipCertificateCheck -Headers @{Authorization="Bearer <token>"} -UseBasicParsing
-```
-
-### Authentication
-
-**Option A — Token (recommended):**
-```
-Header: CTRLX_TOKEN: <bearer-token>
-```
-Obtain token: `POST https://<IP>/identity-manager/api/v1/auth/token` with `{"name":"...","password":"..."}`
-
-**Option B — Credentials directly:**
-```
-Header: CTRLX_USERNAME: <user>
-Header: CTRLX_PASSWORD: <pass>
-```
-
-### Required Headers for Every Request
-
-```
-Content-Type: application/json
-Accept: application/json, text/event-stream
-CTRLX_TOKEN: <token>
-```
-
-The response is always a **Server-Sent Events stream** (`text/event-stream`).
-Each `data:` line is a JSON-RPC response object.
-
-### Session Handshake (Batch — Recommended)
-
-Send initialize + notifications/initialized + tools/list in a single batch POST:
-
-```json
-[
-  {"jsonrpc":"2.0","id":1,"method":"initialize","params":{
-    "protocolVersion":"2024-11-05","capabilities":{},
-    "clientInfo":{"name":"my-agent","version":"1.0"}}},
-  {"jsonrpc":"2.0","method":"notifications/initialized","params":{}},
-  {"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}
-]
-```
-
-> **Note:** Sequential single requests require passing `Mcp-Session-Id` from the initialize
-> response header in all subsequent requests. The batch approach avoids this complexity.
-
-## Copilot CLI Integration (mcp-config.json)
-
-ctrlX OS uses a **self-signed TLS certificate** and requires `Accept: text/event-stream` on every
-GET request. The Copilot CLI HTTP transport does not handle these reliably, so use a **Node.js
-stdio proxy** instead.
-
-### Step 1 — Create the proxy script
-
-Save as `~/.copilot/mcp-proxy/ctrlx-proxy.mjs`:
-
-```js
-#!/usr/bin/env node
-// ⚠️ CRITICAL: Use async for-await over readline — NOT event-based stdin.on("data", async ...)
-// The event-based approach exits before the fetch() resolves, producing no output.
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
-import { createInterface } from "readline";
-
-const BASE_URL = process.env.CTRLX_URL || "https://127.0.0.1:8443/mcp";
-const USERNAME = process.env.CTRLX_USERNAME || "boschrexroth";
-const PASSWORD = process.env.CTRLX_PASSWORD || "boschrexroth";
-
-let sessionId = null;
-
-async function sendMessage(body) {
-  const headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json, text/event-stream",
-    "CTRLX_USERNAME": USERNAME,
-    "CTRLX_PASSWORD": PASSWORD,
-  };
-  if (sessionId) headers["Mcp-Session-Id"] = sessionId;
-
-  const res = await fetch(BASE_URL, { method: "POST", headers, body: JSON.stringify(body) });
-
-  const sid = res.headers.get("mcp-session-id");
-  if (sid) sessionId = sid;
-
-  const text = await res.text();
-  for (const line of text.split("\n")) {
-    const t = line.trim();
-    if (t.startsWith("data: ")) {
-      const json = t.slice(6).trim();
-      if (json) process.stdout.write(json + "\n");
-    } else if (t.startsWith("{")) {
-      process.stdout.write(t + "\n");
-    }
-  }
-}
-
-const rl = createInterface({ input: process.stdin, crlfDelay: Infinity });
-
-(async () => {
-  for await (const line of rl) {
-    const trimmed = line.trim();
-    if (!trimmed) continue;
-    try {
-      await sendMessage(JSON.parse(trimmed));
-    } catch (e) {
-      process.stderr.write("error: " + e.message + "\n");
-    }
-  }
-})();
-```
-
-**Verify it works before registering:**
-```powershell
-echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}}}' | node ctrlx-proxy.mjs
-# Expected: {"jsonrpc":"2.0","id":1,"result":{"serverInfo":{"name":"ctrlx-mcp-server 🚀",...}}}
-```
-
-### Step 2 — Configure mcp-config.json
-
-`~/.copilot/mcp-config.json`:
-
-```json
-{
-  "mcpServers": {
-    "ctrlx": {
-      "type": "stdio",
-      "command": "node",
-      "args": ["C:\\Users\\<USER>\\.copilot\\mcp-proxy\\ctrlx-proxy.mjs"],
-      "env": {
-        "CTRLX_URL": "https://127.0.0.1:8443/mcp",
-        "CTRLX_USERNAME": "boschrexroth",
-        "CTRLX_PASSWORD": "boschrexroth"
-      }
-    }
-  }
-}
-```
-
-After saving, restart the Copilot CLI session. Use `/mcp` to verify `ctrlx` shows as connected.
-All MCP tools (`datalayer_read`, `skill_motion`, `logbook_list_entries`, etc.) are then available
-as native agent tools.
-
-> **Why stdio instead of http type?** The `http` transport in Copilot CLI does not add custom
-> `Accept` headers and rejects self-signed certificates. The stdio proxy handles both.
-
-## Missing Skills — Automatically Create on Device
-
-When a needed `skill_*` tool is missing from `tools/list`, create it directly on the device
-using `write_file`. Skills are Markdown files stored at:
-
-```
-/var/snap/rexroth-solutions/common/solutions/DefaultSolution/configurations/appdata/.agents/skills/<SkillName>.md
-```
-
-### Workflow
-
-1. Call `tools/list` at session start. Note which `skill_*` tools are present.
-2. Identify which skills are needed for the current task (e.g., `skill_oscilloscope` for
-   oscilloscope tasks, `skill_motion` for axis work).
-3. If a required skill is **missing**: call `skill_skillcreation` to learn the skill format,
-   then create the skill file using `write_file`.
-4. After writing, call `tools/list` again to confirm the new skill appears.
-
-### Skill File Format
-
-Every skill must start with a YAML front matter header:
-
-```markdown
----
-name: myskill
-description: "What this skill provides (max 200 chars)."
-license: Proprietary. LICENSE.txt has complete terms
----
-
-# My Skill
-
-## Core Concepts
-...
-
-## Common Workflows
-...
-```
-
-- File location: `.agents/skills/` inside the allowed appdata directory
-- Naming: **PascalCase** filename, **lowercase** `name` in header
-- Full path example: `.../appdata/.agents/skills/Oscilloscope.md`
-
-### Example — Create Missing Oscilloscope Skill
-
-```
-write_file(
-  path = "/var/snap/rexroth-solutions/common/solutions/DefaultSolution/configurations/appdata/.agents/skills/Oscilloscope.md",
-  content = "---\nname: oscilloscope\n..."
-)
-```
-
-> Use `list_allowed_directories` to confirm the allowed base path before writing.
-> Use `skill_skillcreation` to get the current format specification.
-
-## Fallback Decision
-
-```
-Device involved?
-  └─ Yes → Is MCP Server app installed and running?
-              ├─ Yes  → Use MCP tools (this workflow)
-              └─ No   → Use standard workflows:
-                          REST     → workflows/use-rest-api.md
-                          DataLayer→ workflows/use-datalayer.md
-                          SSH diag → workflows/debug-issue.md
-                          File I/O → workflows/use-webdav.md
-                          UI       → workflows/use-web-ui.md
-```
+Use `ctrlx-skill_skillcreation` to get the file format, `ctrlx-list_allowed_directories` to confirm base path.
 
 ## Safety
 
-MCP tool calls that write state or change configuration on a real device are persistent changes.
-Apply the same confirmation policy as for REST and SSH:
+MCP write calls on real devices = persistent changes. Same rules as REST/SSH:
+- Inspect first, propose, wait for confirmation, then execute, then verify.
 
-- Inspect first.
-- Propose the MCP call and expected result.
-- Wait for explicit user confirmation before executing writes on a real device.
-- Verify the result after execution.
+## Setup / Troubleshooting
+
+→ `reference/apps/mcp-server/README.md`
