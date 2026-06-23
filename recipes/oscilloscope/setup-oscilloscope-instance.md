@@ -146,6 +146,28 @@ Für jeden Kanal einmal wiederholen. Farben frei wählbar (Hex).
 | `DL_TYPE_MISMATCH: unknown enum value: CIRCULAR` | `bufferType: "CIRCULAR"` nicht gültig | Nur `"SINGLESHOT"` verwenden |
 | `DL_INVALID_ADDRESS` bei `rec-values/{channelName}` | Kanal-Einzelabruf nicht unterstützt | Nur `rec-values/allsignals` verwenden |
 | Diagramm heißt `Diagram_1`, nicht `Diagram_0` | Automatische Benennung beginnt bei 1 | Vor dem Views-POST immer `cfg/diagrams?type=browse` abfragen |
+| `NOT_CONFIGURED` nach `cmd/start` | Kanal-`source`-Pfad existiert nicht im Data Layer | Pfad mit `datalayer_browse` verifizieren **bevor** Kanal anlegen |
+
+## Korrekte Velocity-Pfade (verifiziert ctrlX OS 4.6)
+
+```
+motion/axs/<name>/state/values/actual/vel   ✅  (actual velocity)
+motion/axs/<name>/state/values/actual/pos   ✅  (actual position)
+motion/axs/<name>/state/values/actual/acc   ✅  (actual acceleration)
+motion/axs/<name>/state/values/actual/trq   ✅  (actual torque)
+```
+
+> ⚠️ `actual/actualVel`, `actual/actualPos` etc. existieren **nicht** — nur der kurze Name ohne Präfix.
+
+## MCP-Nutzung (empfohlen ab ctrlX AI 0.2.3)
+
+Wenn `ctrlx-datalayer_*` Tools im Agenten verfügbar sind, alle Oszilloskop-Operationen direkt damit ausführen — kein curl erforderlich. Reihenfolge:
+
+1. `ctrlx-datalayer_create` → Instanz anlegen
+2. `ctrlx-datalayer_write` → Buffer + Trigger konfigurieren
+3. `ctrlx-datalayer_browse` → Diagramm-Namen ermitteln (`Diagram_1`)
+4. `ctrlx-datalayer_create` → Kanäle + Views anlegen
+5. `ctrlx-datalayer_create` → `cmd/start`
 
 ---
 
