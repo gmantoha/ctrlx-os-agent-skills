@@ -11,9 +11,12 @@ Use this skill for ctrlX OS, ctrlX CORE, ctrlX apps, ctrlX Data Layer, ctrlX RES
 ## First Steps
 
 1. Identify the task type.
-2. Read the matching workflow from `workflows/`.
-3. Read `reference/AGENTS.md` and any relevant platform, app, or access-method references under `reference/`.
-4. If a device is involved, determine whether it is real or virtual before changing anything.
+2. **If a device is involved: check for MCP Server first.**
+   Detect the `ctrlx-ai` snap via `GET /package-manager/api/v1/packages/ctrlx-ai`.
+   - If installed → use `workflows/use-mcp.md` and MCP tools for all device interactions.
+   - If not installed → proceed with standard workflows (REST, SSH, WebDAV, Web UI).
+3. Read the matching workflow from `workflows/`.
+4. Read `reference/AGENTS.md` and any relevant platform, app, or access-method references under `reference/`.
 5. Produce commands, UI steps, code, or a customer answer with evidence and clear verification steps.
 
 ## Safety
@@ -27,6 +30,8 @@ For real-device changes, inspect first, propose exact commands or UI actions, wa
 Always check and report the virtual lab instance status at the start and end of any session that uses it. Stop the virtual instance after testing completes unless the user explicitly asks to keep it running.
 
 ## Routing
+
+Use `workflows/use-mcp.md` **first** when a device is involved — check if `ctrlx-ai` (MCP Server) is installed. If yes, use MCP tools for all device operations. If no, fall back to the workflows below.
 
 Use `workflows/debug-issue.md` for crashes, OOM, service failures, logs, token verifier floods, Data Layer disconnects, and performance investigations.
 
