@@ -18,9 +18,28 @@ labs/app-packages/DC_App_Paket_4.6.0/          ← user apps
 labs/app-packages/DC_App_Paket_4.6.0/SYSTEM_APPS/   ← system apps
 ```
 
+On this machine additional packages are available under:
+
+```
+C:\Users\jmu1but\Downloads\DC_App_Paket_4.6.1\          ← user apps 4.6.1
+C:\Users\jmu1but\Downloads\DC_App_Paket_3.6.8\          ← user apps 3.6.8 (incl. core22)
+```
+
 Note: `.app` files are git-ignored. Check whether the folder is populated before assuming packages are present.
 
 Release notes for all 4.6.0 apps are in `reference/docs/release-notes/4.6.0/EN/` and can be read to determine what changed in a given version.
+
+Apps not included in the standard DC_App_Paket (e.g. DRIVE Connect) are available in the **Collaboration Room** — see `reference/apps/catalog.md`.
+
+## App Dependencies
+
+Some apps require a specific base snap that is not pre-installed on all OS versions. Always check before installing:
+
+| App | Snap | Required Base | Available in |
+|---|---|---|---|
+| DRIVE Connect 3.6.x | `rexroth-drive-comm` | `core22` | `DC_App_Paket_3.6.8/SYSTEM_APPS/core22-*.app` |
+
+Install the base snap first, then the app. Details → `reference/apps/drive-connect/README.md`
 
 ## Rules
 
