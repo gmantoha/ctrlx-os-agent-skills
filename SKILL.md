@@ -63,14 +63,34 @@ Use `workflows/update-os.md` for upgrading ctrlX OS from local .app files, inclu
 
 Use concrete playbooks under `recipes/` when available. For example:
 - `recipes/vpn/route-through-plc.md` — VPN-Route durch ctrlX CORE zu PLC/SPS-Netz
+- `recipes/motion/axis-create-delete.md` — Axes anlegen, konfigurieren, löschen; posMax-Grenzen; Rotary Spindle (constant RPM)
+- `recipes/motion/axis-power-and-move.md` — Power ON/OFF (POST!), absolute move, unit table, polling
+- `recipes/motion/axis-error-reset.md` — ERRORSTOP reset; `cmd/reset` known issues; STOPPED deadlock fix; SETUP-cycle fallback
+- `recipes/motion/ignore-axis-profile.md` — DRIVEAXS ohne physischen Antrieb; ignoreAxisProfile=true; STOPPED-Deadlock-Ursache und Fix
 - `recipes/motion/axis-velocity-limits.md` — Achsgeschwindigkeitsgrenzen lesen/schreiben
-- `recipes/motion/motion-opstate-switch.md` — Motion von Configuration → Running schalten
+- `recipes/motion/motion-opstate-switch.md` — SETUP ↔ OPERATING; axes must be DISABLED first
+- `recipes/motion/simultaneous-axis-moves.md` — Mehrere Achsen gleichzeitig bewegen
 - `recipes/oscilloscope/setup-oscilloscope-instance.md` — Oszilloskop-Instanz einrichten und starten
 - `recipes/io-engineering/project-and-ethercat-topology.md` — IO Engineering Projekt anlegen und EtherCAT-Topologie mit ctrlX I/O aufbauen
 - `recipes/plc/deploy-and-start.md` — PLC Build → Download → Start via Engineering REST API (vollständige Job-Sequenz, Ports, Troubleshooting)
 - `recipes/plc/axis-interface-motion.md` — AxisInterface (CXA_MotionInterface) ST-Muster: Init, Power, Move, Diagnose
+- `recipes/plc/axis-interface-velocity.md` — Direkte arAxisCtrl_gb/arAxisStatus_gb Velocity-Steuerung; Admin.Active Guard; Datalayer Symbols
+- `recipes/plc/real-device-ports.md` — Ports real vs. virtuell (httpsPort 443/8443, plcPort 11740/8740); nodeUrl-Format; Auth-Session-Limit
 - `recipes/plc/create-pou-gvl.md` — POUs und GVLs per REST API anlegen und aktualisieren
 - `recipes/plc/engineering-scripting.md` — CODESYSScript (Verfügbarkeit prüfen!) vs. REST API
+
+## Motion Task — Standard Sequence
+
+For any motion task (create axes, move, sequence), follow this order:
+
+1. **Read** the relevant recipe(s) first — never guess API format
+2. **Check mode**: `GET motion/state/opstate` — is it Configuration or Running?
+3. **For config changes**: ensure all axes DISABLED, switch to SETUP, make changes, save, switch to OPERATING
+4. **Wait** 10–12 s after OPERATING switch before polling axis states
+5. **Power ON**: `POST cmd/power {"type":"bool8","value":true}` (POST, not PUT)
+6. **Move**: `POST cmd/pos-abs` — fire all simultaneous moves before any polling
+7. **Poll**: check `state/opstate/plcopen` until STANDSTILL; check for ERRORSTOP
+8. **Power OFF all axes** before ending — any axis left STANDSTILL blocks the next SETUP switch
 
 ## Evidence Order
 
