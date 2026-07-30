@@ -59,6 +59,8 @@ Use `workflows/answer-customer.md` when the primary output is a customer or coll
 
 Use `workflows/update-os.md` for upgrading ctrlX OS from local .app files, including system snap ordering, version polling, reboot handling, and core22 removal via remodel.
 
+Use `workflows/contribute-skill.md` for installing/updating this skill (Pull), capturing something newly learned (Teach), or contributing a learning back to this repository (Push).
+
 ## Common Recipes
 
 Use concrete playbooks under `recipes/` when available. For example:
