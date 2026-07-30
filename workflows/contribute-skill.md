@@ -56,10 +56,16 @@ manual git commands are needed:
 4. `git add` + `git commit` with a descriptive message
 5. `git push origin <branch>`
 6. `gh pr create --fill` to open a Pull Request for review
+7. If the user has merge rights and asks to merge now, merge the PR
+   (`gh pr merge <branch> --merge --delete-branch`)
+8. **Immediately run Pull** (see above, including its fallback if `npx skills update`
+   fails) so the change lands locally too — do this automatically as the last step of
+   Push, without waiting to be asked separately
 
 Requires `gh auth login` once per machine (GitHub CLI authentication) before the push
 step can open a PR.
 
-After the PR is merged, run **Pull** again (`npx skills update ctrlx --global --yes`) to
-receive the change locally — pushing to the repo does not update your local copy
-automatically.
+Push is not considered complete until the merged change has also been pulled locally.
+Merging the PR on GitHub does not, by itself, update anyone's local copy — Pull must run
+after every merge, whether triggered by this same Push request or done later by other
+team members on their own machines.
