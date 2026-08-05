@@ -11,9 +11,12 @@ Use this skill for ctrlX OS, ctrlX CORE, ctrlX apps, ctrlX Data Layer, ctrlX RES
 ## First Steps
 
 1. Identify the task type.
-2. Read the matching workflow from `workflows/`.
-3. Read `reference/AGENTS.md` and any relevant platform, app, or access-method references under `reference/`.
-4. If a device is involved, determine whether it is real or virtual before changing anything.
+2. **If a device is involved: check for MCP Server first.**
+   Detect the `ctrlx-ai` snap via `GET /package-manager/api/v1/packages/ctrlx-ai`.
+   - If installed → use `workflows/use-mcp.md` and MCP tools for all device interactions.
+   - If not installed → proceed with standard workflows (REST, SSH, WebDAV, Web UI).
+3. Read the matching workflow from `workflows/`.
+4. Read `reference/AGENTS.md` and any relevant platform, app, or access-method references under `reference/`.
 5. Produce commands, UI steps, code, or a customer answer with evidence and clear verification steps.
 
 ## Safety
@@ -27,6 +30,8 @@ For real-device changes, inspect first, propose exact commands or UI actions, wa
 Always check and report the virtual lab instance status at the start and end of any session that uses it. Stop the virtual instance after testing completes unless the user explicitly asks to keep it running.
 
 ## Routing
+
+Use `workflows/use-mcp.md` **first** when a device is involved — check if `ctrlx-ai` (MCP Server) is installed. If yes, use MCP tools for all device operations. If no, fall back to the workflows below.
 
 Use `workflows/debug-issue.md` for crashes, OOM, service failures, logs, token verifier floods, Data Layer disconnects, and performance investigations.
 
@@ -54,14 +59,40 @@ Use `workflows/answer-customer.md` when the primary output is a customer or coll
 
 Use `workflows/update-os.md` for upgrading ctrlX OS from local .app files, including system snap ordering, version polling, reboot handling, and core22 removal via remodel.
 
+Use `workflows/contribute-skill.md` for installing/updating this skill (Pull), capturing something newly learned (Teach), or contributing a learning back to this repository (Push).
+
 ## Common Recipes
 
 Use concrete playbooks under `recipes/` when available. For example:
 - `recipes/vpn/route-through-plc.md` — VPN-Route durch ctrlX CORE zu PLC/SPS-Netz
+- `recipes/motion/axis-create-delete.md` — Axes anlegen, konfigurieren, löschen; posMax-Grenzen; Rotary Spindle (constant RPM)
+- `recipes/motion/axis-power-and-move.md` — Power ON/OFF (POST!), absolute move, unit table, polling
+- `recipes/motion/axis-error-reset.md` — ERRORSTOP reset; `cmd/reset` known issues; STOPPED deadlock fix; SETUP-cycle fallback
+- `recipes/motion/ignore-axis-profile.md` — DRIVEAXS ohne physischen Antrieb; ignoreAxisProfile=true; STOPPED-Deadlock-Ursache und Fix
 - `recipes/motion/axis-velocity-limits.md` — Achsgeschwindigkeitsgrenzen lesen/schreiben
-- `recipes/motion/motion-opstate-switch.md` — Motion von Configuration → Running schalten
+- `recipes/motion/motion-opstate-switch.md` — SETUP ↔ OPERATING; axes must be DISABLED first
+- `recipes/motion/simultaneous-axis-moves.md` — Mehrere Achsen gleichzeitig bewegen
 - `recipes/oscilloscope/setup-oscilloscope-instance.md` — Oszilloskop-Instanz einrichten und starten
 - `recipes/io-engineering/project-and-ethercat-topology.md` — IO Engineering Projekt anlegen und EtherCAT-Topologie mit ctrlX I/O aufbauen
+- `recipes/plc/deploy-and-start.md` — PLC Build → Download → Start via Engineering REST API (vollständige Job-Sequenz, Ports, Troubleshooting)
+- `recipes/plc/axis-interface-motion.md` — AxisInterface (CXA_MotionInterface) ST-Muster: Init, Power, Move, Diagnose
+- `recipes/plc/axis-interface-velocity.md` — Direkte arAxisCtrl_gb/arAxisStatus_gb Velocity-Steuerung; Admin.Active Guard; Datalayer Symbols
+- `recipes/plc/real-device-ports.md` — Ports real vs. virtuell (httpsPort 443/8443, plcPort 11740/8740); nodeUrl-Format; Auth-Session-Limit
+- `recipes/plc/create-pou-gvl.md` — POUs und GVLs per REST API anlegen und aktualisieren
+- `recipes/plc/engineering-scripting.md` — CODESYSScript (Verfügbarkeit prüfen!) vs. REST API
+
+## Motion Task — Standard Sequence
+
+For any motion task (create axes, move, sequence), follow this order:
+
+1. **Read** the relevant recipe(s) first — never guess API format
+2. **Check mode**: `GET motion/state/opstate` — is it Configuration or Running?
+3. **For config changes**: ensure all axes DISABLED, switch to SETUP, make changes, save, switch to OPERATING
+4. **Wait** 10–12 s after OPERATING switch before polling axis states
+5. **Power ON**: `POST cmd/power {"type":"bool8","value":true}` (POST, not PUT)
+6. **Move**: `POST cmd/pos-abs` — fire all simultaneous moves before any polling
+7. **Poll**: check `state/opstate/plcopen` until STANDSTILL; check for ERRORSTOP
+8. **Power OFF all axes** before ending — any axis left STANDSTILL blocks the next SETUP switch
 
 ## Evidence Order
 
