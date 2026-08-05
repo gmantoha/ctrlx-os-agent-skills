@@ -16,16 +16,14 @@ Dieses Rezept zeigt, wie man per REST API ein neues IO Engineering-Projekt anleg
 $base = "http://localhost:9003/io/engineering/api/v2"
 $h = @{ "Content-Type" = "application/json" }
 
-$job = Invoke-RestMethod "$base/jobs" -Method POST -Headers $h -Body @"
-{
-  "jobType": "NewProjectJob",
-  "jobParameters": {
-    "projectName": "MeinIOProjekt",
-    "projectFolder": "C:\\Users\\<User>\\Documents\\My ctrlX",
-    "templateKey": "ctrlXCOREIO"
-  }
-}
-"@
+$job = Invoke-RestMethod "$base/jobs" -Method POST -Headers $h -Body (@{
+    jobType = "NewProjectJob"
+    jobParameters = @{
+        filePath = "C:\Users\$env:USERNAME\Documents\My ctrlX"  # Zielordner (muss existieren)
+        fileName = "MeinIOProjekt"                               # Projektname ohne Extension
+        template = "ctrlXOSIO"                                   # v4.6.x
+    }
+} | ConvertTo-Json)
 
 # Warten bis Job abgeschlossen
 do {
@@ -36,7 +34,11 @@ do {
 Write-Host "Status: $($result.state) - $($result.jobResultInfo)"
 ```
 
-> **Wichtig:** Template-Key ist `ctrlXCOREIO` (nicht `ctrlXOSIO` wie im OpenAPI-Beispiel).
+> **Wichtig (v4.6.x):** `filePath` ist der **Ordner**, `fileName` der Projektname. Template-Enum: `ctrlXOSIO`.
+> Für ältere Installationen (v2.1.0): Parameter `projectFolder` + `projectName` + `templateKey: ctrlXCOREIO`.
+>
+> Die lokale OpenAPI-Spec liegt unter:
+> `C:\Program Files\ctrlX WORKS\ctrlX IO Engineering\{version}\Studio\Help\OpenAPI\io-engineering-api-v2.json`
 
 ---
 
@@ -148,6 +150,61 @@ $save = Invoke-RestMethod "$base/jobs" -Method POST -Headers $h -Body @"
 Start-Sleep 2
 $r = Invoke-RestMethod "$base/jobs/$($save.id)"
 Write-Host "Gespeichert: $($r.jobResultInfo)"
+```
+
+---
+
+## 7. Konfiguration auf ctrlX CORE übertragen
+
+### Vorbedingungen prüfen
+
+**Wichtig:** Die App `rexroth-ethercatmaster` muss installiert **und** eine Instanz angelegt sein.
+
+```powershell
+# Instanz prüfen / anlegen (einmalig pro Gerät nötig)
+$dlH = @{ Authorization = "Bearer $token"; Accept = "application/json"; "Content-Type" = "application/json" }
+
+$instBody = @{
+    type  = "object"
+    value = @{ request = @{ instanceName = "ethercatmaster"; port = "eth1" } }
+} | ConvertTo-Json -Depth 5
+
+Invoke-RestMethod "https://{IP}:{PORT}/automation/api/v2/nodes/fieldbuses/ethercat/master/instances" `
+    -Method POST -Headers $dlH -Body $instBody -SkipCertificateCheck
+# → {"type":"string","value":"fieldbuses/ethercat/master/instances/ethercatmaster","responseType":"create"}
+```
+
+> Fehler _"EtherCAT-Master-Instanz nicht vorhanden"_ → Instanz fehlt, obwohl App installiert ist.
+
+### Verbinden, einloggen und übertragen
+
+```powershell
+$base = "http://localhost:9003/io/engineering/api/v2"
+$h = @{ "Content-Type" = "application/json" }
+
+# 1. Verbindung zur ctrlX CORE setzen
+$conn = Invoke-RestMethod "$base/jobs" -Method POST -Headers $h -Body (@{
+    jobType = "CommunicationSettingsJob"
+    jobParameters = @{ nodeUrl = "/devices/Device"; ipAddress = "{IP}"; httpsPort = {PORT} }
+} | ConvertTo-Json)
+do { Start-Sleep 2; $r = Invoke-RestMethod "$base/jobs/$($conn.id)" } while ($r.state -eq "Running" -or $r.state -eq "Pending")
+Write-Host "Verbindung: $($r.state)"
+
+# 2. Login
+$login = Invoke-RestMethod "$base/jobs" -Method POST -Headers $h -Body (@{
+    jobType = "DeviceUserLoginJob"
+    jobParameters = @{ nodeUrl = "/devices/Device"; username = "aiuser"; password = $pw }
+} | ConvertTo-Json)
+do { Start-Sleep 2; $r = Invoke-RestMethod "$base/jobs/$($login.id)" } while ($r.state -eq "Running" -or $r.state -eq "Pending")
+# "User is already loggedIn" gilt als OK
+
+# 3. Transfer
+$transfer = Invoke-RestMethod "$base/jobs" -Method POST -Headers $h -Body (@{
+    jobType = "TransferFieldbusConfigJob"
+    jobParameters = @{ nodeUrl = "/devices/Device/ethercatmaster"; allowSwitchState = $true }
+} | ConvertTo-Json)
+do { Start-Sleep 3; $r = Invoke-RestMethod "$base/jobs/$($transfer.id)" } while ($r.state -eq "Running" -or $r.state -eq "Pending")
+Write-Host "Transfer: $($r.state) - $($r.jobResultInfo)"
 ```
 
 ---
