@@ -20,6 +20,7 @@
 | App install / update / remove | `workflows/manage-apps.md` |
 | Snap build / Data Layer app / SDK | `workflows/build-app.md` |
 | REST automation / external client | `workflows/use-rest-api.md` |
+| Device Portal templates / serial commissioning | `workflows/device-portal-templates.md` |
 | Data Layer reads / writes / PLC IPC | `workflows/use-datalayer.md` |
 | File transfer / app data | `workflows/use-webdav.md` |
 | UI config / Playwright | `workflows/use-web-ui.md` |
