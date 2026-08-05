@@ -8,6 +8,7 @@ Use it with prompts such as:
 - `use ctrlx skill to configure my ctrlX CORE on <IP> so that the VPN routes through to the SPS`
 - `use ctrlx skill to answer this customer question`
 - `use ctrlx skill to build or package this ctrlX snap`
+- `use ctrlx skill to create or apply a Device Portal template`
 
 This repository is structured for three equal goals:
 
@@ -21,6 +22,7 @@ This repository is structured for three equal goals:
 - `workflows/`: workflow-oriented agent entry points
 - `reference/`: common ctrlX platform knowledge, references, and best practices
 - `reference/app-development/`: official-source-first guidance for ctrlX app builds, snap packaging, package assets, and Data Layer app integration
+- `reference/apps/device-portal/`: API-only Device Portal template integration and PLC artifact verification
 - `recipes/`: concrete task playbooks such as VPN routing, firewall, storage, PLC, and Data Layer patterns
 - `templates/`: reusable answer, investigation, and demo templates
 - `labs/`: virtual ctrlX operating environment guidance and helper scripts
@@ -32,12 +34,12 @@ This repository is structured for three equal goals:
 - product PDFs
 - workflow guidance
 - examples and templates
-- default credentials when they are public defaults
+- documented public defaults only when they are intentionally required for a lab
 - scripts for repeatable local setup
 
 ## What Is Not Tracked
 
-- customer-specific secrets
+- customer-specific secrets and service-account credentials
 - downloaded app packages
 - virtual machine images
 - local logs, exports, caches, and scratch data
@@ -50,6 +52,10 @@ This repository is structured for three equal goals:
 4. Use a concrete playbook from `recipes/` when available.
 5. Use `labs/ctrlx-os-virtual/` when testing against a local virtual ctrlX OS.
 6. Store private customer work only in `customers/`.
+
+For Device Portal template or serial-commissioning work, start with
+`workflows/device-portal-templates.md`. It distinguishes complete-device
+templates from true modular deployment and requires target-side verification.
 
 ## Install
 

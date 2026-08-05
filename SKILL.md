@@ -15,9 +15,10 @@ Use this skill for ctrlX OS, ctrlX CORE, ctrlX apps, ctrlX Data Layer, ctrlX RES
    Detect the `ctrlx-ai` snap via `GET /package-manager/api/v1/packages/ctrlx-ai`.
    - If installed → use `workflows/use-mcp.md` and MCP tools for all device interactions.
    - If not installed → proceed with standard workflows (REST, SSH, WebDAV, Web UI).
-3. Read the matching workflow from `workflows/`.
-4. Read `reference/AGENTS.md` and any relevant platform, app, or access-method references under `reference/`.
-5. Produce commands, UI steps, code, or a customer answer with evidence and clear verification steps.
+3. For Device Portal template or serial-commissioning work, read `workflows/device-portal-templates.md` before using any cloud or device endpoint.
+4. Read the matching workflow from `workflows/`.
+5. Read `reference/AGENTS.md` and any relevant platform, app, or access-method references under `reference/`.
+6. Produce commands, UI steps, code, or a customer answer with evidence and clear verification steps.
 
 ## Safety
 
@@ -42,6 +43,8 @@ Use `workflows/manage-apps.md` for app installation, update, removal, service li
 Use `workflows/build-app.md` for snap packaging, app development, SDK usage, Data Layer integration, deployment, and build-deploy-debug loops.
 
 Use `workflows/use-rest-api.md` for external automation, browser/client integration, and documented REST endpoints.
+
+Use `workflows/device-portal-templates.md` for Device Portal API template creation/application, full-device restore demonstrations, and serial commissioning design.
 
 Use `workflows/use-datalayer.md` for on-device IPC, PLC-to-service communication, Data Layer reads/writes/calls, and node schema questions.
 
