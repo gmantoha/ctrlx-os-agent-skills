@@ -107,9 +107,11 @@ Invoke-RestMethod "$base/motion/axs/Axis_4" -Method DELETE -Headers $h
 - `POST motion/axs/{name}` with a body → `DL_INVALID_ADDRESS` (wrong pattern)
 - Browse `motion/axs` (GET) → `DL_INVALID_ADDRESS` (can't list axes this way)
 - To list axes: poll known names individually or read from PLC GVL
-- `axsCategory: "VIRTUAL"` → `DL_TYPE_MISMATCH` (unknown enum value). Use `DRIVEAXS` + `ignore-axisprofile=true` for axes without physical drive.
+- `axsCategory: "VIRTUAL"` → `DL_TYPE_MISMATCH` (unknown enum value). Use `DRIVEAXS` for all axes.
 - Velocity unit for LINEAR axes: **mm/min** (not mm/s). 1000 mm in 10 s = 100 mm/s = **6000 mm/min**.
-- After creation without a physical drive, set `ignore-axisprofile=true` before switching back to OPERATING, then save and reboot if necessary (see `switch-to-running-mode.md`).
+- **`motion/axs/{name}/cfg/ignore-axisprofile` existiert nicht** (`DL_INVALID_ADDRESS`). Der tatsächliche Knoten heißt `cfg/axisprofile` (type: `string`, default: `""`). Das Switch-to-Running-Rezept, das `ignore-axisprofile=true` erwähnt, ist veraltet/falsch — verified 2026-06-12, ctrlX OS 4.6 virtual.
+- **Virtuelle Steuerung ohne Drive:** Motion bleibt nach `Booting`-Kommando >60 s in Booting und fällt zurück nach Configuration. Wechsel nach Running schlägt fehl (`0xf0100001`). Achsen können erstellt/konfiguriert werden, aber Running ist ohne Drive-Zuweisung nicht erreichbar.
+- Browse `motion/axs?type=browse` → liefert Liste der angelegten Achsen (type: `arstring`). `GET motion/axs` ohne `?type=browse` → `DL_INVALID_ADDRESS`.
 - `cmd/set-pos` → `DL_INVALID_ADDRESS` — position reset node does not exist on standard axes (verified 2026-06-10).
 - **PowerShell pitfall:** never name a helper function `Move` — it collides with the `Move-Item` alias and tries to move filesystem paths. Use `Send-Move` or similar.
 - **Axes must be powered off (DISABLED) before deleting them in Configuration mode.** If axes are STANDSTILL when you switch to SETUP, Motion silently stays in Running and DELETE returns `DL_INVALID_CONFIGURATION`.
