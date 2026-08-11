@@ -71,7 +71,6 @@ Use concrete playbooks under `recipes/` when available. For example:
 - `recipes/motion/axis-create-delete.md` — Axes anlegen, konfigurieren, löschen; posMax-Grenzen; Rotary Spindle (constant RPM)
 - `recipes/motion/axis-power-and-move.md` — Power ON/OFF (POST!), absolute move, unit table, polling
 - `recipes/motion/axis-error-reset.md` — ERRORSTOP reset; `cmd/reset` known issues; STOPPED deadlock fix; SETUP-cycle fallback
-- `recipes/motion/ignore-axis-profile.md` — DRIVEAXS ohne physischen Antrieb; ignoreAxisProfile=true; STOPPED-Deadlock-Ursache und Fix
 - `recipes/motion/axis-velocity-limits.md` — Achsgeschwindigkeitsgrenzen lesen/schreiben
 - `recipes/motion/motion-opstate-switch.md` — SETUP ↔ OPERATING; axes must be DISABLED first
 - `recipes/motion/simultaneous-axis-moves.md` — Mehrere Achsen gleichzeitig bewegen

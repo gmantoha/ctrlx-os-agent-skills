@@ -105,14 +105,15 @@ Invoke-RestMethod "$base/motion/axs/Axis_4" -Method DELETE -Headers $h
 ## Notes
 
 - `POST motion/axs/{name}` with a body → `DL_INVALID_ADDRESS` (wrong pattern)
-- Browse `motion/axs` (GET) → `DL_INVALID_ADDRESS` (can't list axes this way)
-- To list axes: poll known names individually or read from PLC GVL
+- To list axes: `GET motion/axs?type=browse` → `arstring` of axis names. Plain `GET motion/axs` (no `?type=browse`) → `404 DL_INVALID_ADDRESS` (re-confirmed 2026-08-11).
 - `axsCategory: "VIRTUAL"` → `DL_TYPE_MISMATCH` (unknown enum value). Use `DRIVEAXS` for all axes.
 - Velocity unit for LINEAR axes: **mm/min** (not mm/s). 1000 mm in 10 s = 100 mm/s = **6000 mm/min**.
-- **`motion/axs/{name}/cfg/ignore-axisprofile` existiert nicht** (`DL_INVALID_ADDRESS`). Der tatsächliche Knoten heißt `cfg/axisprofile` (type: `string`, default: `""`). Das Switch-to-Running-Rezept, das `ignore-axisprofile=true` erwähnt, ist veraltet/falsch — verified 2026-06-12, ctrlX OS 4.6 virtual.
-- **Virtuelle Steuerung ohne Drive:** Motion bleibt nach `Booting`-Kommando >60 s in Booting und fällt zurück nach Configuration. Wechsel nach Running schlägt fehl (`0xf0100001`). Achsen können erstellt/konfiguriert werden, aber Running ist ohne Drive-Zuweisung nicht erreichbar.
+- **`ignore-axisprofile` is at `motion/axs/{name}/cfg/functions/ignore-axisprofile`** (`bool8`), **not** at `cfg/ignore-axisprofile`. Probing the short path returns `DL_INVALID_ADDRESS`, which between 2026-06-12 and 2026-08-11 was three times mistaken for "the node does not exist". Related: `cfg/functions/open-loop` (`bool8`). `cfg/axisprofile` is a separate `string` node — writing a bool there gives `DL_TYPE_MISMATCH`. Verified 2026-08-11, ctrlX OS 4.6 virtual.
+- **A `DRIVEAXS` axis without a physical drive does not need this flag** on a virtual CORE — create → power ON → move works with `ignore-axisprofile = false`, unsaved (verified 2026-08-11). An earlier note (2026-06-11) documented that a drive-less axis with an assigned `axisProfileName` fails with `0xf0100001` unless the flag is persisted via `cfg/save` and reloaded on a fresh boot; that mechanism was **not reproduced** on 2026-08-11 and is unconfirmed.
+- SETUP switch while an axis is still powered → `500`, `080F0042` `"Some callables refused the event SCHED_EVENT_SWITCH_TO_SETUP"`, cause `"axis <name> has still power"`.
 - Browse `motion/axs?type=browse` → liefert Liste der angelegten Achsen (type: `arstring`). `GET motion/axs` ohne `?type=browse` → `DL_INVALID_ADDRESS`.
-- `cmd/set-pos` → `DL_INVALID_ADDRESS` — position reset node does not exist on standard axes (verified 2026-06-10).
+- `cmd/set-pos` does not exist — but **`cmd/set-pos-abs` does** (`types/motion/axs/cmd/set-pos-abs`, "cmd to set absolute position"), as does `cmd/set-ipo-pos-from-act-pos`. The 2026-06-10 note "position reset node does not exist on standard axes" was wrong: only the guessed *name* was absent. Verified 2026-08-11.
+- **Before concluding a node does not exist, browse its parent** (`?type=browse`) and check the child list. Command nodes are create-only: a plain `GET` returns `501`, and `?type=metadata` is the correct existence check. Guessing paths instead of browsing produced three wrong entries in this skill.
 - **PowerShell pitfall:** never name a helper function `Move` — it collides with the `Move-Item` alias and tries to move filesystem paths. Use `Send-Move` or similar.
 - **Axes must be powered off (DISABLED) before deleting them in Configuration mode.** If axes are STANDSTILL when you switch to SETUP, Motion silently stays in Running and DELETE returns `DL_INVALID_CONFIGURATION`.
 
