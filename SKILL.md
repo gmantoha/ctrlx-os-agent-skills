@@ -72,6 +72,8 @@ Use concrete playbooks under `recipes/` when available. For example:
 - `recipes/motion/axis-power-and-move.md` — Power ON/OFF (POST!), absolute move, unit table, polling
 - `recipes/motion/axis-error-reset.md` — ERRORSTOP reset; `cmd/reset` known issues; STOPPED deadlock fix; SETUP-cycle fallback
 - `recipes/motion/axis-velocity-limits.md` — Achsgeschwindigkeitsgrenzen lesen/schreiben
+- `recipes/motion/bom-to-motion-profile.md` — Kunden-Stückliste (Motoren/Drives/Lizenzen) → Motion-Achskonfiguration; BOM-Plausibilitätsprüfungen
+- `recipes/motion/axis-config-persistence.md` — Motion-Konfiguration speichern: **ungelöst** über REST; Achsen gehen beim Reboot verloren
 - `recipes/motion/motion-opstate-switch.md` — SETUP ↔ OPERATING; axes must be DISABLED first
 - `recipes/motion/simultaneous-axis-moves.md` — Mehrere Achsen gleichzeitig bewegen
 - `recipes/oscilloscope/setup-oscilloscope-instance.md` — Oszilloskop-Instanz einrichten und starten
