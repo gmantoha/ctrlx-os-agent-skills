@@ -5,6 +5,10 @@ Dieses Rezept zeigt, wie man per REST API ein neues IO Engineering-Projekt anleg
 ## Voraussetzungen
 
 - ctrlX WORKS IO Engineering läuft lokal (z.B. Port 9003)
+- **Die REST API ist standardmäßig AUS.** `Studio.RestApi.dll` wird mitgeliefert, muss
+  aber über *Tools → Options* aktiviert werden, danach GUI-Neustart. Vorher existiert
+  weder Config-Datei noch Registry-Key — das Fehlen eines lauschenden Ports bedeutet
+  **nicht**, dass die API nicht verfügbar ist.
 - Basis-URL: `http://localhost:9003/io/engineering/api/v2`
 - API-Doku: https://boschrexroth.github.io/rest-api-description/ctrlx-automation/ctrlx-works/index.html
 
@@ -56,7 +60,10 @@ Das Standardtemplate enthält bereits:
 
 ## 3. Buskoppler XB-EC-12 einfügen
 
-IO-Module immer **zuerst den Buskoppler** einfügen, danach Module darunter.
+IO-Module werden typischerweise unter einem Buskoppler eingefügt — **zwingend ist das
+aber nicht**: Module können auch direkt unter `ethercatmaster` eingefügt werden (durch
+Testeinfügung verifiziert, 4.6). Wenn die Stückliste keinen Koppler enthält, keinen
+erfinden — nachfragen. Ein Phantom-Koppler verschiebt alle Folgeadressen.
 
 ```powershell
 $coupler = Invoke-RestMethod "$base/devices/Device/ethercatmaster" -Method POST -Headers $h -Body @"
@@ -219,3 +226,39 @@ Beispiel:
 ```
 /devices/Device/ethercatmaster/XB_EC_12/XF71/DI_Modul_8Ch
 ```
+
+Ohne Koppler entsprechend:
+```
+/devices/Device/ethercatmaster/{IOModul}
+```
+
+---
+
+## Topologie validieren
+
+`ExportEthercatConfigJob` ist zugleich **Validator** — er schlägt bei kaputter Topologie
+fehl. Er benötigt **beide** Parameter `filePath` (Ordner) **und** `fileName`; sonst:
+`Information 'fileName' missing.`
+
+Das Ergebnis enthält `<Slave>`-Knoten mit `Info.Name` / `Info.PhysAddr` — Slave-Anzahl und
+Adressbereich gegen die Erwartung prüfen.
+
+## Geräte im Repository suchen
+
+```powershell
+# Antwortfeld ist .installedDevices — NICHT .devices
+(Invoke-RestMethod "$base/device-repositories/System Repository").installedDevices
+```
+
+Gerätecache auf der Platte:
+```
+C:\ProgramData\Rexroth\IOE-V-{version}\0\Studio\Devices\{deviceType}\{id}\{encodedVersion}\
+```
+
+## Bekannte Fehler
+
+- `400 "A blocking operation is in progress"` → GUI ist beschäftigt; ~10 s warten und
+  erneut versuchen. Kein Fehler in der Anfrage.
+- Geräte deklarieren **keine erzwingbare Slot-Reihenfolge** (`DependOnSlot` ist
+  Boilerplate). Eine falsche Rail-Reihenfolge wird **stillschweigend akzeptiert** — siehe
+  `topology-from-bom.md`.
