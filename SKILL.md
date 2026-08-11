@@ -78,6 +78,7 @@ Use concrete playbooks under `recipes/` when available. For example:
 - `recipes/motion/simultaneous-axis-moves.md` — Mehrere Achsen gleichzeitig bewegen
 - `recipes/oscilloscope/setup-oscilloscope-instance.md` — Oszilloskop-Instanz einrichten und starten
 - `recipes/io-engineering/project-and-ethercat-topology.md` — IO Engineering Projekt anlegen und EtherCAT-Topologie mit ctrlX I/O aufbauen
+- `recipes/io-engineering/topology-from-bom.md` — Kunden-Stückliste → EtherCAT-Topologie; was aus einer BOM ableitbar ist und was nicht ("eine BOM sagt *was*, nie *wo*")
 - `recipes/plc/deploy-and-start.md` — PLC Build → Download → Start via Engineering REST API (vollständige Job-Sequenz, Ports, Troubleshooting)
 - `recipes/plc/axis-interface-motion.md` — AxisInterface (CXA_MotionInterface) ST-Muster: Init, Power, Move, Diagnose
 - `recipes/plc/axis-interface-velocity.md` — Direkte arAxisCtrl_gb/arAxisStatus_gb Velocity-Steuerung; Admin.Active Guard; Datalayer Symbols
