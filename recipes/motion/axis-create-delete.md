@@ -114,6 +114,11 @@ Invoke-RestMethod "$base/motion/axs/Axis_4" -Method DELETE -Headers $h
 - Browse `motion/axs?type=browse` → liefert Liste der angelegten Achsen (type: `arstring`). `GET motion/axs` ohne `?type=browse` → `DL_INVALID_ADDRESS`.
 - `cmd/set-pos` does not exist — but **`cmd/set-pos-abs` does** (`types/motion/axs/cmd/set-pos-abs`, "cmd to set absolute position"), as does `cmd/set-ipo-pos-from-act-pos`. The 2026-06-10 note "position reset node does not exist on standard axes" was wrong: only the guessed *name* was absent. Verified 2026-08-11.
 - **Before concluding a node does not exist, browse its parent** (`?type=browse`) and check the child list. Command nodes are create-only: a plain `GET` returns `501`, and `?type=metadata` is the correct existence check. Guessing paths instead of browsing produced three wrong entries in this skill.
+- **Axis config is not persisted by anything documented here.** Axes survive a
+  Configuration → Running cycle but are lost on reboot. `motion/admin/cfg/save` and
+  `make-persistent` exist but no working payload is known — see
+  `axis-config-persistence.md`.
+- Creating many axes in one pass works without delays (15 verified, 2026-08-11).
 - **PowerShell pitfall:** never name a helper function `Move` — it collides with the `Move-Item` alias and tries to move filesystem paths. Use `Send-Move` or similar.
 - **Axes must be powered off (DISABLED) before deleting them in Configuration mode.** If axes are STANDSTILL when you switch to SETUP, Motion silently stays in Running and DELETE returns `DL_INVALID_CONFIGURATION`.
 
