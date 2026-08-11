@@ -28,7 +28,10 @@ Expected: {"type":"object","value":{"state":"OPERATING"}}  or "SETUP"
 ## Notes
 - `motion/cmd/opstate` POST IS the correct Data Layer command (nodeClass=Program, operation=create)
 - Error `0xf010000c` = unrecognized opstate value; `0xf0100001` = valid value but transition blocked
-- **`motion/axs/{name}/cfg/ignore-axisprofile` does not exist** (`DL_INVALID_ADDRESS`). The existing node is `motion/axs/{name}/cfg/axisprofile` (type: `string`, default: `""`); there is no boolean ignore flag. On a virtual controller without configured drives, switching to Running after axis creation is not possible — Motion falls back from Booting to Configuration (verified 2026-06-12, ctrlX OS 4.6 virtual).
+- `scheduler/admin/state` and `motion/state/opstate` are **independent**. `PUT OPERATING` can return `200` while Motion stays in `Configuration` indefinitely — the `200` is not proof that Motion is running. Always read `motion/state/opstate` as well.
+- **`motion/state/boot-state`** → `{text, actStep, maxSteps}` (18 steps) shows exactly where Motion boot stopped. Step 5 = `"Wait for Scheduler callables (wait for RUN state)"` (scheduler still in SETUP), step 10 = `"Check for motion basic license"`, `18/18` = `"Booting finished"`. Read this before drawing any conclusion about a failed switch.
+- `POST motion/cmd/opstate {"type":"string","value":"Running"}` while Motion is in `Configuration` → `500`, `0xf0100001`. Command `"Booting"` instead — note it returns `200` even when the boot afterwards fails.
+- **A `DRIVEAXS` axis without a physical drive works on a virtual ctrlX CORE**: create → power ON → move, with `ignore-axisprofile = false` and without saving. Verified 2026-08-11, ctrlX OS 4.6 virtual.
 - The save command requires `phase:"SAVE"` in the body
 
 
