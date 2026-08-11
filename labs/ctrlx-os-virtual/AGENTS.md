@@ -32,9 +32,8 @@ cmd /c start chrome --new-window "https://127.0.0.1:8443"
 
 ## Motion auf virtueller Steuerung ohne physische Drives
 
-Auf einer virtuellen ctrlX CORE ohne konfigurierte Drives bleibt Motion im Zustand **Booting** (>60 s) und fällt danach zurück nach **Configuration**. Der Wechsel nach Running scheitert mit `0xf0100001`.
+Eine `DRIVEAXS`-Achse **ohne physischen Antrieb funktioniert** auf der virtuellen ctrlX CORE: anlegen → Power ON → verfahren. Kein Sonder-Flag nötig (`ignore-axisprofile = false`, ungespeichert). Verified: 2026-08-11, ctrlX OS 4.6 virtual.
 
-- Der DL-Knoten `motion/axs/{name}/cfg/ignore-axisprofile` existiert **nicht** (`DL_INVALID_ADDRESS`).
-- Der vorhandene Knoten lautet `motion/axs/{name}/cfg/axisprofile` (type: `string`, default: `""`).
-- Achsen können erstellt und konfiguriert werden (Properties + Limits OK), aber Motion lässt sich ohne Drive-Zuweisung nicht in Running schalten.
-- Verified: 2026-06-12, ctrlX OS 4.6 virtual.
+- Schlägt der Wechsel nach Running fehl, zuerst `motion/state/boot-state` lesen (18 Schritte, zeigt den genauen Abbruchpunkt) — nicht raten.
+- `scheduler/admin/state` und `motion/state/opstate` sind unabhängig: `OPERATING` heißt nicht, dass Motion läuft.
+- Das Flag `ignore-axisprofile` liegt unter `motion/axs/{name}/cfg/functions/`, **nicht** unter `cfg/`.
