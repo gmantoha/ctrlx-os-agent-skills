@@ -83,10 +83,16 @@ Prefer Unix sockets over TCP ports for app web services.
 
 Important details:
 
+- `services.proxyMapping.name` is a unique web-service identifier in
+  `<id>.<service>` form. It should start with the snap id; for one web server,
+  `<snap-name>.web` is the usual pattern. It does not have to equal the
+  `apps.<daemon>` key.
 - Package-manifest environment variables use `{$VAR}`, not `${VAR}`.
 - Unix socket paths are limited by the Linux socket path length, commonly 108 characters.
 - The app must create and remove its own socket file.
 - Restrict API routes that require authenticated access.
+- Keep the manifest binding, launcher socket path, and `package-run` source
+  directory identical after variable expansion.
 
 Expose the runtime socket directory with `package-run` when using Unix sockets:
 
