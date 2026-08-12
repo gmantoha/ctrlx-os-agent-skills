@@ -25,6 +25,7 @@ Use this repository's app-development notes as secondary guidance and offline fa
 
 - `reference/app-development/sources.md`
 - `reference/app-development/snap-packaging.md`
+- `reference/app-development/app-build-environment.md`
 - `reference/app-development/package-assets.md`
 - `reference/app-development/datalayer-apps.md`
 - `reference/app-development/troubleshooting.md`
@@ -42,5 +43,7 @@ Use this repository's app-development notes as secondary guidance and offline fa
 
 ## Useful Recipes
 
+- `recipes/app-build/profile-driven-hmi.md`
+- `recipes/app-build/ctrlx-snap-build-install-loop.md`
 - `recipes/app-build/minimal-web-app.md`
 - `recipes/app-build/datalayer-provider.md`

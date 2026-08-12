@@ -18,10 +18,12 @@ Check these first:
 3. Provide `configs/package-assets/<snap-name>.package-manifest.json`.
 4. Add the `configs` part and `package-assets` slot.
 5. Prefer a Unix socket reverse-proxy binding and expose it with `package-run`.
-6. Declare only the scopes the service enforces.
-7. Add menu entries only for UI entry points that should appear in ctrlX OS.
-8. Build and inspect snap contents before installation.
-9. On a real device, ask before installing or updating the app.
+6. Use a unique proxy mapping name in `<id>.<service>` form, commonly
+   `<snap-name>.web`; this is distinct from the daemon key under `apps`.
+7. Declare only the scopes the service enforces.
+8. Add menu entries only for UI entry points that should appear in ctrlX OS.
+9. Build and inspect snap contents before installation.
+10. On a real device, ask before installing or updating the app.
 
 ## Local References
 
@@ -39,3 +41,9 @@ python3 -m json.tool configs/package-assets/<snap-name>.package-manifest.json
 ```
 
 On the target, verify service state, Logbook entries, UI route, reverse-proxy route, and `snap connections <snap-name>`.
+
+For a development `.snap` installed through the Web UI, use **Settings ->
+Apps -> Service Mode -> Install from file**, enable unknown-source installs if
+required, and return to Operation Mode after installation. For an unavailable
+web page, inspect the installed package version, daemon logs, package-assets
+registration, proxy mapping, package-run connection, and socket path separately.
