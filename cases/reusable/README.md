@@ -8,3 +8,4 @@ Current migrated cases:
 - `vendorx-oom-crash/`
 - `mssql-snap/`
 - `plc-rest-req/`
+- `data-layer-axis-hmi/`
