@@ -1,7 +1,25 @@
-# ctrlX App Build Environment
+# ctrlX App Build Environments
 
-The ctrlX App Build Environment (ABE) is a Linux VM managed by ctrlX WORKS for
-building ctrlX snaps with the official SDK and Snapcraft tools.
+The official ctrlX App Build Environment (ABE) is a Linux VM managed by ctrlX
+WORKS for building ctrlX snaps with the official SDK and Snapcraft tools.
+
+## Choose the environment
+
+Prefer the ctrlX WORKS ABE when it is available and matches the target SDK and
+ctrlX OS release. It is the supported baseline used by the official SDK
+documentation and samples.
+
+The official SDK also documents standalone QEMU launchers for hosts without
+ctrlX WORKS. Use those version-matched scripts before third-party automation.
+The current official ABE itself is an Ubuntu Server QEMU VM provisioned with
+Cloud-Init, so QEMU and Cloud-Init alone do not distinguish an official ABE.
+
+Use a separately maintained VM only when the official options are unsuitable
+or a reproducible, self-contained Windows setup is a project requirement. The
+[Silas Windows/QEMU recipe](../../recipes/app-build/windows-qemu-sdk-vm.md)
+documents one public implementation example. It provisions an Ubuntu Minimal
+cloud image and installs the public SDK; its automation, sizing, networking,
+and security choices are not a Bosch compatibility statement or baseline.
 
 ## Role separation
 
@@ -42,6 +60,11 @@ base, and `platforms` declaration against the selected ctrlX OS release and
 closest official SDK sample. Use `--destructive-mode` only as a deliberate
 fallback outside the normal ABE build flow.
 
+Do not infer snap compatibility from the VM's Ubuntu release alone. `core22`
+and `core24` are snap bases, while Ubuntu 22.04 and 24.04 are possible build
+hosts. Verify the target ctrlX OS release, snap base, SDK revision, and sample
+together.
+
 ## File transfer
 
 From Windows, use the forwarded SSH endpoint to copy source into the ABE and
@@ -62,3 +85,8 @@ Before deployment, inspect:
 
 On the target, verify the installed version, service state, interface
 connections, Logbook or snap logs, and the expected UI/API route.
+
+For a custom VM, also record the base cloud-image release and checksum, the SDK
+commit or release, provisioning-script revision, Snapcraft version, and target
+architecture. A setup that downloads `main` or latest installers is convenient
+but not reproducible until those inputs are pinned.

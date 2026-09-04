@@ -34,13 +34,31 @@ Use this repository's app-development notes as secondary guidance and offline fa
 
 1. Identify language, runtime, architecture, and required ctrlX integration points.
 2. Check the live SDK docs and closest official SDK sample.
-3. Check local app-development notes for concise fallback and troubleshooting guidance.
-4. Check SDK and build dependency assumptions.
-5. Make the smallest build/package change that satisfies the goal.
-6. Build with the closest official sample's architecture script pattern,
-   preferably in the ctrlX App Build Environment.
-7. Deploy to a virtual target when possible before a real device.
-8. Verify service state, logs, UI/API entrypoints, interface connections, and Data Layer nodes if applicable.
+3. Select the build environment: prefer the matching ctrlX WORKS ABE; use the
+   official SDK standalone QEMU launcher when WORKS is unavailable; consider
+   the audited third-party implementation only when its tradeoffs are
+   acceptable.
+4. Check local app-development notes for concise fallback and troubleshooting guidance.
+5. Check SDK and build dependency assumptions.
+6. Make the smallest build/package change that satisfies the goal.
+7. Build with the closest official sample's architecture script pattern.
+8. Deploy to a virtual target when possible before a real device.
+9. Verify service state, logs, UI/API entrypoints, interface connections, and Data Layer nodes if applicable.
+
+## Environment Decision
+
+- **ctrlX WORKS ABE:** default for supported, release-aligned app builds.
+- **Official standalone QEMU ABE:** version-matched SDK fallback when ctrlX
+  WORKS is unavailable.
+- **Silas Windows/QEMU/Cloud-Init VM:** optional third-party implementation
+  example for a self-contained Windows host workflow. Read
+  `recipes/app-build/windows-qemu-sdk-vm.md` before use.
+- **Native or destructive build:** exception that must be justified and checked
+  against the official sample.
+
+Never treat a build host called "Core 22" or "Core 24" as proof that a snap
+targets `core22` or `core24`. Confirm the snap base and target ctrlX OS release
+independently.
 
 ## Build Preflight
 
@@ -68,5 +86,6 @@ virtual target before requesting a real-device installation.
 
 - `recipes/app-build/profile-driven-hmi.md`
 - `recipes/app-build/ctrlx-snap-build-install-loop.md`
+- `recipes/app-build/windows-qemu-sdk-vm.md`
 - `recipes/app-build/minimal-web-app.md`
 - `recipes/app-build/datalayer-provider.md`

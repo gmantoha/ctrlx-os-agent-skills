@@ -55,7 +55,9 @@ This repository is structured for three equal goals:
 
 For app development and snap packaging, start with `workflows/build-app.md`; it
 routes to the official-source checklist, App Build Environment guidance, and
-the app-build recipes.
+the app-build recipes. The supported ctrlX WORKS ABE remains the default; a
+reviewed third-party Windows/QEMU/Cloud-Init path is documented separately for
+projects that need that tradeoff.
 
 For Device Portal template or serial-commissioning work, start with
 `workflows/device-portal-templates.md`. It distinguishes complete-device
