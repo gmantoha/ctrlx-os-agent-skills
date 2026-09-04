@@ -53,6 +53,10 @@ This repository is structured for three equal goals:
 5. Use `labs/ctrlx-os-virtual/` when testing against a local virtual ctrlX OS.
 6. Store private customer work only in `customers/`.
 
+For app development and snap packaging, start with `workflows/build-app.md`; it
+routes to the official-source checklist, App Build Environment guidance, and
+the app-build recipes.
+
 For Device Portal template or serial-commissioning work, start with
 `workflows/device-portal-templates.md`. It distinguishes complete-device
 templates from true modular deployment and requires target-side verification.

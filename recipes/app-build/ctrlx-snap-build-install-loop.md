@@ -49,42 +49,46 @@ Snapcraft and Linux packaging; VS Code is not a substitute for the ABE.
 ## Build
 
 Confirm the version, target architecture, base, confinement, package-assets,
-and package-run declarations before starting. Build only the architectures
-that match the deployment targets:
+package-run, and `platforms` declarations before starting. Follow the official
+sample scripts: clean, then build only the architecture that matches the
+deployment target:
 
 ```bash
 cd ~/<app>
-snapcraft pack --build-for=amd64 --destructive-mode --verbosity=verbose
-snapcraft pack --build-for=arm64 --destructive-mode --verbosity=verbose
+snapcraft clean
+snapcraft pack --build-for=<amd64-or-arm64> --verbosity=verbose
 ```
 
 `amd64` is typical for an x86 virtual CORE; physical CORE hardware is commonly
-`arm64`. Verify the target rather than assuming. If switching architectures
-causes stale parts, clean the relevant Snapcraft parts before rebuilding.
+`arm64`. Verify the target rather than assuming. Run `snapcraft clean` before
+switching architectures. Use `--destructive-mode` only as a deliberate fallback
+outside the normal ABE build flow.
 
 After each build, inspect the package before installation:
 
 ```bash
-snap info ./<app>_1.0.0_amd64.snap
-unsquashfs -l ./<app>_1.0.0_amd64.snap
+snap info ./<app>_1.0.0_<target-architecture>.snap
+unsquashfs -l ./<app>_1.0.0_<target-architecture>.snap
 python3 -m json.tool configs/package-assets/<snap-name>.package-manifest.json
 ```
 
 Confirm the snap architecture, version, launcher, package manifest, web assets,
-and Unix-socket paths. Bump the application version for an update so the target
-does not confuse a new package with an already installed one.
+and Unix-socket paths. Increase the application version for each update, as
+required by the official app developer guideline.
 
 ## Web snap integration checks
 
 - The package manifest `id`, public URL, launcher, and socket path must agree.
-- `services.proxyMapping.name` is a unique web-service identifier in
-  `<id>.<service>` form, commonly `<snap-name>.web`; it does not have to equal
-  the `apps.<daemon>` key.
+- `services.proxyMapping.name` must be unique. Current official examples use
+  both the snap id and `<id>.<service>` forms; it does not have to equal the
+  `apps.<daemon>` key.
 - Package-manifest variables use `{$SNAP_DATA}`, not shell-style `${SNAP_DATA}`.
 - The launcher must create/remove the socket at the exact path published by the
   manifest and exposed through `package-run`.
 - Keep Unix socket paths below the Linux path-length limit.
 - Prefer the official package-assets schema for the target ctrlX OS release.
+- Attach `package-assets`, `package-run`, and any other required content
+  interfaces to the intended `apps.<name>` entry.
 
 ## Install and verify
 

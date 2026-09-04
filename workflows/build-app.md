@@ -37,9 +37,32 @@ Use this repository's app-development notes as secondary guidance and offline fa
 3. Check local app-development notes for concise fallback and troubleshooting guidance.
 4. Check SDK and build dependency assumptions.
 5. Make the smallest build/package change that satisfies the goal.
-6. Build locally or in the ctrlX App Build Environment.
+6. Build with the closest official sample's architecture script pattern,
+   preferably in the ctrlX App Build Environment.
 7. Deploy to a virtual target when possible before a real device.
 8. Verify service state, logs, UI/API entrypoints, interface connections, and Data Layer nodes if applicable.
+
+## Build Preflight
+
+Before building, verify these items together rather than treating packaging,
+architecture, and ctrlX integration as separate tasks:
+
+- The target ctrlX OS release, snap base, and target architecture agree with
+  the closest current SDK sample.
+- The `platforms` declaration and `--build-for` target agree. Build one required
+  architecture at a time and run `snapcraft clean` before changing targets.
+- Every required top-level plug or slot is attached to the intended
+  `apps.<name>` entry, and no unused interface is declared.
+- For current `core24` samples, use the Craft variables shown by that sample.
+  The current Python webserver sample uses `CRAFT_PROJECT_NAME`, while the
+  Package Assets guide still contains `SNAPCRAFT_PROJECT_NAME`; do not mix the
+  two forms in one project.
+- The package manifest `id`, packaged directory, proxy URL, socket binding, and
+  launcher socket path resolve consistently.
+
+After the build, inspect snap metadata and contents, validate the package
+manifest JSON, and verify interfaces and the expected route on a matching
+virtual target before requesting a real-device installation.
 
 ## Useful Recipes
 
