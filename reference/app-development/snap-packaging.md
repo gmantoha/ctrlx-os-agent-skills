@@ -97,6 +97,11 @@ This follows the official architecture build scripts: clean, then pack one
 target. Use `--destructive-mode` only deliberately outside the normal ABE
 flow; it builds directly on and can modify the host environment.
 
+Some CMake-based SDK projects instead select an architecture-specific
+`BUILD_KIT` before `make install`. Treat those wrappers as project-specific:
+use the exact toolchain name and generated build flow from the matching
+official sample rather than copying an AMD64 or ARM64 script from another app.
+
 ## Deployment Safety
 
 Installing, updating, removing, restarting, or reconfiguring apps on a real ctrlX device is a persistent change. Inspect first and ask for confirmation before changing the device.

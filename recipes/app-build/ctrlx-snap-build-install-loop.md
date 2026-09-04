@@ -24,6 +24,12 @@ The ABE is a Linux VM managed by ctrlX WORKS. It is the reproducible place for
 Snapcraft builds; it does not need to run when no build or SSH session is
 active.
 
+If a matching ctrlX WORKS ABE is unavailable and the project requires a
+self-contained Windows VM, use the version-matched standalone QEMU launchers
+from the official SDK first. If those are unsuitable, evaluate
+`recipes/app-build/windows-qemu-sdk-vm.md`; it is a third-party implementation
+example, not a drop-in replacement for the supported ABE.
+
 Use the official SDK setup for the selected SDK/OS version, then load the
 environment before building:
 
