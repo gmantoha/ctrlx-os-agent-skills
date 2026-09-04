@@ -33,7 +33,8 @@ Check these first:
 ## Verification
 
 ```bash
-snapcraft pack --build-for=amd64 --destructive-mode --verbosity=verbose
+snapcraft clean
+snapcraft pack --build-for=amd64 --verbosity=verbose
 snap connections <snap-name>
 sudo snap logs <snap-name> -n 100
 ```

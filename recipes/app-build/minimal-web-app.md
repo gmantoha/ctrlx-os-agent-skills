@@ -16,10 +16,12 @@ Check these first:
 1. Confirm the snap name and public URL path.
 2. Add only the needed app plugs, usually `network` and `network-bind`.
 3. Provide `configs/package-assets/<snap-name>.package-manifest.json`.
-4. Add the `configs` part and `package-assets` slot.
+4. Add the `configs` part and `package-assets` slot, then attach the slot to the
+   intended `apps.<name>` entry.
 5. Prefer a Unix socket reverse-proxy binding and expose it with `package-run`.
-6. Use a unique proxy mapping name in `<id>.<service>` form, commonly
-   `<snap-name>.web`; this is distinct from the daemon key under `apps`.
+6. Use a unique proxy mapping name. Current official examples use both the snap
+   id and `<id>.<service>` forms; this identifier is distinct from the daemon
+   key under `apps`.
 7. Declare only the scopes the service enforces.
 8. Add menu entries only for UI entry points that should appear in ctrlX OS.
 9. Build and inspect snap contents before installation.
@@ -34,7 +36,8 @@ Check these first:
 ## Verification
 
 ```bash
-snapcraft pack --build-for=amd64 --destructive-mode --verbosity=verbose
+snapcraft clean
+snapcraft pack --build-for=amd64 --verbosity=verbose
 snap info ./my-app_1.0.0_amd64.snap
 unsquashfs -l ./my-app_1.0.0_amd64.snap | grep package-assets
 python3 -m json.tool configs/package-assets/<snap-name>.package-manifest.json

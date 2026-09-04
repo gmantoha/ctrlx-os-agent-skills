@@ -13,7 +13,8 @@ Primary sources:
 
 1. Identify the app type: web UI, service, Data Layer client, Data Layer provider, or mixed app.
 2. Identify the target architecture: `amd64`, `arm64`, or both.
-3. Check the current SDK docs and closest official sample for the language/runtime.
+3. Check the current SDK docs and closest official sample for the
+   language/runtime, target base, and `platforms` declaration.
 4. Keep `snapcraft.yaml` minimal and add only interfaces that the app actually uses.
 5. Build in a ctrlX App Build Environment when available, or document why native/destructive builds are used.
 6. Verify snap metadata and contents before device installation.
@@ -28,6 +29,21 @@ grade: stable
 base: core24
 type: app
 ```
+
+The current SDK Python webserver sample uses `base: core24` and declares both
+targets explicitly:
+
+```yaml
+platforms:
+  amd64:
+  arm64:
+    build-on: [amd64, arm64]
+    build-for: [arm64]
+```
+
+Treat this as a current sample, not a universal compatibility promise. Match
+the base and platforms to the target ctrlX OS release and the selected SDK
+sample.
 
 For daemon services, define an app command and explicit plugs:
 
@@ -71,13 +87,15 @@ Language-specific SDK setup may also be required. Check the SDK `scripts/` direc
 Common local commands:
 
 ```bash
-snapcraft pack --build-for=amd64 --destructive-mode --verbosity=verbose
-snapcraft pack --build-for=arm64 --destructive-mode --verbosity=verbose
-snap info ./my-app_1.0.0_amd64.snap
-unsquashfs -l ./my-app_1.0.0_amd64.snap
+snapcraft clean
+snapcraft pack --build-for=<amd64-or-arm64> --verbosity=verbose
+snap info ./my-app_1.0.0_<target-architecture>.snap
+unsquashfs -l ./my-app_1.0.0_<target-architecture>.snap
 ```
 
-Use `--destructive-mode` deliberately. It is practical for local iteration, but the official SDK app build environment remains the preferred baseline when reproducing customer or release builds.
+This follows the official architecture build scripts: clean, then pack one
+target. Use `--destructive-mode` only deliberately outside the normal ABE
+flow; it builds directly on and can modify the host environment.
 
 ## Deployment Safety
 

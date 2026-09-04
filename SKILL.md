@@ -69,6 +69,8 @@ Use `workflows/contribute-skill.md` for installing/updating this skill (Pull), c
 Use concrete playbooks under `recipes/` when available. For example:
 - `recipes/app-build/profile-driven-hmi.md` — project-specific PLC discovery, mapping, diagnostics, Motion separation, and capability-aware UI gating
 - `recipes/app-build/ctrlx-snap-build-install-loop.md` — Windows source to ABE build, architecture selection, snap inspection, and virtual/real CORE installation
+- `recipes/app-build/minimal-web-app.md` — package-assets, reverse proxy, and web-snap verification
+- `recipes/app-build/datalayer-provider.md` — Data Layer provider design, packaging, and runtime checks
 - `recipes/vpn/route-through-plc.md` — VPN-Route durch ctrlX CORE zu PLC/SPS-Netz
 - `recipes/motion/axis-create-delete.md` — Axes anlegen, konfigurieren, löschen; posMax-Grenzen; Rotary Spindle (constant RPM)
 - `recipes/motion/axis-power-and-move.md` — Power ON/OFF (POST!), absolute move, unit table, polling

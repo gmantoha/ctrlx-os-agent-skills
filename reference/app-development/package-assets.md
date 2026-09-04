@@ -30,7 +30,7 @@ parts:
     plugin: dump
     source: ./configs
     organize:
-      'package-assets/*': package-assets/${SNAPCRAFT_PROJECT_NAME}/
+      'package-assets/*': package-assets/${CRAFT_PROJECT_NAME}/
 
 slots:
   package-assets:
@@ -38,8 +38,18 @@ slots:
     content: package-assets
     source:
       read:
-        - $SNAP/package-assets/${SNAPCRAFT_PROJECT_NAME}
+        - $SNAP/package-assets/${CRAFT_PROJECT_NAME}
+
+apps:
+  app:
+    slots:
+      - package-assets
 ```
+
+This matches the current `core24` Python webserver sample. The Package Assets
+guide also contains older examples using `SNAPCRAFT_PROJECT_NAME`; use the
+variable expected by the selected sample and Snapcraft version, and keep the
+organize destination and slot source identical.
 
 ## Common Manifest Capabilities
 
@@ -83,10 +93,9 @@ Prefer Unix sockets over TCP ports for app web services.
 
 Important details:
 
-- `services.proxyMapping.name` is a unique web-service identifier in
-  `<id>.<service>` form. It should start with the snap id; for one web server,
-  `<snap-name>.web` is the usual pattern. It does not have to equal the
-  `apps.<daemon>` key.
+- `services.proxyMapping.name` must be unique. Current official examples use
+  both the snap id and `<id>.<service>` forms, so do not derive it from the
+  `apps.<daemon>` key or impose one unsupported naming form.
 - Package-manifest environment variables use `{$VAR}`, not `${VAR}`.
 - Unix socket paths are limited by the Linux socket path length, commonly 108 characters.
 - The app must create and remove its own socket file.
@@ -103,7 +112,12 @@ slots:
     content: package-run
     source:
       write:
-        - $SNAP_DATA/package-run/${SNAPCRAFT_PROJECT_NAME}
+        - $SNAP_DATA/package-run/${CRAFT_PROJECT_NAME}
+
+apps:
+  app:
+    slots:
+      - package-run
 ```
 
 ## Minimal Manifest Shape

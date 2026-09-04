@@ -21,6 +21,10 @@ Use this page before making ctrlX app packaging, SDK, Data Layer, or package-man
 - Persisting Device Settings: https://boschrexroth.github.io/ctrlx-automation-sdk/4.6.0/persist-device-settings.html
 - License Management: https://boschrexroth.github.io/ctrlx-automation-sdk/4.6.0/licensing.html
 - Data Layer documentation: https://boschrexroth.github.io/ctrlx-automation-sdk/4.6.0/datalayer.html
+- Current Python webserver sample: https://github.com/boschrexroth/ctrlx-automation-sdk/tree/main/samples-python/webserver
+- Python webserver `snapcraft.yaml`: https://github.com/boschrexroth/ctrlx-automation-sdk/blob/main/samples-python/webserver/snap/snapcraft.yaml
+- Python webserver AMD64 build script: https://github.com/boschrexroth/ctrlx-automation-sdk/blob/main/samples-python/webserver/build-snap-amd64.sh
+- Python webserver ARM64 build script: https://github.com/boschrexroth/ctrlx-automation-sdk/blob/main/samples-python/webserver/build-snap-arm64.sh
 - Snapcraft YAML reference: https://snapcraft.io/docs/snapcraft-yaml-reference
 
 ## Local Fallback Scope

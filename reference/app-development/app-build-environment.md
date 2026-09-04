@@ -29,15 +29,18 @@ Before Snapcraft commands in a fresh shell:
 source /etc/environment
 ```
 
-For a typical `core24` app, the iterative build commands are:
+The current SDK sample scripts clean first and build one target architecture:
 
 ```bash
-snapcraft pack --build-for=amd64 --destructive-mode --verbosity=verbose
-snapcraft pack --build-for=arm64 --destructive-mode --verbosity=verbose
+snapcraft clean
+snapcraft pack --build-for=<amd64-or-arm64> --verbosity=verbose
 ```
 
 Choose the architecture from the target device. A virtual CORE is commonly
-`amd64`; physical CORE hardware is commonly `arm64`.
+`amd64`; physical CORE hardware is commonly `arm64`. Verify the target, snap
+base, and `platforms` declaration against the selected ctrlX OS release and
+closest official SDK sample. Use `--destructive-mode` only as a deliberate
+fallback outside the normal ABE build flow.
 
 ## File transfer
 
