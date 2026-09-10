@@ -9,3 +9,4 @@ Current migrated cases:
 - `mssql-snap/`
 - `plc-rest-req/`
 - `device-portal-template-granularity/`
+- `data-layer-axis-hmi/`
