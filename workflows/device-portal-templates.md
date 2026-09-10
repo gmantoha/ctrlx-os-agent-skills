@@ -1,55 +1,123 @@
 # Device Portal Templates and Serial Commissioning
 
-Use this workflow when an external commissioning tool must create or apply a
-ctrlX CORE template through the Device Portal public API. It covers both a
-complete-device template and modular deployment decisions.
+Use this workflow when a commissioning tool, a demo, or a customer answer
+involves creating or applying ctrlX CORE templates through the Device Portal
+public API ("Mass Rollout Templates"), or when a modular or serial commissioning
+of many ctrlX CORE devices has to be designed.
 
-## Scope and stability
+Read `reference/apps/device-portal/README.md` first. It holds the API contract,
+the Setup selection model, and the dated defect list. Do not call any cloud or
+device endpoint before you know which dialect and which envelope the current
+service accepts.
 
-Separate the two API surfaces:
+Concrete playbooks:
 
-- **Device Portal cloud API:** Keycloak client credentials plus the APIM
-  subscription key. Typical resources are `/devices/{id}`, `/tasks`, and
-  `/templates/{id}`.
-- **ctrlX CORE local API:** local Identity Manager token plus Setup API and
-  other device REST APIs. The CORE is the source of `setupInfo` when the cloud
-  setup-info endpoint is unavailable.
+- `recipes/device-portal/template-create-apply.md` — create, inspect, apply, poll
+- `recipes/device-portal/target-snapshot-and-recovery.md` — fingerprint the
+  target, recovery ZIP, restore the operating state after an apply
+- `recipes/device-portal/plc-bootproject-setup-zip.md` — PLC boot project as a
+  direct Setup ZIP module (the modular alternative to templates)
+- `cases/reusable/device-portal-template-granularity/CASE.md` — sanitized
+  evidence for the "app data is all-or-nothing" finding
 
-Use the current public OpenAPI/documentation first. If an endpoint is not in
-the released API description, label it as observed/unsupported and do not
-present it as a production guarantee.
+## What is verified (state 2026-09-09, QA environment)
+
+Tested with API credentials only on a ctrlX CORE X3 with ctrlX OS 4.6.x
+(Ubuntu Core 24, Setup/Solutions/PLC 4.6.2, Device Portal Agent 3.6.x).
+
+Works:
+
+- `CREATE_DEVICE_TEMPLATE` from an online device with the full setupinfo
+  dialect, including active app data (`configurations.active`).
+- `APPLY_DEVICE_TEMPLATE` with `restoreOptions: "MERGE"`. Apps missing on the
+  target are installed by the Setup app itself, including the SETUP → SERVICE
+  mode switch, without warnings.
+- Settings-only templates (for example network interface DNS, date/time) stack
+  additively in any order. They leave every active-data file hash and the PLC
+  cycle counter untouched. Reapplying such a layer is idempotent.
+- `GET /templates?accountId=…` (template list) and
+  `GET /devices/{id}/setup/setupinfo` (cloud copy of the device setupinfo)
+  work on QA. Earlier findings that they return 404/400 are outdated.
+
+Does not work or is limited:
+
+- **App data is all-or-nothing.** Any apply whose payload contains
+  `configurations.active` loads the complete active configuration on the
+  target: Node-RED flows are deleted, marker files in `node-RED/`, `datalayer/`
+  and `firewall/` are removed, every app directory contained in the archive
+  replaces the target directory, and the PLC cycle counter resets. This also
+  holds for a "PLC-only" template created on a device that never had Node-RED
+  installed. The support recipe "full template A, then PLC-only template B with
+  MERGE only overwrites PLC data" was tested on 2026-09-09 and is **not true**.
+- The stored template loses `configurations.active.$path`. A plain apply then
+  reports `DONE` but the Setup app logs `Writing configurations (skipped, no
+  changes)` and no app data is restored. The reference must be injected at
+  apply time.
+- Every `{"$content": "none"}` app entry produces schema warnings on the
+  device (about 45 per apply). The restore still succeeds.
+- An apply that installs an app leaves the device in SERVICE state. It does not
+  switch back to OPERATING.
+- Uninstalling an app (tested with Node-RED) does not remove its directory from
+  the active configuration. Later templates still pack it.
+- The WebUI "Save as template" dialog cannot include app data at all. Its "PLC"
+  checkbox transports the PLC app package, never the boot project.
+- The `$content` selector dialect of the Setup app is executed by the device
+  but the cloud task never leaves `RUNNING`. There is no public cancel.
+
+## Decision matrix
+
+| Requirement | Approach |
+|---|---|
+| One machine variant as a unit: apps plus all app data (PLC, Node-RED, firewall, Data Layer, scheduler) | Device Portal template with `configurations.active`, `$path` injected on apply, MERGE. Golden device per variant. |
+| Device settings modules: network, hostname, date/time, users, SSH, proxy, hosts, storage, licenses, app-management settings | One settings-only template per module, MERGE, any order. Send only the selected settings keys on apply. |
+| Install or update apps without touching app data | Template with the app entries and `configurations.active: {"$content":"none"}`; apply without a `configurations.active` key. Expected from the observed skip behavior, not separately verified. |
+| "Only the PLC boot project, nothing else touched" | Not achievable with templates. Use a direct CORE Setup ZIP with `mode=merge` (see the PLC recipe) and verify undeclared apps afterwards. |
+| Additive stacking of several app-data modules | Not supported by the platform. Combine the modules on the golden device and ship one app-data template. |
+
+Firewall rules, Node-RED flows, PLC boot project, Data Layer and scheduler
+settings are **app data** (`configurations/active/<app>/`). They are not
+selectable per app. Everything listed as "settings" above is a Setup category
+with `items` content and is selectable per key.
 
 ## Safety gate
 
 Before any real-device mutation:
 
 1. Identify source and target device IDs and confirm the target is disposable,
-   test, or explicitly approved for the operation.
-2. Record a target snapshot: device status, installed apps, active solution,
-   PLC project identity, and any application data whose preservation matters.
-3. Use `MERGE` for additive deployment. Do not use `OVERRIDE` for modular
-   commissioning unless replacement of the whole configuration is intended.
-4. Verify the result at the device, not only from the cloud task response.
-5. For production, make the commissioning tool fail closed on missing or
-   ambiguous verification. A cloud `DONE` state alone is insufficient.
+   a test device, or explicitly approved for the operation.
+2. Fingerprint the target and create a Setup recovery ZIP
+   (`recipes/device-portal/target-snapshot-and-recovery.md`). Download it.
+3. Use `MERGE` for additive deployment. Use `OVERRIDE` only when replacing the
+   whole configuration is intended.
+4. Verify the result on the device, not only from the cloud task. `DONE` is
+   returned even when app data was skipped.
+5. For production tooling, fail closed on a missing or ambiguous verification,
+   on `FAILED`, and on a timeout. A shell exit code of a helper script is not a
+   verification.
 
-Creating a template reads and uploads device data but is still a cloud-side
-operation. Applying a template is a persistent device change and requires
-confirmation under the general ctrlX safety policy.
+Creating a template reads and uploads device data (including app data and
+certificate metadata) to the cloud. Applying a template is a persistent device
+change and requires confirmation under the general ctrlX safety policy.
 
 ## Authentication: API credentials only
 
-Do not use browser session cookies for an automated commissioning workflow.
+Do not use browser session cookies for an automated workflow. The WebUI talks to
+a cookie-authenticated backend-for-frontend under `/api/v2/*`; that surface does
+not accept the service-account bearer token and is not part of the public API.
 
-1. Request a short-lived Keycloak access token using `grant_type=client_credentials`.
-2. Send the bearer token and APIM subscription key on every Device Portal call.
-3. Cache and reuse the token until shortly before expiry.
+1. Request a short-lived Keycloak access token with `grant_type=client_credentials`.
+2. Send `Authorization: Bearer <token>` and `Ocp-Apim-Subscription-Key: <key>` on
+   every Device Portal call.
+3. Cache and reuse the token until shortly before `expires_in`.
 4. Never log client secrets, subscription keys, passwords, or full bearer tokens.
-5. For the local CORE, request one local token and reuse it. The Identity Manager
-   has a finite per-user session limit; requesting one token per REST call can
-   exhaust the limit for hours.
-6. Do not store credentials in tracked files, task payload logs, screenshots,
-   browser local storage shared with other users, or support attachments.
+5. For the local CORE, request one Identity Manager token and reuse it, then
+   call `DELETE /identity-manager/api/v2/auth/token` when finished. The Identity
+   Manager enforces `maxSessionsPerUser` (100) with an 8 h session timeout and
+   no inactivity timeout. One token per REST call exhausts the limit and every
+   login then fails with `{"status":400,"dynamicDescription":"Too many sessions"}`
+   for up to 8 hours. Only restarting `rexroth-deviceadmin.web` cleared it.
+6. Keep credentials out of tracked files, task payload logs, screenshots,
+   browser storage, and support attachments.
 
 Use placeholders in examples:
 
@@ -62,189 +130,76 @@ DP_SUBSCRIPTION_KEY=<apim-subscription-key>
 DP_ACCOUNT_ID=<account-id>
 ```
 
-## Recommended complete-device flow
+## Standard flow
 
-This is the reliable demonstration path when the customer accepts an
-all-or-nothing restore:
+1. Confirm prerequisites: Device Portal Agent app installed on source and
+   target, both devices `ONLINE` in the account, premium API credentials
+   available, same hardware type code and OS generation on source and target.
+2. Prepare the golden (source) device completely: apps, licenses, PLC boot
+   project loaded and running, Node-RED flows deployed, firewall and other app
+   data as intended. Verify `Application.app` and `Application.crc` exist under
+   `configurations/active/plc/run/<arch>/data/`. A backup of a device without an
+   active PLC boot application contains neither file.
+3. Fingerprint the target and create the recovery ZIP.
+4. Read the source setupinfo (cloud endpoint, fallback CORE endpoint) and build
+   the template selection in the setupinfo dialect. Decide per template whether
+   it is an app-data template, a settings-only template, or an app-install
+   template. Never mix a settings module with `configurations.active`.
+5. Submit `CREATE_DEVICE_TEMPLATE`, poll to `DONE`, retrieve the template, and
+   inspect `configurations`: which apps carry `$path`, and whether
+   `configurations.active` is `{}`.
+6. Build the apply payload from the stored configurations. Inject
+   `configurations.active.$path` only for an app-data template. Submit
+   `APPLY_DEVICE_TEMPLATE` with `MERGE`, poll to `DONE` or `FAILED`.
+7. On the CORE, read the last Setup apply task protocol and check for
+   `Writing configurations - loading active configuration`, warnings, and
+   errors. Restore OPERATING state if the apply installed apps.
+8. Compare the target fingerprint before and after. Check the intended change
+   and every preservation invariant (unrelated app data hashes, package list,
+   PLC project and cycling, DNS, timezone).
+9. Run machine-specific fine tuning only after the template verification has
+   passed and keep those scripts separate from the template module.
+10. Report template ID, task IDs, final states, the Setup protocol lines, and
+    the fingerprint comparison. Remove IDs and credentials before sharing.
 
-1. Prepare the source CORE completely: required apps, licenses, PLC boot
-   project, Node-RED data, firewall/network settings, and any other intended
-   active configuration.
-2. Verify that the PLC boot artifacts are active. A typical real backup must
-   contain `Application.app` and the matching `Application.crc` under the PLC
-   active configuration. Do not infer this from the PLC app package alone.
-3. Read `GET /setup/api/v1/setupinfo` from the source CORE and preserve the
-   complete object. Do not replace complete app objects with `$content:none`.
-4. Submit `CREATE_DEVICE_TEMPLATE` through `POST /tasks` with that setupInfo
-   stringified in `parameters.setupInfo`.
-5. Poll `GET /tasks/{taskId}` until `DONE` or `FAILED`, with an application
-   timeout. Treat an unbounded `RUNNING` task as failure and stop automation.
-6. Retrieve `GET /templates/{templateId}` and inspect the stored
-   `configurations` string before applying it.
-7. If the portal has dropped the resource reference for active app data, add
-   the verified reference to the apply payload:
+## Payload rules that were learned the hard way
 
-```json
-{
-  "configurations": {
-    "active": { "$path": "configurations/active" }
-  }
-}
-```
-
-   Only do this when the archive layout and platform version have been tested.
-8. Submit `APPLY_DEVICE_TEMPLATE` with `restoreOptions: "MERGE"` and the
-   complete, reviewed `configurations` string. Poll the task to completion.
-9. Verify on the target: installed app set/versions, active solution, PLC
-   `Application.app` and `.crc`, PLC project identity/cycle activity, Node-RED
-   data, firewall/network state, and any intended system settings.
-10. Run machine-specific fine tuning only after the template verification has
-    passed. Keep the fine-tuning scripts separate from the immutable template
-    module.
-
-The full-device approach is appropriate for a prepared target of the same
-hardware/OS/app compatibility class. It is not a safe substitute for
-per-component deployment on a device containing unrelated live configuration.
-
-## Public task shapes
-
-Create:
-
-```json
-{
-  "taskType": "DEVICE_TASK",
-  "accountId": "<account-id>",
-  "action": "CREATE_DEVICE_TEMPLATE",
-  "parameters": {
-    "deviceId": "<source-device-id>",
-    "name": "<template-name>",
-    "version": "1",
-    "description": "<description>",
-    "setupInfo": "<stringified ctrlX setupInfo>"
-  }
-}
-```
-
-Apply:
-
-```json
-{
-  "taskType": "DEVICE_TASK",
-  "accountId": "<account-id>",
-  "action": "APPLY_DEVICE_TEMPLATE",
-  "parameters": {
-    "deviceId": "<target-device-id>",
-    "templateId": "<template-id>",
-    "restoreOptions": "MERGE",
-    "configurations": "<stringified reviewed template configurations>"
-  }
-}
-```
-
-Treat the exact field name (`taskType` versus examples that say `type`) as an
-environment-specific compatibility point. Confirm it against the live API
-contract before deployment.
-
-## Critical validation checks
-
-Before applying a template, inspect:
-
-- `packageManagement.installedApps`: every intended app has a compatible
-  version and a valid `$path` to an archive resource.
-- `configurations.active`: a non-empty or `$path`-referenced active
-  configuration is required to transport app data.
-- `certificateManagement`: do not copy device identity material between
-  devices unless that is an explicit, supported requirement. Device Portal
-  registration certificates and private keys normally belong to the target.
-- `deviceTypeCode`, OS, architecture, app versions, and licensing compatibility.
-- `configurations` payload size and encoding. Send JSON as UTF-8 or ASCII-safe
-  escaped JSON with the exact `application/json` media type accepted by the
-  gateway.
-
-After applying, inspect the CORE Setup task protocol. These messages are useful:
-
-- `Writing configurations - loading active configuration`: app data was loaded.
-- `Writing configurations (skipped, no changes)`: app data was not applied.
-- `Updating apps finished`: package processing completed, not necessarily that
-  the PLC program was loaded.
-- schema warnings: investigate them; do not treat task `DONE` as proof of clean
-  restore.
-
-## Known failure modes and workarounds
-
-### Cloud setupInfo endpoint returns 400
-
-If `GET /devices/{deviceId}/setup/setupinfo` returns HTTP 400 with an empty body,
-verify the device is online and then read the source object directly from the
-CORE with `/setup/api/v1/setupinfo`. Record this as a portal defect, not as
-successfully retrieved cloud data.
-
-### `$content` selector tasks remain RUNNING
-
-The CORE Setup API supports `$content` selection markers, but a Device Portal
-template task may accept a selector-style payload, process it on the device,
-and remain `RUNNING` indefinitely. Do not use the compact selector dialect for
-production automation until the cloud service validates it and returns a
-bounded result. Prefer a full setupInfo object with unwanted components removed
-only when that exact dialect is confirmed by the portal contract.
-
-### Stored template loses active-data `$path`
-
-The uploaded archive can contain `configurations/active/**` while the stored
-template JSON says only `"active": {}`. The apply operation then reports success
-but skips app data. Verify the archive or CORE protocol and inject the known
-`configurations/active` `$path` at apply time only after testing the target
-platform. Report this as a portal defect because the cloud should preserve the
-resource reference.
-
-### `configurations` is required on apply
-
-Some service versions reject an apply request without `parameters.configurations`
-even when documentation describes it as optional. Retrieve and pass the stored
-configuration explicitly, then verify the live schema/documentation before
-depending on this workaround.
-
-### Active app data is all-or-nothing
-
-`configurations.active` generally represents the complete active solution tree.
-Narrowing it to a child such as `configurations.active.plc` may be ignored and
-can cause Node-RED, firewall, Data Layer, scheduler, and other data to be
-transported as well. If the requirement is genuinely "PLC only", use a direct
-CORE Setup ZIP with `mode=merge` or another supported per-app mechanism instead
-of claiming that a whole active configuration is modular.
-
-An archived configuration containing only PLC data can be a useful experiment,
-but loading it may rebuild the solution store and drop metadata or data for
-undeclared apps. Treat it as a lab workaround, not a production-safe pattern,
-unless the platform owner confirms its semantics.
-
-## Production architecture decision
-
-Choose explicitly:
-
-**Complete-device module:** Device Portal template with full active configuration.
-Use for a known-compatible, prepared target when subsequent scripts will perform
-the machine-specific tuning. Verify the complete result before tuning.
-
-**True modular deployment:** build and validate small CORE Setup ZIPs and apply
-them directly to the target via the CORE Setup API with `mode=merge`, using the
-Device Portal only for reachability if needed. This gives better control over
-PLC-only changes and avoids cloud template resource-reference defects.
-
-Do not mix these models silently. A template that contains full active app data
-is not an additive per-app module merely because the API task uses `MERGE`.
+- Envelope: `{"type": "DEVICE_TASK", "accountId": "...", "action": ..., "parameters": {...}}`.
+  The older `taskType` key is rejected since September 2026 with
+  `The action must be APPLY_DEVICE_TEMPLATE or CREATE_DEVICE_TEMPLATE and type must be DEVICE_TASK`.
+  The documented envelope includes `accountId`; requests without it were also
+  accepted.
+- `parameters.setupInfo` and `parameters.configurations` are JSON **strings**.
+  Serialize the object once, then let the HTTP client serialize the outer body.
+  Do not copy escaped snippets from the PDFs; several are truncated or malformed.
+- `restoreOptions` is plural. The prose in the design document uses the
+  singular; the singular is wrong in a payload.
+- `parameters.configurations` is mandatory on apply in practice (HTTP 400
+  `The Configurations field is required.`), even though the How-To marks it
+  optional.
+- `version` is documented as a number; the string `"1"` was also accepted.
+- `schedule.start` (ISO timestamp) schedules the task; omit it to run now.
+- Exclude apps on create with `{"$content": "none"}`. Include app data with
+  `"configurations": {"active": {}}`. Never use `"$content": "items"` or
+  `"$content": "files"` in a portal payload.
+- A restore from another device always logs two `certificateManagement` errors
+  about `device.crt` and `device.hsm` deletion. The design document treats the
+  restore as successful in that case. Do not copy device identity material
+  between devices on purpose; leave `certificateManagement` out of templates.
 
 ## Evidence to retain
 
 For each production test, retain sanitized records of:
 
-- source/target compatibility metadata and timestamps;
+- source/target compatibility metadata (`deviceTypeCode`, `compatibleOs`, app
+  versions) and timestamps;
 - template ID, create/apply task IDs, and final states;
-- hash/size or presence checks for critical artifacts such as
-  `Application.app` and `Application.crc`;
-- pre/post app list and active-configuration manifest;
+- hash or size checks for `Application.app` and `Application.crc`;
+- pre/post app list, active-configuration file hashes, and
+  `configuration.json` app list;
 - CORE Setup task protocol and portal responses;
-- the exact configuration version and assumptions used.
+- the exact selection and apply payloads (with IDs replaced).
 
-Remove tokens, passwords, private keys, customer identifiers, internal IPs, and
-raw setup exports before adding evidence to this skill or a shared case.
+Remove tokens, passwords, private keys, account and device IDs, customer
+names, internal IPs, and raw setup exports before adding evidence to this
+skill or a shared case.
