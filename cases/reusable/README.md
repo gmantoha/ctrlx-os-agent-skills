@@ -8,4 +8,5 @@ Current migrated cases:
 - `linck-oom-crash/`
 - `mssql-snap/`
 - `plc-rest-req/`
+- `device-portal-template-granularity/`
 - `data-layer-axis-hmi/`
