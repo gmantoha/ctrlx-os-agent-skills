@@ -8,3 +8,4 @@ Current migrated cases:
 - `vendorx-oom-crash/`
 - `mssql-snap/`
 - `plc-rest-req/`
+- `device-portal-template-granularity/`
