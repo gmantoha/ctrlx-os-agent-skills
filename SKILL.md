@@ -44,7 +44,7 @@ Use `workflows/build-app.md` for snap packaging, app development, SDK usage, Dat
 
 Use `workflows/use-rest-api.md` for external automation, browser/client integration, and documented REST endpoints.
 
-Use `workflows/device-portal-templates.md` for Device Portal API template creation/application, full-device restore demonstrations, and serial commissioning design.
+Use `workflows/device-portal-templates.md` for Device Portal API template creation/application, template stacking decisions (settings modules versus all-or-nothing app data), full-device restore demonstrations, and serial commissioning design.
 
 Use `workflows/use-datalayer.md` for on-device IPC, PLC-to-service communication, Data Layer reads/writes/calls, and node schema questions.
 
@@ -85,6 +85,9 @@ Use concrete playbooks under `recipes/` when available. For example:
 - `recipes/plc/real-device-ports.md` — Ports real vs. virtuell (httpsPort 443/8443, plcPort 11740/8740); nodeUrl-Format; Auth-Session-Limit
 - `recipes/plc/create-pou-gvl.md` — POUs und GVLs per REST API anlegen und aktualisieren
 - `recipes/plc/engineering-scripting.md` — CODESYSScript (Verfügbarkeit prüfen!) vs. REST API
+- `recipes/device-portal/template-create-apply.md` — Device Portal Template per Public API erstellen/prüfen/anwenden (`type`-Envelope, `$path`-Injektion, Polling)
+- `recipes/device-portal/target-snapshot-and-recovery.md` — Ziel-Fingerprint, Setup-Recovery-ZIP, OPERATING nach Template-Apply wiederherstellen
+- `recipes/device-portal/plc-bootproject-setup-zip.md` — PLC-Bootprojekt als direktes Setup-ZIP-Modul (`mode=merge`), wenn Templates zu grob sind
 
 ## Motion Task — Standard Sequence
 

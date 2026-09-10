@@ -56,6 +56,7 @@ This repository is structured for three equal goals:
 For Device Portal template or serial-commissioning work, start with
 `workflows/device-portal-templates.md`. It distinguishes complete-device
 templates from true modular deployment and requires target-side verification.
+Concrete request sequences and the recovery procedure are in `recipes/device-portal/`.
 
 ## Install
 
