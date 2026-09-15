@@ -19,7 +19,9 @@ or a reproducible, self-contained Windows setup is a project requirement. The
 [Silas Windows/QEMU recipe](../../recipes/app-build/windows-qemu-sdk-vm.md)
 documents one public implementation example. It provisions an Ubuntu Minimal
 cloud image and installs the public SDK; its automation, sizing, networking,
-and security choices are not a Bosch compatibility statement or baseline.
+and security choices are not a Bosch compatibility statement or baseline. Its
+app-build source is preserved locally under
+`reference/app-development/upstream/silas-sdk-vm/`.
 
 ## Role separation
 

@@ -1,0 +1,145 @@
+%%{init: {
+    "theme": "base",
+    "themeVariables": {
+        "fontFamily": "Segoe UI, Arial, sans-serif",
+        "fontSize": "14px",
+        "primaryColor": "#eef7ff",
+        "primaryBorderColor": "#2f80ed",
+        "primaryTextColor": "#0f172a",
+        "secondaryColor": "#f3fbf6",
+        "secondaryBorderColor": "#2d9d78",
+        "secondaryTextColor": "#0f172a",
+        "tertiaryColor": "#fff8e8",
+        "tertiaryBorderColor": "#d58a00",
+        "tertiaryTextColor": "#0f172a",
+        "lineColor": "#4b5563",
+        "background": "#ffffff",
+        "htmlLabels": false,
+        "clusterBkg": "#ffffff",
+        "clusterBorder": "#64748b"
+    },
+    "flowchart": {
+        "useMaxWidth": true,
+        "htmlLabels": false,
+        "nodeSpacing": 28,
+        "rankSpacing": 58,
+        "padding": 12,
+        "curve": "basis"
+    }
+}}%%
+flowchart TD
+    Start([Start install_sdk.bat]) --> Init["UTF-8, Farbcodes und Projektpfad setzen<br>install_debug.log zuruecksetzen"]
+    Init --> Arg{"Start mit<br>-install?"}
+
+    Arg -- Nein --> CheckDeps[":CHECK_ALL_DEPS<br>QEMU, VS Code und Extensions pruefen"]
+    CheckDeps --> Missing{"Fehlende<br>Abhaengigkeiten?"}
+    Missing -- Nein --> MainMenu
+    Missing -- Ja --> RequestAdmin[":REQUEST_ADMIN<br>Fehlende Komponenten anzeigen"]
+    RequestAdmin --> Elevate["PowerShell startet das Skript<br>mit Administratorrechten"]
+    Elevate --> ExitOld([Altes Fenster beendet])
+
+    Arg -- Ja --> InstallDeps[":INSTALL_DEPS<br>Installationsargumente auswerten"]
+    InstallDeps --> InstallVS{"-install-vscode?"}
+    InstallVS -- Ja --> VSCode["VS Code herunterladen<br>und silent installieren"]
+    InstallVS -- Nein --> InstallExt
+    VSCode --> InstallExt{"-install-extensions?"}
+    InstallExt -- Ja --> HostExt["Fehlende Windows-Extensions installieren<br>Remote-SSH, C/C++, Python, Java, Go usw."]
+    InstallExt -- Nein --> InstallQemu
+    HostExt --> InstallQemu{"-install-qemu?"}
+    InstallQemu -- Ja --> QemuInstall["QEMU-Installer herunterladen<br>und in Projekt/qemu installieren"]
+    InstallQemu -- Nein --> MainMenu
+    QemuInstall --> MainMenu
+
+    subgraph Menu["Hauptmenue :MAIN_MENU"]
+        direction TB
+        MainMenu["VM-Status anzeigen<br>Core 22/Core 24 und QEMU"] --> Action{"Aktion waehlen"}
+        Action -- "1: Vorhandene VM starten" --> StartChoice
+        Action -- "2: Neue VM einrichten" --> VersionChoice
+        Action -- "3: Beenden" --> Exit([Skript beendet])
+    end
+
+    subgraph Existing["Option 1: vorhandene VM starten"]
+        direction TB
+        StartChoice["Core 22 oder Core 24 waehlen"] --> ExistingCheck{"Passende .qcow2<br>vorhanden?"}
+        ExistingCheck -- Nein --> ExistingError["Fehler anzeigen<br>zurueck zum Hauptmenue"] --> MainMenu
+        ExistingCheck -- Ja --> SetExisting["CORE_VER setzen"]
+    end
+
+    subgraph NewVm["Option 2: neue VM einrichten"]
+        direction TB
+        VersionChoice["ctrlX OS Ziel waehlen:<br>1.xx -> Core 22 Fallback<br>2.xx/3.xx -> Core 22<br>4.xx -> Core 24"] --> SetVersion["CORE_VER und DOWNLOAD_TARGET=VM setzen"]
+        SetVersion --> ProxyChoice["Arbeitsumgebung waehlen"]
+        ProxyChoice --> ProxyType{"Proxy-Modus?"}
+        ProxyType -- Bosch --> BoschProxy["RB Local Proxy Manager bestaetigen<br>PROXY_URL=127.0.0.1:3128"]
+        ProxyType -- Firmen-Proxy --> CompanyProxy{"proxy.env<br>vorhanden?"}
+        CompanyProxy -- Nein --> ProxyError["proxy.env Vorlage erzeugen<br>Abbruch zum Hauptmenue"] --> MainMenu
+        CompanyProxy -- Ja --> CntlM["CNTLM-Proxy konfigurieren und starten<br>lokalen Endpoint bereitstellen"]
+        CntlM --> LoadProxy["proxy.env laden<br>PROXY_URL auf CNTLM setzen"]
+        ProxyType -- Direkt --> Direct["Direkte Internetverbindung"]
+        BoschProxy --> DownloadVm
+        LoadProxy --> DownloadVm
+        Direct --> DownloadVm
+    end
+
+    subgraph Provision["VM-Download und Provisionierung :DOWNLOAD_VM"]
+        direction TB
+        DownloadVm["Ubuntu Minimal Cloud-Image<br>fuer Core 22 oder Core 24 herunterladen"] --> PrepareSSH["SSH-Schluessel erzeugen oder wiederverwenden<br>Windows-SSH-Alias ctrlx-sdk-vm konfigurieren"]
+        PrepareSSH --> Cidata["instances/cidata erzeugen:<br>meta-data, user-data, network-config"]
+        Cidata --> SetupScript["setup-sdk.sh generieren:<br>Proxy, serielle Konsole, LXD,<br>APT-Architekturen und SDK-Installation"]
+        SetupScript --> IsoTool{"mkisofs.exe<br>vorhanden?"}
+        IsoTool -- Nein --> DownloadIsoTool["mkisofs.exe herunterladen"]
+        IsoTool -- Ja --> GenerateIso
+        DownloadIsoTool --> GenerateIso["seed.iso als NoCloud-CIDATA-ISO erzeugen"]
+        GenerateIso --> ValidateIso["ISO und CIDATA-Dateien pruefen"]
+        ValidateIso --> Valid{"seed.iso<br>gueltig?"}
+        Valid -- Nein --> IsoError["Fehler anzeigen<br>zurueck zum Hauptmenue"] --> MainMenu
+        Valid -- Ja --> StartPrompt["Setup erfolgreich<br>Taste zum Starten der VM"]
+    end
+
+    SetExisting --> StartQemu
+    StartPrompt --> StartQemu
+
+    subgraph Runtime["QEMU-Ausfuehrung :START_QEMU_VM"]
+        direction TB
+        StartQemu["Startvorbereitung anzeigen<br>Port 11022 -> VM:22"] --> SeedCheck{"seed.iso<br>vorhanden?"}
+        SeedCheck -- Nein --> CidataCheck{"CIDATA/user-data<br>vorhanden?"}
+        CidataCheck -- Nein --> MissingCidata["Cloud-init fehlt<br>zurueck zum Hauptmenue"] --> MainMenu
+        CidataCheck -- Ja --> GenerateIso
+        SeedCheck -- Ja --> Resize["VM-Image auf mindestens 60 GB erweitern"]
+        Resize --> RunQemu["QEMU headless starten:<br>WHPX, 16 GB RAM, 12 CPUs,<br>VirtIO, NoCloud-ISO, serielle Konsole"]
+        RunQemu --> QemuStarted{"QEMU gestartet?"}
+        QemuStarted -- Nein --> QemuError["qemu_error.log pruefen<br>zurueck zum Hauptmenue"] --> MainMenu
+        QemuStarted -- Ja --> WaitReady
+    end
+
+    subgraph Remote["Bereitschaft und VS-Code-Remote-SSH"]
+        direction TB
+        WaitReady["Auf SSH und<br>cloud-init boot-finished warten"] --> OpenSSH{"OpenSSH vorhanden<br>und VM bereit?"}
+        OpenSSH -- Nein/Timeout --> AutoConnectWarning["Warnung ausgeben<br>manuelle Verbindung spaeter moeglich"] --> Monitor
+        OpenSSH -- Ja --> OpenCode["VS Code Remote-SSH fuer<br>ctrlx-sdk-vm /home/boschrexroth oeffnen"]
+        OpenCode --> ExtensionCheck{"VS Code und<br>Remote-SSH vorhanden?"}
+        ExtensionCheck -- Nein --> SkipExtensions["Auto-Connect/Extensions ueberspringen"] --> Monitor
+        ExtensionCheck -- Ja --> ServerWait["Auf VS-Code-Server warten"]
+        ServerWait --> ServerReady{"Code-Server<br>bereit?"}
+        ServerReady -- Nein/Timeout --> ServerWarning["Warnung in install_debug.log<br>manuelle Verbindung erforderlich"] --> Monitor
+        ServerReady -- Ja --> ResizeRoot["Root-Dateisystem mit<br>growpart und resize2fs erweitern"]
+        ResizeRoot --> InstallVmExt["Extensions sequenziell<br>im Remote Extension Host installieren"]
+        InstallVmExt --> ExtResult{"Installation<br>erfolgreich?"}
+        ExtResult -- Nein --> ExtError["Warnung und install_debug.log"] --> Monitor
+        ExtResult -- Ja --> Connected["VM ist in VS Code<br>als ctrlx-sdk-vm verbunden"] --> Monitor
+    end
+
+    Monitor["VM-Monitor: SSH-Verbindung pruefen"] --> Shutdown{"SSH-Verbindung<br>geschlossen?"}
+    Shutdown -- Nein --> Monitor
+    Shutdown -- Ja --> MainMenu
+
+    style Menu fill:#ffe4e4,stroke:#c62828,stroke-width:3px,color:#7f1d1d
+    style Existing fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style StartChoice fill:#eef7ff,stroke:#1976d2,stroke-width:1px,color:#0f172a
+    style ExistingCheck fill:#eef7ff,stroke:#1976d2,stroke-width:1px,color:#0f172a
+    style ExistingError fill:#eef7ff,stroke:#1976d2,stroke-width:1px,color:#0f172a
+    style SetExisting fill:#eef7ff,stroke:#1976d2,stroke-width:1px,color:#0f172a
+    style NewVm fill:#fce4ec,stroke:#ad1457,stroke-width:2px,color:#880e4f
+    style Provision fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#1b5e20
+    style Runtime fill:#e0f7fa,stroke:#00838f,stroke-width:2px,color:#006064
+    style Remote fill:#fff8e1,stroke:#f9a825,stroke-width:2px,color:#6d4c00

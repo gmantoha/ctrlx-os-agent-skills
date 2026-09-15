@@ -57,7 +57,9 @@ For app development and snap packaging, start with `workflows/build-app.md`; it
 routes to the official-source checklist, App Build Environment guidance, and
 the app-build recipes. The supported ctrlX WORKS ABE remains the default; a
 reviewed third-party Windows/QEMU/Cloud-Init path is documented separately for
-projects that need that tradeoff.
+projects that need that tradeoff. Its deletion-risk app-build source subset is
+preserved with provenance and license under
+`reference/app-development/upstream/silas-sdk-vm/`.
 
 For Device Portal template or serial-commissioning work, start with
 `workflows/device-portal-templates.md`. It distinguishes complete-device

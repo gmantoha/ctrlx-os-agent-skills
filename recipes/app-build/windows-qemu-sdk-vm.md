@@ -11,12 +11,14 @@ a supported ABE replacement.
 - Repository:
   https://github.com/vitalisAutomation/kuschke-silas-bachelor-thesis
 - Revision:
-  [`24ebf1290231005bf77eca3e6dda470a6157e2ed`](https://github.com/vitalisAutomation/kuschke-silas-bachelor-thesis/tree/24ebf1290231005bf77eca3e6dda470a6157e2ed),
-  authored and committed 2026-08-26T11:55:33+02:00
+  [`41927dc373366abb478a6b3fc1ccdb8c4ed72751`](https://github.com/vitalisAutomation/kuschke-silas-bachelor-thesis/tree/41927dc373366abb478a6b3fc1ccdb8c4ed72751),
+  authored and committed 2026-09-15T08:08:46+02:00
 - Entry point:
-  [`sdk-vm-automation/install_sdk.bat`](https://github.com/vitalisAutomation/kuschke-silas-bachelor-thesis/blob/24ebf1290231005bf77eca3e6dda470a6157e2ed/sdk-vm-automation/install_sdk.bat)
-- License: MIT; link to the upstream files rather than vendoring the
-  implementation.
+  [`sdk-vm-automation/install_sdk.bat`](../../reference/app-development/upstream/silas-sdk-vm/sdk-vm-automation/install_sdk.bat)
+- Preserved source and provenance:
+  [`reference/app-development/upstream/silas-sdk-vm/`](../../reference/app-development/upstream/silas-sdk-vm/README.md)
+- License: MIT. Only the app-build subset is preserved; binaries, generated
+  files, device automation, and unrelated application code are excluded.
 
 ## What the example automates
 
@@ -62,11 +64,14 @@ Do not run the audited batch file unchanged in a trusted environment. At the
 recorded revision it:
 
 - downloads mutable or unpinned installers, cloud images, and the SDK `main`
-  branch without a complete checksum/pinning policy;
+  branch without a complete checksum/pinning policy, and also clones the ctrlX
+  skill default branch during provisioning;
 - uses `curl -k`, `wget --no-check-certificate`, and disables Git TLS
   verification during provisioning;
 - creates a known VM password, enables SSH password authentication,
   configures passwordless sudo, and disables SSH host-key checking;
+- accepts a Bosch password for CNTLM and expands its Base64 representation into
+  generated Cloud-Init data before deriving a hash in the guest;
 - writes generated keys, Cloud-Init data, VM images, logs, and optional
   `proxy.env` data below or beside the project directory;
 - assumes admin rights for missing host dependencies and project-local QEMU;
@@ -80,6 +85,8 @@ artifacts are ignored. Review every generated Cloud-Init file before boot.
 
 Never copy VM images, `seed.iso`, private/public keys, proxy data, generated
 snaps, certificates, logs, or developer-specific paths into this skill.
+Treat generated Cloud-Init `user-data` as credential-bearing when the CNTLM
+path is selected.
 
 ## Build and verify
 

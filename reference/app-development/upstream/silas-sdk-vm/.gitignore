@@ -1,0 +1,20 @@
+# Generated VM and provisioning state
+instances/
+qemu/
+proxy.env
+install_debug.log
+qemu_error.log
+id_rsa_ctrlx.pub
+
+# Downloaded installers, images, packages, keys, and certificates
+*.exe
+*.img
+*.iso
+*.qcow2
+*.snap
+*.key
+*.pem
+*.crt
+*.cer
+*.pfx
+*.p12

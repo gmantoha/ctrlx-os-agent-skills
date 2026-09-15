@@ -71,17 +71,19 @@ Avoid fallback-only assumptions for:
 The following third-party repository is useful as an implementation study, not
 as product authority:
 
-- Silas Kuschke bachelor-thesis repository, audited revision
-  [`24ebf1290231005bf77eca3e6dda470a6157e2ed`](https://github.com/vitalisAutomation/kuschke-silas-bachelor-thesis/tree/24ebf1290231005bf77eca3e6dda470a6157e2ed)
-  (2026-08-26), MIT licensed.
+- Silas Kuschke bachelor-thesis repository, preserved revision
+  [`41927dc373366abb478a6b3fc1ccdb8c4ed72751`](https://github.com/vitalisAutomation/kuschke-silas-bachelor-thesis/tree/41927dc373366abb478a6b3fc1ccdb8c4ed72751)
+  (2026-09-15), MIT licensed.
+- Local source snapshot:
+  [`upstream/silas-sdk-vm/`](upstream/silas-sdk-vm/README.md).
 - Windows VM entry point:
-  [`sdk-vm-automation/install_sdk.bat`](https://github.com/vitalisAutomation/kuschke-silas-bachelor-thesis/blob/24ebf1290231005bf77eca3e6dda470a6157e2ed/sdk-vm-automation/install_sdk.bat).
+  [`sdk-vm-automation/install_sdk.bat`](upstream/silas-sdk-vm/sdk-vm-automation/install_sdk.bat).
 - Architecture wrappers:
-  [`build-snap-amd64.sh`](https://github.com/vitalisAutomation/kuschke-silas-bachelor-thesis/blob/24ebf1290231005bf77eca3e6dda470a6157e2ed/build-snap-amd64.sh)
+  [`build-snap-amd64.sh`](upstream/silas-sdk-vm/build-snap-amd64.sh)
   and
-  [`build-snap-arm64.sh`](https://github.com/vitalisAutomation/kuschke-silas-bachelor-thesis/blob/24ebf1290231005bf77eca3e6dda470a6157e2ed/build-snap-arm64.sh).
+  [`build-snap-arm64.sh`](upstream/silas-sdk-vm/build-snap-arm64.sh).
 - Upstream license:
-  [`LICENSE`](https://github.com/vitalisAutomation/kuschke-silas-bachelor-thesis/blob/24ebf1290231005bf77eca3e6dda470a6157e2ed/LICENSE).
+  [`LICENSE`](upstream/silas-sdk-vm/LICENSE).
 
 Before reusing a third-party setup, verify it against the current official SDK:
 
