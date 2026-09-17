@@ -32,3 +32,6 @@ credentials.local/
 *.zip
 
 aiUserPasswort
+
+__pycache__/
+*.pyc
