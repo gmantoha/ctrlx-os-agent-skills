@@ -48,7 +48,7 @@ Ein Restore setzt das Gerät auf Werkseinstellungen. Nur „Gerät war kurz weg"
 |---|---|---|
 | Vorher gesetzte statische IP | weg (DHCP) | noch da |
 | Offline-Dauer | deutlich länger, mehrere Reboots | ~1 min |
-| Login mit Default-Passwort | Passwortänderung erzwungen | normal |
+| Login mit Default-Passwort | ggf. Passwortänderung erzwungen (nicht verifiziert) | normal |
 | Versionen in `GET /package-manager/api/v1/packages` | = Image-Version | unverändert |
 
 Monitoring vom Laptop (ohne Login): Link-Carrier, `ping -6 fe80::…%if` (bleibt über Restore gleich),

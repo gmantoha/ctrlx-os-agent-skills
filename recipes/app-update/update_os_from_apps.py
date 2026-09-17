@@ -16,7 +16,7 @@ Design rules (each one learned the hard way):
   * Before every step wait until GET /tasks has no pending/running task (never double-upload).
   * The Location header of POST /packages is RELATIVE ("/tasks/<id>"); POST /tasks returns the full path.
   * Completion = installed release.version == target version (task state may be null / stale).
-  * Connection loss = reboot -> keep waiting (up to 40 min), then continue.
+  * Connection loss or HTTP 502/503/504 = reboot/service restart -> keep waiting (up to 40 min), then continue.
 """
 import argparse, json, os, ssl, subprocess, sys, tarfile, time, urllib.error, urllib.parse, urllib.request
 
@@ -75,7 +75,9 @@ def api(method, path, body=None, timeout=20):
             return r
         except urllib.error.HTTPError as e:
             if e.code == 401: TOK = None; continue
-            raise
+            if e.code not in (502, 503, 504) or time.time() - t0 > 2400: raise
+            if not down: log(f"  HTTP {e.code} (service restarting?) - waiting ..."); down = True
+            time.sleep(10)
         except Exception:
             if time.time() - t0 > 2400: raise
             if not down: log("  device unreachable (reboot?) - waiting ..."); down = True
@@ -178,10 +180,12 @@ def install(path, name, target):
     log(f"[update] {name}: {cur} -> {target}  ({os.path.basename(path)})")
     for _ in range(2):
         pkgs()  # make sure device is up and token valid before a long upload
-        out = subprocess.run(["curl", "-sk", "-g", "-i", "--max-time", "1800", "-H", "Authorization: Bearer " + token(),
+        out = subprocess.run(["curl", "-sk", "-g", "-i", "--max-time", "1800", "-H", "Expect:", "-H", "Authorization: Bearer " + token(),
                               "-F", "file=@" + path, "-F", "update=true", BASE + "/package-manager/api/v1/packages"],
                              capture_output=True, text=True)
-        head = out.stdout.split("\r\n\r\n")[0]; status = head.splitlines()[0] if head else out.stderr
+        blocks = [b for b in out.stdout.split("\r\n\r\n") if b.startswith("HTTP/")]
+        head = next((b for b in blocks if " 100 " not in b.splitlines()[0]), "")  # skip interim "100 Continue"
+        status = head.splitlines()[0] if head else (out.stderr or "no HTTP response")
         if " 401" in status: TOK = None; continue
         break
     loc = next((l.split(":", 1)[1].strip() for l in head.splitlines() if l.lower().startswith("location:")), None)
@@ -200,7 +204,7 @@ def main():
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
     host = a.host
-    if ":" in host:  # IPv6: bracket + URL-encode zone id
+    if host.count(":") > 1 and not host.startswith("["):  # IPv6: bracket + URL-encode zone id (host:port stays)
         host = "[" + host.replace("%", "%25") + "]"
     BASE = "https://" + host
     USER = os.environ.get("CTRLX_USER", "boschrexroth"); PW = os.environ.get("CTRLX_PASSWORD")
@@ -208,7 +212,9 @@ def main():
     plan = []
     for f in sorted(os.listdir(a.dir)):
         if f.endswith(".app"):
-            n, v, archs = read_app(os.path.join(a.dir, f)); plan.append((order_key(n), n, v, archs, os.path.join(a.dir, f)))
+            n, v, archs = read_app(os.path.join(a.dir, f))
+            if not n: log(f"skip {f}: no public/snaps/<arch>/release/*.snap inside"); continue
+            plan.append((order_key(n), n, v, archs, os.path.join(a.dir, f)))
     plan.sort()
     for _, n, v, archs, p in plan: log(f"plan: {n:28} {v:22} {sorted(archs)}  {os.path.basename(p)}")
     if a.dry_run: return
