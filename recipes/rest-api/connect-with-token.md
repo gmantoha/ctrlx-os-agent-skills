@@ -48,5 +48,10 @@ Write-Host "Motion state: $($state.value)"
 
 - `SkipCertificateCheck` ist erforderlich (self-signed cert auf 192.168.1.1).
 - Token-Lebensdauer: kurz (~30 min). Bei längeren Sessions neu holen.
+- **Token wiederverwenden, nicht pro Request neu einloggen.** Jeder `POST /auth/token` legt eine Session an;
+  das Limit pro Benutzer ist schnell erreicht → `HTTP 400`, `mainDiagnosisCode 080E0200`,
+  `detailedDiagnosisCode 0C7A0202`, `"Too many sessions"`. Neu einloggen nur bei `401`.
+  Freigeben: Sessions in der Web-UI schließen (`GET/DELETE /identity-manager/api/v2/sessions[/{id}]` braucht selbst
+  ein Token) oder Gerät neu starten. Am Skriptende `DELETE /identity-manager/api/v2/auth/token` aufrufen.
 - Für `aiuser`-Passwort: siehe `recipes/users/aiUserPasswort`.
 - Die Paket-Liste ist groß (~28 KB). Mit `Select-Object name, version` auf relevante Felder filtern.
