@@ -87,6 +87,10 @@ Use concrete playbooks under `recipes/` when available. For example:
 - `recipes/plc/engineering-scripting.md` — CODESYSScript (Verfügbarkeit prüfen!) vs. REST API
 - `recipes/device-portal/template-create-apply.md` — Device Portal Template per Public API erstellen/prüfen/anwenden (`type`-Envelope, `$path`-Injektion, Polling)
 - `recipes/device-portal/target-snapshot-and-recovery.md` — Ziel-Fingerprint, Setup-Recovery-ZIP, OPERATING nach Template-Apply wiederherstellen
+- `recipes/app-update/os-update-from-local-files.md` — System-Apps aus lokalen .app-Dateien aktualisieren (Reihenfolge, Reboots, Session-Limit, IPC = arch02) + `update_os_from_apps.py`
+- `recipes/app-update/image-restore-usb-stick.md` — USB-Stick GPT/FAT32 für X5/X7/IPC; IPC bootet Stick nur bei Start über Web-UI; prüfen, ob wirklich geflasht wurde
+- `recipes/network/find-device-and-set-static-ip.md` — Core am Direktkabel per IPv6 link-local finden, REST über `fe80::…%25if`, statische IPv4 per network-manager + `PUT /changes`
+- `recipes/rest-api/connect-with-token.md` — Token holen; Token wiederverwenden (sonst „Too many sessions")
 - `recipes/device-portal/plc-bootproject-setup-zip.md` — PLC-Bootprojekt als direktes Setup-ZIP-Modul (`mode=merge`), wenn Templates zu grob sind
 
 ## Motion Task — Standard Sequence
