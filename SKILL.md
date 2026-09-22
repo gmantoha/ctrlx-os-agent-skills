@@ -20,6 +20,21 @@ Use this skill for ctrlX OS, ctrlX CORE, ctrlX apps, ctrlX Data Layer, ctrlX RES
 5. Read `reference/AGENTS.md` and any relevant platform, app, or access-method references under `reference/`.
 6. Produce commands, UI steps, code, or a customer answer with evidence and clear verification steps.
 
+## Efficiency Defaults
+
+- Do not start an App Build Environment for a local preview or source-only
+  change.
+- When an installable snap is requested and a configured ctrlX WORKS ABE is
+  available, start it directly, wait for SSH and `snapcraft --version`, and
+  stop it after the build unless it is intentionally needed for another task.
+- Read only the relevant workflow and files, batch independent inspections,
+  run the smallest relevant tests, and avoid duplicate builds or repeated
+  polling.
+- Build one requested architecture at a time. Keep ARM64 as the active target
+  until the physical package works; do not spend time rebuilding AMD64 early.
+- Perform one package inspection and one packaged smoke test before any target
+  installation. Real-device changes still require explicit confirmation.
+
 ## Safety
 
 Inspection, log review, local file analysis, and drafting commands are safe without confirmation.
@@ -64,9 +79,22 @@ Use `workflows/update-os.md` for upgrading ctrlX OS from local .app files, inclu
 
 Use `workflows/contribute-skill.md` for installing/updating this skill (Pull), capturing something newly learned (Teach), or contributing a learning back to this repository (Push).
 
+For a new PLC plus HMI project, offline-first development, subscription-driven
+telemetry, capability discovery, or a staged PLC/HMI design process, read
+`recipes/app-build/offline-plc-hmi-workflow.md` before implementing.
+
 ## Common Recipes
 
 Use concrete playbooks under `recipes/` when available. For example:
+- `recipes/app-build/profile-driven-hmi.md` — project-specific PLC discovery, mapping, diagnostics, Motion separation, and capability-aware UI gating
+- `recipes/app-build/offline-plc-hmi-workflow.md` — offline-first PLC/HMI creation, contract-first PLC design, subscription-driven telemetry, HMI design, IO/Motion separation, and staged validation
+- `recipes/app-build/ctrlx-snap-build-install-loop.md` — Windows source to ABE build, architecture selection, snap inspection, and virtual/real CORE installation
+- `recipes/app-update/local-snap-install-update.md` — confirmed REST upload, mode restoration, version polling, and installed-route verification for a local snap
+- `recipes/app-build/snap-app-from-idea.md` — generic idea-to-snap decisions for web apps, daemons, Data Layer apps, gateways, and utilities
+- `cases/reusable/core-visualizer-snap/CASE.md` — clean subscription-driven axis HMI, safe writes, ARM64 web snap packaging, ABE smoke tests, and 502/runtime troubleshooting
+- `cases/reusable/core-cpu-visualizer/CASE.md` — read-only CPU/application metrics, installed-mode REST/IPC fallback, four-hour history, and Windows-to-ABE packaging lessons
+- `cases/reusable/adaptive-smart-hmi/CASE.md` — sanitized cross-project HMI, preview, Motion, and Windows ABE lessons
+- `cases/reusable/plc-target-architecture/CASE.md` — target architecture selection for PLC Engineering projects
 - `recipes/vpn/route-through-plc.md` — VPN-Route durch ctrlX CORE zu PLC/SPS-Netz
 - `recipes/motion/axis-create-delete.md` — Axes anlegen, konfigurieren, löschen; posMax-Grenzen; Rotary Spindle (constant RPM)
 - `recipes/motion/axis-power-and-move.md` — Power ON/OFF (POST!), absolute move, unit table, polling
@@ -87,10 +115,12 @@ Use concrete playbooks under `recipes/` when available. For example:
 - `recipes/plc/engineering-scripting.md` — CODESYSScript (Verfügbarkeit prüfen!) vs. REST API
 - `recipes/device-portal/template-create-apply.md` — Device Portal Template per Public API erstellen/prüfen/anwenden (`type`-Envelope, `$path`-Injektion, Polling)
 - `recipes/device-portal/target-snapshot-and-recovery.md` — Ziel-Fingerprint, Setup-Recovery-ZIP, OPERATING nach Template-Apply wiederherstellen
-- `recipes/app-update/os-update-from-local-files.md` — System-Apps aus lokalen .app-Dateien aktualisieren (Reihenfolge, Reboots, Session-Limit, IPC = arch02) + `update_os_from_apps.py`
-- `recipes/app-update/image-restore-usb-stick.md` — USB-Stick GPT/FAT32 für X5/X7/IPC; IPC bootet Stick nur bei Start über Web-UI; prüfen, ob wirklich geflasht wurde
-- `recipes/network/find-device-and-set-static-ip.md` — Core am Direktkabel per IPv6 link-local finden, REST über `fe80::…%25if`, statische IPv4 per network-manager + `PUT /changes`
-- `recipes/rest-api/connect-with-token.md` — Token holen; Token wiederverwenden (sonst „Too many sessions")
+- `recipes/app-update/os-update-from-local-files.md` — local `.app` OS-update sequencing, architecture checks, reboot recovery, and mode restoration
+- `recipes/app-update/image-restore-usb-stick.md` — USB restore workflow and Web UI start requirement for supported IPCs
+- `recipes/app-update/uninstall-and-verify.md` — asynchronous snap removal and post-removal verification
+- `recipes/network/find-device-and-set-static-ip.md` — discover a directly connected CORE and set a static IPv4 through the documented API
+- `recipes/rest-api/connect-with-token.md` — token acquisition, reuse, and session-limit avoidance
+- `reference/app-development/app-build-environment.md` — ABE roles, readiness checks, and Windows-to-ABE boundaries
 - `recipes/device-portal/plc-bootproject-setup-zip.md` — PLC-Bootprojekt als direktes Setup-ZIP-Modul (`mode=merge`), wenn Templates zu grob sind
 
 ## Motion Task — Standard Sequence

@@ -35,6 +35,10 @@ Use this workflow for ctrlX app, service, performance, crash, OOM, token verifie
 - `ctrlx-apps_get_details` → check `state`, `health`
 - Logbook: filter by app snap name in message
 - Look for: AppArmor denials (normal confinement — check if path is allowed), missing interfaces
+- A `502` or "Waiting for app to start" page means the reverse-proxy route
+  exists but its upstream daemon/socket is not healthy. Check the installed
+  version, `snap services`, `snap connections`, exact socket path, and
+  `snap logs` separately.
 
 ### Performance / High Load
 - `ctrlx-datalayer_read` → `system/resources/cpu/usage`, `system/resources/memory/usage`

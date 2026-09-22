@@ -25,6 +25,7 @@ Use this repository's app-development notes as secondary guidance and offline fa
 
 - `reference/app-development/sources.md`
 - `reference/app-development/snap-packaging.md`
+- `reference/app-development/app-build-environment.md`
 - `reference/app-development/package-assets.md`
 - `reference/app-development/datalayer-apps.md`
 - `reference/app-development/troubleshooting.md`
@@ -38,9 +39,18 @@ Use this repository's app-development notes as secondary guidance and offline fa
 5. Make the smallest build/package change that satisfies the goal.
 6. Build locally or in the ctrlX App Build Environment.
 7. Deploy to a virtual target when possible before a real device.
-8. Verify service state, logs, UI/API entrypoints, interface connections, and Data Layer nodes if applicable.
+8. Inspect the package contents and run a packaged launcher/socket smoke test
+   before deployment.
+9. Verify service state, logs, UI/API entrypoints, interface connections, and
+   Data Layer nodes if applicable.
+
+For an architecture-specific physical deployment, freeze other architectures
+until the target architecture is working. A successful amd64 virtual build
+does not validate an arm64 physical CORE package.
 
 ## Useful Recipes
 
+- `recipes/app-build/profile-driven-hmi.md`
+- `recipes/app-build/ctrlx-snap-build-install-loop.md`
 - `recipes/app-build/minimal-web-app.md`
 - `recipes/app-build/datalayer-provider.md`

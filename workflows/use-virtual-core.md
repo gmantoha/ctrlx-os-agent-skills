@@ -32,3 +32,22 @@ Use this workflow when a task can be verified against a local virtual ctrlX CORE
 ## Verification Notes
 
 Virtual ctrlX systems may not expose real hardware-backed nodes, storage providers, fieldbus devices, or USB behavior. If a workflow depends on such features, say that virtual verification is only partial and identify what still needs real-device validation.
+
+## Windows and ctrlX WORKS variant
+
+The shell helpers under `labs/ctrlx-os-virtual/` assume a usable Linux shell.
+On Windows, `bash.exe` may be present while no WSL distribution is installed;
+in that case the helper can fail before it reaches the already-running
+ctrlX WORKS/QEMU instance. Do not restart or recreate the VM solely because
+the helper shell failed. Use ctrlX WORKS status, QEMU inspection, and the
+forwarded endpoints as read-only fallback evidence:
+
+```text
+Virtual CORE: Web 8443, SSH 8022, Data Layer 8740, OPC-UA 4840
+ABE builder:  SSH 10022 (when the ABE is running)
+```
+
+Always distinguish the ABE builder VM from the virtual CORE. Stop the virtual
+CORE after actual lab testing unless the user explicitly asks to keep it
+running; stopping the temporary ABE after packaging is a separate cleanup
+operation.

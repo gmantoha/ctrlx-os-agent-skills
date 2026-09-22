@@ -10,6 +10,20 @@ Primary source: https://boschrexroth.github.io/ctrlx-automation-sdk/4.6.0/packag
 - Use the schema URL from the official docs or the target ctrlX OS version.
 - Keep manifests minimal; do not declare menus, scopes, licenses, or certificate stores that the app does not use.
 
+### License distinction
+
+The manifest `licenses` array is for ctrlX device capability identifiers, such
+as `SWL-...`, not for source-code licenses such as MIT, BSD, or Apache. The
+`required` flag means that the device license is mandatory for the application
+or feature. Only add this array and the `licensing-service` plug when the app
+actually acquires a ctrlX license through the License Manager API.
+
+FOSS notices belong in the official package-assets/FOSS information mechanism.
+The optional top-level `license` field in `snapcraft.yaml` is package metadata;
+it does not install a license on the CORE or grant a device capability.
+
+Reference: https://boschrexroth.github.io/ctrlx-automation-sdk/4.6.0/licensing.html
+
 ## File Location
 
 The package manifest belongs below:
@@ -83,10 +97,22 @@ Prefer Unix sockets over TCP ports for app web services.
 
 Important details:
 
+- `services.proxyMapping.name` is a unique web-service identifier in
+  `<id>.<service>` form. It should start with the snap id; for one web server,
+  `<snap-name>.web` is the usual pattern. It does not have to equal the
+  `apps.<daemon>` key.
 - Package-manifest environment variables use `{$VAR}`, not `${VAR}`.
 - Unix socket paths are limited by the Linux socket path length, commonly 108 characters.
 - The app must create and remove its own socket file.
 - Restrict API routes that require authenticated access.
+- Keep the manifest binding, launcher socket path, and `package-run` source
+  directory identical after variable expansion.
+
+When the public route returns the CORE's generic `502`/"Waiting for app to
+start” page, the route and package-assets registration may already be correct.
+Treat it as evidence that the reverse proxy cannot reach a healthy upstream,
+then inspect the installed version, daemon state, interface connections,
+socket, and logs separately.
 
 Expose the runtime socket directory with `package-run` when using Unix sockets:
 

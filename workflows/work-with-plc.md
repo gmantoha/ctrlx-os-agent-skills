@@ -21,6 +21,7 @@ Use this workflow for ctrlX PLC Engineering tasks, Structured Text examples, and
 
 | Task | Read first |
 |------|-----------|
+| New PLC plus HMI project, offline development, or subscription-driven UI | `recipes/app-build/offline-plc-hmi-workflow.md` |
 | Build, download, start PLC app | `recipes/plc/deploy-and-start.md` |
 | Create or update POUs / GVLs via REST | `recipes/plc/create-pou-gvl.md` |
 | Motion ST code with AxisInterface | `recipes/plc/axis-interface-motion.md` |

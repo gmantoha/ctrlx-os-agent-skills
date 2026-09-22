@@ -18,6 +18,11 @@ Primary sources:
 5. Build in a ctrlX App Build Environment when available, or document why native/destructive builds are used.
 6. Verify snap metadata and contents before device installation.
 
+For a reusable decision tree and fast path from an app idea to a tested snap,
+see `recipes/app-build/snap-app-from-idea.md`. Keep the target architecture
+focused until that target has passed its deployment test; a build for another
+architecture is not equivalent evidence.
+
 ## Common ctrlX Snap Elements
 
 Typical production app metadata includes:

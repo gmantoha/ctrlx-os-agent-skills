@@ -10,3 +10,7 @@ Current migrated cases:
 - `plc-rest-req/`
 - `device-portal-template-granularity/`
 - `data-layer-axis-hmi/`
+- `adaptive-smart-hmi/`
+- `core-cpu-visualizer/`
+- `core-visualizer-snap/`
+- `plc-target-architecture/`

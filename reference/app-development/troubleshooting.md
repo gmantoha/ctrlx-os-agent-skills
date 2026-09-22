@@ -59,9 +59,29 @@ python3 -m json.tool configs/package-assets/<snap-name>.package-manifest.json
 | --- | --- | --- |
 | App menu missing | Manifest not packaged, invalid JSON, wrong permissions | Snap contents, browser console, Logbook |
 | Reverse proxy fails | Socket not created or path too long | Socket path and `package-run` slot |
+| CORE shows 502 or "Waiting for app to start" | Registered route has no reachable healthy upstream | Installed version, daemon state, `package-run`, socket, and logs |
 | Data Layer connection refused | Wrong connection string or disconnected interface | `ipc://` in snap, `snap connections` |
 | Save/load not called | Missing package-manifest commands or wrong URL | Logbook, manifest commands, route status |
 | License acquisition fails | Plug disconnected, license absent, wrong name | License docs, `snap connections`, Logbook |
+
+## Unavailable web app diagnosis
+
+The CORE initialization page is a generic reverse-proxy response, not a
+diagnosis. A direct `502` for the app route generally proves that the
+package-assets route exists while the daemon socket is unavailable. Check in
+this order:
+
+1. Confirm the installed snap name, version, architecture, base, and daemon:
+   `snap list <snap-name>` and `snap services <snap-name>`.
+2. Check `snap connections <snap-name>` for `package-assets`,
+   `package-run`, and the app's required plugs.
+3. Read `sudo snap logs <snap-name> -n 100` and the CORE Logbook.
+4. Confirm that the daemon created the exact socket published by the manifest.
+5. Only then change the launcher, base, plugs, or manifest.
+
+If the same packaged launcher creates the socket and serves HTTP 200 in an ABE
+smoke test but the real CORE returns 502, the remaining fault is target-side
+confinement, interface state, base/OS compatibility, or service startup.
 
 ## Logging
 
