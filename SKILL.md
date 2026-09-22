@@ -44,6 +44,9 @@ Use `workflows/build-app.md` for snap packaging, app development, SDK usage, Dat
 
 Use `workflows/use-rest-api.md` for external automation, browser/client integration, and documented REST endpoints.
 
+Use `recipes/3d-viewer/setup-and-verify.md` for ctrlX 3D Viewer model upload,
+Data Layer axis mapping, URDF/XML transforms, and browser/WebGL validation.
+
 Use `workflows/device-portal-templates.md` for Device Portal API template creation/application, template stacking decisions (settings modules versus all-or-nothing app data), full-device restore demonstrations, and serial commissioning design.
 
 Use `workflows/use-datalayer.md` for on-device IPC, PLC-to-service communication, Data Layer reads/writes/calls, and node schema questions.
