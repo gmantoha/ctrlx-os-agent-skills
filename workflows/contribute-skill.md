@@ -52,9 +52,10 @@ manual git commands are needed.
 
 ### Repository rules
 
-- `main` of `gmantoha/ctrlx-os-agent-skills` is protected: no direct pushes, no force-push,
-  no deletion. Every change goes through a Pull Request with 1 approving review and all
-  review conversations resolved.
+- `main` of `gmantoha/ctrlx-os-agent-skills` is protected by the repository ruleset
+  **"Protect main"**: no direct pushes, no force-push, no deletion. Every change goes through
+  a Pull Request with 1 approving review and all review conversations resolved. Repository
+  admins may bypass only when merging a PR (`--admin`), never for direct or force pushes.
 - Only the maintainer (`gmantoha`) reviews and merges. Contributors never merge their own PRs.
 - Pushing a branch **into this repository** requires write access (collaborator). GitHub has no
   setting that lets everyone push branches. Everyone else contributes through a **fork**;
@@ -66,8 +67,9 @@ manual git commands are needed.
    `git clone https://github.com/gmantoha/ctrlx-os-agent-skills.git` or `git checkout main && git pull`
 2. Create a branch from `main`: `git checkout -b <short-topic-name>`
 3. Add/update a file under `recipes/`, `cases/`, or `reference/` describing the learning.
-   Remove customer names, credentials, keys, IDs and customer IPs before committing.
-4. `git add` + `git commit` with a descriptive message
+   Anonymize before committing — see [Anonymization checklist](#anonymization-checklist).
+4. `git add` + `git commit` with a descriptive message (no customer names in the message
+   or the branch name either)
 5. Check whether you can push to the repository:
 
    ```bash
@@ -104,6 +106,46 @@ manual git commands are needed.
 8. **After the merge, run Pull** (see above, including its fallback if `npx skills update`
    fails) so the change lands locally too. If the PR is still waiting for review, tell the user
    that Pull has to run after the merge.
+
+### Anonymization checklist
+
+This repository is shared. Customer data must never reach it — not in the current files
+and not in the git history. Check **everything** that gets committed:
+
+- **Where:** file contents *and* file/directory names, raw logs and exports (`raw/`),
+  HTML/e-mail drafts, generated scripts, commit messages, branch names, PR titles/bodies.
+- **What:** company and customer names — including inside snap names, service names,
+  paths, MQTT topics, API routes, Python package names (e.g. `ctrlx-<customer>-<app>`,
+  `/snap/<customer>-...`) — person names and department codes, e-mail addresses,
+  hostnames, serial numbers, asset/device IDs, customer IPs, credentials, tokens, keys.
+- **How:** replace consistently with a neutral, greppable placeholder that does not
+  collide with existing words (e.g. `vendorx`, `VendorX`, `ACME-DE-001`, `[anonymisiert]`);
+  keep case variants consistent so logs stay readable.
+- **Check before committing** (replace `<name>` with each customer term):
+
+  ```bash
+  git grep -n -i "<name>"                  # file contents
+  git ls-files | grep -i "<name>"           # file and directory names
+  git diff --cached | grep -i "<name>"      # what is about to be committed
+  ```
+
+Customer workspaces belong in `customers/` (git-ignored), never in `cases/`.
+
+#### If customer data was already pushed
+
+A follow-up commit does **not** remove it — it stays in the history and on GitHub.
+Tell the maintainer; do not try to fix it yourself. Only the maintainer rewrites history:
+
+1. Fresh clone of all branches, then `git filter-repo --replace-text <rules>
+   --replace-message <rules> --filename-callback ...` (rules file: `name==>placeholder`
+   per line, one line per case variant).
+2. Verify: `git log --all -p | grep -i -c "<name>"` returns `0`, and the new `main` tree equals
+   the old tree with the replacement applied.
+3. Temporarily disable the ruleset "Protect main" (set to *Disabled*, do not delete it),
+   push with `git push --force-with-lease=<branch>:<old-sha> ...`, re-enable the ruleset.
+4. Everyone re-clones or runs `git fetch && git reset --hard origin/main`; old local
+   objects: `git reflog expire --expire=now --all && git gc --prune=now`.
+5. Old PR diffs (`refs/pull/*`) still show the data — only GitHub Support can purge them.
 
 Requires `gh auth login` once per machine (GitHub CLI authentication) before the push
 step can open a PR.
