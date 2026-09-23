@@ -23,6 +23,7 @@
 | Device Portal templates / serial commissioning | `workflows/device-portal-templates.md` |
 | Data Layer reads / writes / PLC IPC | `workflows/use-datalayer.md` |
 | File transfer / app data | `workflows/use-webdav.md` |
+| Node-RED flows / Function nodes / S7-REST-InfluxDB | `reference/apps/node-red/README.md` + `recipes/node-red/` |
 | UI config / Playwright | `workflows/use-web-ui.md` |
 | Customer / colleague answer | `workflows/answer-customer.md` |
 | ctrlX OS update | `workflows/update-os.md` |

@@ -54,6 +54,8 @@ Use `workflows/learn-from-ui.md` when the correct Data Layer payload format is u
 
 Use `workflows/use-webdav.md` for file transfer and app data inspection through WebDAV.
 
+Use `reference/apps/node-red/README.md` and `recipes/node-red/` for Node-RED flows on ctrlX: creating/deploying flows via Admin API, Function-node sandbox limits, loading libraries from palette packages, and S7/REST/InfluxDB integration patterns.
+
 Use `workflows/work-with-plc.md` for PLC Engineering, ST examples, and PLC integration guidance.
 
 Use `workflows/use-virtual-core.md` for launching, stopping, monitoring, and testing against a local virtual ctrlX CORE lab.
@@ -92,6 +94,9 @@ Use concrete playbooks under `recipes/` when available. For example:
 - `recipes/network/find-device-and-set-static-ip.md` — Core am Direktkabel per IPv6 link-local finden, REST über `fe80::…%25if`, statische IPv4 per network-manager + `PUT /changes`
 - `recipes/rest-api/connect-with-token.md` — Token holen; Token wiederverwenden (sonst „Too many sessions")
 - `recipes/device-portal/plc-bootproject-setup-zip.md` — PLC-Bootprojekt als direktes Setup-ZIP-Modul (`mode=merge`), wenn Templates zu grob sind
+- `recipes/node-red/admin-api-flows.md` — Node-RED Flows per Admin API lesen/anlegen/deployen, Context lesen, Inject auslösen, Probe-Nodes (ctrlX-Token reicht)
+- `recipes/node-red/function-module-from-palette.md` — Bibliothek aus Palette-Paket (z. B. `@st-one-io/nodes7`) im Function-Node: Registrierung, Prüf-/Reparatur-Node, Notfall wenn keine Flows starten
+- `recipes/node-red/s7-to-rest-with-influx-buffer.md` — mehrere S7 → signierter REST-Upload je objectId, Pufferung in InfluxDB, Nachsenden; Konfig aus Dateien in appdata
 
 ## Motion Task — Standard Sequence
 
