@@ -44,6 +44,20 @@ $state = Invoke-RestMethod "https://192.168.1.1/automation/api/v2/nodes/motion/s
 Write-Host "Motion state: $($state.value)"
 ```
 
+## Bash-Rezept (Linux)
+
+```bash
+IP=192.168.1.1
+TOKEN=$(curl -sk -X POST https://$IP/identity-manager/api/v2/auth/token -H "Content-Type: application/json" \
+  -d '{"name":"<user>","password":"<pw>"}' | python3 -c 'import sys,json;print(json.load(sys.stdin)["access_token"])')
+curl -sk https://$IP/package-manager/api/v1/packages -H "Authorization: Bearer $TOKEN" \
+  | python3 -c 'import sys,json;[print(p["name"]) for p in json.load(sys.stdin)]'
+# ... Token wiederverwenden (auch für /node-red/* und /solutions/webdav/*) ...
+curl -sk -X DELETE https://$IP/identity-manager/api/v2/auth/token -H "Authorization: Bearer $TOKEN"
+```
+
+Passwörter mit `#` oder `$` in einfachen Anführungszeichen übergeben.
+
 ## Hinweise
 
 - `SkipCertificateCheck` ist erforderlich (self-signed cert auf 192.168.1.1).

@@ -1,0 +1,53 @@
+{
+  "_hint": "Liste der S7-Steuerungen. Jede S7 wird einer objectId des REST-Servers zugeordnet. Wird von Node-RED (Flow 2) beim Start und bei jeder Dateiänderung gelesen.",
+  "defaults": {
+    "port": 102,
+    "rack": 0,
+    "slot": 2,
+    "cycleTimeMs": 1000,
+    "timeoutMs": 2000,
+    "reconnectMs": 5000,
+    "sendMode": "all",
+    "simulate": false,
+    "enabled": true
+  },
+  "plcs": [
+    {
+      "id": "S7-Anlage-1",
+      "host": "<ip-s7-1>",
+      "objectId": "<objectId-anlage-1>",
+      "variables": [
+        { "name": "Marker", "addr": "DB1,WORD0", "datapoint": "test1" }
+      ]
+    },
+    {
+      "id": "S7-Anlage-2",
+      "enabled": false,
+      "host": "<ip-s7-2>",
+      "rack": 0,
+      "slot": 1,
+      "objectId": "<objectId-anlage-2>",
+      "cycleTimeMs": 2000,
+      "variables": [
+        { "name": "Temperatur", "addr": "DB10,REAL0", "datapoint": "temp" },
+        { "name": "Druck", "addr": "DB10,REAL4", "datapoint": "druck" },
+        { "name": "Pumpe", "addr": "DB10,X8.0", "datapoint": "pumpe" }
+      ]
+    }
+  ],
+  "_felder": {
+    "defaults": "Standardwerte für alle S7; jede S7 kann sie einzeln überschreiben",
+    "plcs[].id": "eindeutiger Name der S7 (erscheint im Status)",
+    "plcs[].enabled": "false = S7 wird nicht verbunden (z. B. vorbereitet, noch nicht in Betrieb)",
+    "plcs[].host/port/rack/slot": "Verbindungsdaten der S7 (ISO-on-TCP, Rack/Slot)",
+    "plcs[].objectId": "objectId des REST-Servers, in die die Daten dieser S7 geschrieben werden (mehrere S7 dürfen dieselbe objectId nutzen, Datenpunktnamen müssen dann eindeutig sein)",
+    "plcs[].cycleTimeMs": "Polling-Taktrate in ms (min. 50)",
+    "plcs[].timeoutMs": "Timeout der S7-Kommunikation in ms",
+    "plcs[].reconnectMs": "Wartezeit bis zum Wiederverbindungsversuch in ms",
+    "plcs[].sendMode": "all = jeden Zyklus alle Werte senden, changed = nur geänderte Werte",
+    "plcs[].simulate": "true = statt der S7 werden Zufallswerte erzeugt (Inbetriebnahme/Test ohne SPS)",
+    "plcs[].variables[].name": "Variablenname (frei wählbar, je S7 eindeutig)",
+    "plcs[].variables[].addr": "S7-Adresse, z. B. DB1,WORD0  DB5,REAL12  DB2,INT4  M10.0  I0.1  DB3,X2.3",
+    "plcs[].variables[].datapoint": "Name des Datenpunkts beim REST-Server (optional, sonst = name)"
+  }
+}
