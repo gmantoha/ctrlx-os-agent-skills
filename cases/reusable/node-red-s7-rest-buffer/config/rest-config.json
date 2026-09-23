@@ -1,0 +1,33 @@
+{
+  "_hint": "REST-Server (REST Data-Receiver). Wird von Node-RED (Flow 2) beim Start und bei jeder Dateiänderung gelesen.",
+  "url": "http://<rest-server>/plugins/data-receiver-source/",
+  "publicKey": "<public-key>",
+  "privateKey": "<private-key>",
+  "objects": {
+    "_hint": "optional: abweichende Keys oder URL je objectId; fehlt ein Eintrag, gelten die Werte oben",
+    "<objectId-anlage-2>": { "publicKey": "public-key-anlage-2", "privateKey": "private-key-anlage-2" }
+  },
+  "method": "upload-data",
+  "uploadIntervalMs": 10000,
+  "timeoutMs": 10000,
+  "dtFormat": "local",
+  "resendCheckIntervalMs": 30000,
+  "resendChunkSize": 500,
+  "bufferBucket": "iot",
+  "bufferMeasurement": "rest_buffer",
+  "bufferLookback": "30d",
+  "_felder": {
+    "url": "Basis-URL des Data-Receivers (endet mit /), die Methode wird angehängt",
+    "publicKey/privateKey": "Standard-Zugangsdaten; privateKey wird nur für die SHA-256-Signatur verwendet und nie mitgesendet",
+    "objects": "je objectId optional eigene url/publicKey/privateKey. Die Zuordnung S7 -> objectId steht in s7-config.json",
+    "objectId": "optional: Standard-objectId für S7 ohne eigene objectId",
+    "method": "upload-data (Messwerte) oder upload-dp-list (Datenpunktliste)",
+    "uploadIntervalMs": "Alle x ms werden die gesammelten Werte je objectId als ein Request gesendet",
+    "timeoutMs": "HTTP-Timeout; danach gilt der Request als fehlgeschlagen und wird gepuffert",
+    "dtFormat": "local = Zeitstempel in Ortszeit der ctrlX, utc = UTC",
+    "resendCheckIntervalMs": "Wie oft bei Rückstand ein Nachsendeversuch gestartet wird",
+    "resendChunkSize": "Max. Werte pro Nachsende-Request",
+    "bufferBucket/bufferMeasurement": "InfluxDB-Bucket und Measurement für den Puffer (Bucket muss zum Node 'InfluxDB schreiben' passen)",
+    "bufferLookback": "Wie weit das Nachsenden in die Vergangenheit sucht (Flux-Dauer, z. B. 30d)"
+  }
+}
