@@ -48,19 +48,62 @@ on. If yes, draft it as a short recipe/case file and hand off to **Push** below.
 ## Push — contribute the learning back to the shared repo
 
 Say **"push this skill: <what you learned>"**. The agent runs the full sequence so no
-manual git commands are needed:
+manual git commands are needed.
 
-1. Clone or pull the latest `main` of `gmantoha/ctrlx-os-agent-skills`
-2. Create a branch: `git checkout -b <short-topic-name>`
-3. Add/update a file under `recipes/`, `cases/`, or `reference/` describing the learning
+### Repository rules
+
+- `main` of `gmantoha/ctrlx-os-agent-skills` is protected: no direct pushes, no force-push,
+  no deletion. Every change goes through a Pull Request with 1 approving review and all
+  review conversations resolved.
+- Only the maintainer (`gmantoha`) reviews and merges. Contributors never merge their own PRs.
+- Pushing a branch **into this repository** requires write access (collaborator). GitHub has no
+  setting that lets everyone push branches. Everyone else contributes through a **fork**;
+  the resulting Pull Request looks the same to the reviewer.
+
+### Sequence
+
+1. Clone or pull the latest `main`:
+   `git clone https://github.com/gmantoha/ctrlx-os-agent-skills.git` or `git checkout main && git pull`
+2. Create a branch from `main`: `git checkout -b <short-topic-name>`
+3. Add/update a file under `recipes/`, `cases/`, or `reference/` describing the learning.
+   Remove customer names, credentials, keys, IDs and customer IPs before committing.
 4. `git add` + `git commit` with a descriptive message
-5. `git push origin <branch>`
-6. `gh pr create --fill` to open a Pull Request for review
-7. If the user has merge rights and asks to merge now, merge the PR
-   (`gh pr merge <branch> --merge --delete-branch`)
-8. **Immediately run Pull** (see above, including its fallback if `npx skills update`
-   fails) so the change lands locally too — do this automatically as the last step of
-   Push, without waiting to be asked separately
+5. Check whether you can push to the repository:
+
+   ```bash
+   gh api repos/gmantoha/ctrlx-os-agent-skills --jq .permissions.push
+   ```
+
+   - `true` (collaborator) → push the branch into the repository and open the PR:
+
+     ```bash
+     git push -u origin <branch>
+     gh pr create --base main --fill
+     ```
+
+   - `false` (everyone else) → push to your fork and open the PR against the original repository.
+     `gh` creates the fork if it does not exist yet (non-interactive, suitable for agents):
+
+     ```bash
+     gh repo fork gmantoha/ctrlx-os-agent-skills --remote --remote-name fork
+     git push -u fork <branch>
+     gh pr create --repo gmantoha/ctrlx-os-agent-skills --base main \
+       --head <your-github-user>:<branch> --fill
+     ```
+
+     Interactively, a plain `gh pr create` also offers to create the fork.
+     Do not try `git push origin` without write access — it fails with HTTP 403.
+6. Report the PR link to the user. The PR now waits for the maintainer's review.
+   Address review comments with new commits on the same branch (`git push`); a new commit
+   dismisses an existing approval, so the maintainer re-approves.
+7. Merge (maintainer only):
+   - PR from someone else, after approval: `gh pr merge <number> --merge --delete-branch`
+   - Maintainer's own PR (GitHub does not allow approving your own PR; admins may bypass):
+     `gh pr merge <number> --merge --delete-branch --admin`
+   Never merge on behalf of the maintainer unless they explicitly ask for it in this session.
+8. **After the merge, run Pull** (see above, including its fallback if `npx skills update`
+   fails) so the change lands locally too. If the PR is still waiting for review, tell the user
+   that Pull has to run after the merge.
 
 Requires `gh auth login` once per machine (GitHub CLI authentication) before the push
 step can open a PR.
