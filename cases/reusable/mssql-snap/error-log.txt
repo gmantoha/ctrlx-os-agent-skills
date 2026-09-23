@@ -1,4 +1,4 @@
-Kunde: Berg Anton (DCEM/SLC6)
+Kunde: [anonymisiert]
 Kontext: Versuch, Microsoft SQL Server 2025 als Snap für ctrlX OS im
 strict-Confinement zu bauen. Der Kunde vermutet, dass nur classic-
 Confinement funktionieren würde.
