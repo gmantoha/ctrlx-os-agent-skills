@@ -1,6 +1,6 @@
 # ctrlX OS Agent Skill
 
-Installable AI agent skill for Bosch Rexroth employees working with ctrlX OS and ctrlX CORE.
+Installable AI agent skill for everyone working with ctrlX OS and ctrlX CORE.
 
 Use it with prompts such as:
 
