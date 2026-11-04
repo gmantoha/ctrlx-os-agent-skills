@@ -41,7 +41,7 @@ Use narrow paths/hosts; avoid wildcard-wide permissions. The manual does not est
 1. The authenticated ctrlX user needs the relevant scopes. For solution files, 0.5.0 documents `rexroth-solutions.web.all.r` for reads and `rexroth-solutions.web.all.rw` for filesystem changes and `execute_process`.
 2. Server configuration and hard-coded restrictions bound exposed operations.
 3. The agent's approval gate and saved rules govern eligible calls.
-4. This skill additionally requires explicit confirmation before persistent real-device changes. An app auto-approval rule is not consent for an otherwise unapproved change in this conversation.
+4. The `ctrlx` skill additionally requires explicit confirmation before persistent real-device changes. An app auto-approval rule is not consent for an otherwise unapproved change in this conversation.
 
 A denial at one layer is not fixed by disabling another. Diagnose user scopes, allowed roots/paths, exclusions, destructive-mode restrictions and approval decisions separately.
 

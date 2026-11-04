@@ -1,4 +1,4 @@
-# Illustrative configuration, not a live provider/model catalog.
+# ctrlX AI / Agent iXi: illustrative configuration, not a live model catalog.
 # Replace URL, model ID and limits with confirmed provider values before use.
 # Have the user provision llm_api_key in the protected agent/secrets.yaml.
 version: 1

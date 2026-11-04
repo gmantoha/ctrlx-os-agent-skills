@@ -1,15 +1,12 @@
----
-name: ctrlx-ai
-description: Configure, troubleshoot and migrate Bosch Rexroth ctrlX AI - Automation Intelligence and its built-in Agent iXi. Use whenever users mention Agent iXi, ctrlX AI model/provider setup, models.yaml, AskRexroth limited mode, additional MCP servers, tool approval rules, custom system prompts or skills, HTTP/process tools, or the 0.3.0 to 0.5.0 migration. Covers OpenAI-compatible, Anthropic, LiteLLM, Azure and Vertex proxy configuration. Use the general ctrlx skill for unrelated device, motion, PLC or snap-development tasks.
----
+# Configure and Troubleshoot ctrlX AI / Agent iXi
 
-# ctrlX AI / Agent iXi
+Use this workflow for ctrlX AI / Agent iXi model/provider setup, AskRexroth limited mode, additional MCP servers, approval rules, custom prompts/skills, HTTP/process tools and migration from 0.3.0 to 0.5.0. It is part of the existing `ctrlx` skill, not a separately installed skill.
 
-Turn ctrlX AI questions into a version-aware configuration proposal, migration plan or diagnosis. Keep this skill usable on its own: all required product notes are bundled below.
+Read `reference/AGENTS.md` and [the app reference](../reference/apps/ctrlx-ai/README.md) first. Use `workflows/use-mcp.md` for general device interaction and `workflows/manage-apps.md` for app installation/update operations.
 
 ## Scope and evidence
 
-These notes summarize the supplied **ctrlX AI - Automation Intelligence User Manual**, whose changelog describes **0.5.0** and migration from **0.3.0**. They are documentation-derived, not proof of behavior on a particular device. See [source provenance](references/sources.md).
+These notes summarize the supplied **ctrlX AI - Automation Intelligence User Manual**, whose changelog describes **0.5.0** and migration from **0.3.0**. They are documentation-derived, not proof of behavior on a particular device. See [source provenance](../reference/apps/ctrlx-ai/sources.md).
 
 Check the installed app version before applying version-dependent advice. For older or newer versions, verify the live tool schemas, shipped configuration templates and version-matched documentation rather than assuming these notes apply unchanged. Tool names can be prefixed by the client or additional server.
 
@@ -22,38 +19,18 @@ Check the installed app version before applying version-dependent advice. For ol
 
    | Task | Read |
    |---|---|
-   | LLM provider, model selection, discovery, limits, caching, secrets or YAML errors | [Models and agent settings](references/models-and-agent.md) |
-   | MCP authentication, additional servers, HTTP/process access, permissions or approval rules | [MCP and security](references/mcp-and-security.md) |
-   | Custom prompts/skills, dashboard hosting, attachments or widget behavior | [Prompts and usage](references/prompts-and-usage.md) |
-   | Upgrade from 0.3.0, obsolete environment settings or symptom-led diagnosis | [Migration and troubleshooting](references/migration-and-troubleshooting.md) |
+   | LLM provider, model selection, discovery, limits, caching, secrets or YAML errors | [Models and agent settings](../reference/apps/ctrlx-ai/models-and-agent.md) |
+   | MCP authentication, additional servers, HTTP/process access, permissions or approval rules | [MCP and security](../reference/apps/ctrlx-ai/mcp-and-security.md) |
+   | Custom prompts/skills, dashboard hosting, attachments or widget behavior | [Prompts and usage](../reference/apps/ctrlx-ai/prompts-and-usage.md) |
+   | Upgrade from 0.3.0 or obsolete environment settings | [Migration recipe](../recipes/ctrlx-ai/migrate-0.3-to-0.5.md) |
+   | Symptom-led diagnosis | [Troubleshooting](../reference/apps/ctrlx-ai/troubleshooting.md) |
 
 5. Draft the smallest change that addresses the issue. For a real device, show the exact file/setting diff or action and its consequences, then wait for explicit confirmation before writing, installing, restarting or deleting anything. Approval rules in the application do not replace this conversation's confirmation policy.
 6. Verify through read-back, the logbook and a new conversation where required. Report what was verified and what remains a proposal. A valid YAML parse alone does not establish that a provider or MCP connection works.
 
 For documentation-only questions, answer from the references without requesting device access.
 
-## Configuration map (0.5.0)
-
-```text
-mcp/
-  mcp.env                 MCP server configuration; still used
-agent/
-  models.yaml             LLM providers, models, roles and defaults
-  secrets.yaml            Secret scalar values; do not read with AI tools
-  agent.yaml              Approval and logging settings
-  mcp.yaml                Additional MCP servers
-  approval-rules.json     Saved tool-call decisions
-  .gitignore              Excludes secrets.yaml from Git
-  .aiexclude              Blocks AI access to secrets.yaml and itself
-.agents/
-  SystemPrompt.md         Additions to the built-in prompt
-  skills/builtin/         Shipped skills; replaced on every app start
-  skills/custom/          User skills: <name>/SKILL.md plus resources
-  attachments/            Non-image uploads available to file tools
-  www/                    Hosted web content
-```
-
-The MCP endpoint is `https://<device-hostname>/mcp`. Installation is through **Settings → Apps → Install App**; installation on a real device requires confirmation. Configuration templates are provisioned on first load. Do not overwrite an existing configuration with an example.
+For new model configuration, start from [the sanitized model template](../templates/ctrlx-ai/models.yaml.example), not by overwriting an existing file. The app reference holds the configuration map and reload semantics.
 
 ## Non-negotiable boundaries
 

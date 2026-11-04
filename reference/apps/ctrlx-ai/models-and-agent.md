@@ -11,7 +11,7 @@ Scope: supplied User Manual, **AI Agent Configuration → LLM Provider & Model S
 
 ## Minimal model configuration
 
-Start from [the bundled example](../assets/models.yaml.example), replace the illustrative URL/model ID/limits with confirmed values, and have the user provision `llm_api_key` in `agent/secrets.yaml`. Do not read or print that secret file.
+Start from [the model template](../../../templates/ctrlx-ai/models.yaml.example), replace the illustrative URL/model ID/limits with confirmed values, and have the user provision `llm_api_key` in `agent/secrets.yaml`. Do not read or print that secret file.
 
 ```yaml
 version: 1
