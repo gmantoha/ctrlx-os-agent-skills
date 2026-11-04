@@ -13,6 +13,12 @@ Not tracked here:
 
 - app binaries or downloaded packages
 
+## ctrlX AI / Agent iXi
+
+- App reference: `reference/apps/ctrlx-ai/README.md`
+- Configuration and diagnostics: `workflows/configure-ctrlx-ai.md`
+- Migration 0.3.0 → 0.5.0: `recipes/ctrlx-ai/migrate-0.3-to-0.5.md`
+
 ## App Package Location
 
 Locally available `.app` package files are stored under:

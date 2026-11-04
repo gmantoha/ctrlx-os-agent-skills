@@ -15,7 +15,7 @@
 | Task | Workflow |
 |---|---|
 | Device interaction (MCP available) | `workflows/use-mcp.md` |
-| ctrlX AI / Agent iXi config, models, approvals, custom skills, migration | `skills/ctrlx-ai/SKILL.md` |
+| ctrlX AI / Agent iXi config, models, approvals, custom skills, migration | `workflows/configure-ctrlx-ai.md` |
 | Crash / OOM / service failure / logs | `workflows/debug-issue.md` |
 | Network / VPN / firewall / users / certs | `workflows/configure-device.md` |
 | App install / update / remove | `workflows/manage-apps.md` |

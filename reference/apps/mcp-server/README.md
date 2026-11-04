@@ -7,10 +7,11 @@ management, logs, and app lifecycle through structured MCP tool calls instead of
 
 ## Current ctrlX AI / Agent iXi guidance (0.5.0)
 
-Use [`skills/ctrlx-ai/SKILL.md`](../../../skills/ctrlx-ai/SKILL.md) for the supplied
-0.5.0 manual's model/agent YAML configuration, additional MCP servers, approval
-rules, HTTP/process tools, custom skills and 0.3.0 migration. Current HTTP auth
-headers are `ctrlx-token`, `ctrlx-username`, `ctrlx-password` and, when needed,
+Use [the ctrlX AI app reference](../ctrlx-ai/README.md) and
+[`workflows/configure-ctrlx-ai.md`](../../../workflows/configure-ctrlx-ai.md) for
+the supplied 0.5.0 manual's model/agent YAML configuration, additional MCP servers,
+approval rules, HTTP/process tools, custom skills and 0.3.0 migration. Current HTTP
+auth headers are `ctrlx-token`, `ctrlx-username`, `ctrlx-password` and, when needed,
 `ctrlx-host`; server environment-variable names remain unchanged.
 
 **The v0.2.3 / server 1.1.0 connection examples below are historical**, including

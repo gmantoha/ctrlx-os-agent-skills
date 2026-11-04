@@ -1,11 +1,6 @@
-# ctrlX OS Agent Skills
+# ctrlX OS Agent Skill
 
-Installable AI agent skills for everyone working with ctrlX OS and ctrlX CORE.
-
-| Skill | Focus |
-|---|---|
-| `ctrlx` | General ctrlX OS/CORE operation, development, diagnostics and customer answers |
-| [`ctrlx-ai`](skills/ctrlx-ai/SKILL.md) | ctrlX AI / Agent iXi configuration, models, MCP/security, custom prompts/skills and 0.3.0 → 0.5.0 migration |
+Installable AI agent skill for everyone working with ctrlX OS and ctrlX CORE.
 
 Use it with prompts such as:
 
@@ -14,6 +9,7 @@ Use it with prompts such as:
 - `use ctrlx skill to answer this customer question`
 - `use ctrlx skill to build or package this ctrlX snap`
 - `use ctrlx skill to create or apply a Device Portal template`
+- `use ctrlx skill to configure Agent iXi models or migrate ctrlX AI to 0.5.0`
 
 This repository is structured for three equal goals:
 
@@ -24,11 +20,11 @@ This repository is structured for three equal goals:
 ## Structure
 
 - `SKILL.md`: root agent-skill manifest, routing table, and safety policy
-- `skills/ctrlx-ai/`: self-contained additional skill with curated manual references, a sanitized model-config example and test prompts
 - `workflows/`: workflow-oriented agent entry points
 - `reference/`: common ctrlX platform knowledge, references, and best practices
 - `reference/app-development/`: official-source-first guidance for ctrlX app builds, snap packaging, package assets, and Data Layer app integration
 - `reference/apps/device-portal/`: API-only Device Portal template integration and PLC artifact verification
+- `reference/apps/ctrlx-ai/`: ctrlX AI / Agent iXi configuration, models, MCP/security, custom prompts/skills and troubleshooting
 - `recipes/`: concrete task playbooks such as VPN routing, firewall, storage, PLC, and Data Layer patterns
 - `templates/`: reusable answer, investigation, and demo templates
 - `labs/`: virtual ctrlX operating environment guidance and helper scripts
@@ -64,6 +60,11 @@ For Device Portal template or serial-commissioning work, start with
 templates from true modular deployment and requires target-side verification.
 Concrete request sequences and the recovery procedure are in `recipes/device-portal/`.
 
+For ctrlX AI / Agent iXi setup or migration, start with
+`workflows/configure-ctrlx-ai.md`. Product knowledge is in `reference/apps/ctrlx-ai/`,
+the 0.3.0 → 0.5.0 procedure in `recipes/ctrlx-ai/`, and a sanitized model YAML in
+`templates/ctrlx-ai/`. All are part of the existing `ctrlx` skill.
+
 ## Install
 
 This repository is compatible with the open agent skills CLI used by Vercel.
@@ -80,17 +81,6 @@ npx skills add gmantoha/ctrlx-os-agent-skills \
 ```
 
 Use `--copy` instead of a symlink so the agent can read bundled skill files without resolving paths outside the installed skill directory.
-
-Install the additional `ctrlx-ai` skill (the root manifest otherwise limits nested discovery):
-
-```bash
-npx skills add gmantoha/ctrlx-os-agent-skills \
-  --full-depth --skill ctrlx-ai --agent opencode --global --copy --yes
-```
-
-For a local-only install from this checkout, use
-`npx skills add ./skills/ctrlx-ai --agent opencode --global --copy --yes`.
-These commands install a workstation-agent skill, not an app or skill on a ctrlX device.
 
 For local development, work in this Git repository and install the current checkout:
 

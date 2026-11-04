@@ -3,8 +3,9 @@
 Preferred interaction layer when ctrlX AI app is installed. Use MCP tools instead of REST/SSH/curl.
 
 For ctrlX AI / Agent iXi **0.5.0 configuration, authentication and migration**, read
-`skills/ctrlx-ai/SKILL.md` and its bundled references. Check the installed version;
-client-visible tool names and capabilities vary. Current HTTP authentication headers
+`workflows/configure-ctrlx-ai.md` and `reference/apps/ctrlx-ai/mcp-and-security.md`.
+Check the installed version; client-visible tool names and capabilities vary.
+Current HTTP authentication headers
 are hyphenated (`ctrlx-token` or `ctrlx-username` / `ctrlx-password`), not the legacy
 uppercase underscore names. Server environment-variable names remain unchanged.
 
@@ -60,7 +61,7 @@ In **0.5.0**, create custom skills relative to the active app-data configuration
 The folder name must match the skill's frontmatter `name`. Copy any supporting
 resources too. Never edit `skills/builtin/`: it is replaced on each app start.
 Legacy flat Markdown files have lower priority and should not be used for new
-0.5.0 skills. See `skills/ctrlx-ai/references/prompts-and-usage.md`.
+0.5.0 skills. See `reference/apps/ctrlx-ai/prompts-and-usage.md`.
 
 Discover any skill-creation guidance tool rather than assuming an old `skill_*`
 name exists. Show the exact proposed file changes and obtain confirmation before

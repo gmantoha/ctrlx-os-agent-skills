@@ -1,12 +1,12 @@
 ---
 name: ctrlx
-description: Use for Bosch Rexroth ctrlX OS and ctrlX CORE tasks including debugging apps and services, configuring devices, VPN/network/firewall/storage setup, building ctrlX snaps, REST/Data Layer/WebDAV/Web UI workflows, PLC integration, virtual labs, demos, and customer technical answers.
+description: Use for Bosch Rexroth ctrlX OS and ctrlX CORE tasks including debugging apps and services, configuring devices, VPN/network/firewall/storage setup, building ctrlX snaps, REST/Data Layer/WebDAV/Web UI workflows, PLC integration, ctrlX AI / Agent iXi configuration and migration (models, MCP, approvals, prompts and custom skills), virtual labs, demos, and customer technical answers.
 allowed-tools: Read, Bash, Glob, Grep, WebFetch
 ---
 
 # ctrlX OS Skill
 
-Use this skill for ctrlX OS, ctrlX CORE, ctrlX apps, ctrlX Data Layer, ctrlX REST APIs, PLC integration, virtual ctrlX labs, app packaging, device configuration, diagnostics, customer answers, and demos.
+Use this skill for ctrlX OS, ctrlX CORE, ctrlX apps, ctrlX Data Layer, ctrlX REST APIs, PLC integration, ctrlX AI / Agent iXi, virtual ctrlX labs, app packaging, device configuration, diagnostics, customer answers, and demos.
 
 ## First Steps
 
@@ -34,7 +34,7 @@ Always check and report the virtual lab instance status at the start and end of 
 
 Use `workflows/use-mcp.md` **first** when a device is involved — check if `ctrlx-ai` (MCP Server) is installed. If yes, use MCP tools for all device operations. If no, fall back to the workflows below.
 
-Use `skills/ctrlx-ai/SKILL.md` for ctrlX AI / Agent iXi setup and diagnostics: model/provider YAML, discovery, secrets, additional MCP servers, approvals, custom prompts/skills, and migration from 0.3.0 to 0.5.0. This is also available as the separately installable `ctrlx-ai` skill.
+Use `workflows/configure-ctrlx-ai.md` for ctrlX AI / Agent iXi setup and diagnostics: model/provider YAML, discovery, secrets, additional MCP servers, approvals, custom prompts/skills, and migration from 0.3.0 to 0.5.0. Product references are under `reference/apps/ctrlx-ai/`; concrete migration steps are under `recipes/ctrlx-ai/`.
 
 Use `workflows/debug-issue.md` for crashes, OOM, service failures, logs, token verifier floods, Data Layer disconnects, and performance investigations.
 
@@ -99,6 +99,7 @@ Use concrete playbooks under `recipes/` when available. For example:
 - `recipes/node-red/admin-api-flows.md` — Node-RED Flows per Admin API lesen/anlegen/deployen, Context lesen, Inject auslösen, Probe-Nodes (ctrlX-Token reicht)
 - `recipes/node-red/function-module-from-palette.md` — Bibliothek aus Palette-Paket (z. B. `@st-one-io/nodes7`) im Function-Node: Registrierung, Prüf-/Reparatur-Node, Notfall wenn keine Flows starten
 - `recipes/node-red/s7-to-rest-with-influx-buffer.md` — mehrere S7 → signierter REST-Upload je objectId, Pufferung in InfluxDB, Nachsenden; Konfig aus Dateien in appdata
+- `recipes/ctrlx-ai/migrate-0.3-to-0.5.md` — Agent iXi: ENV → YAML, geschützte Secrets, neue Prompt-/Skill-Pfade, MCP-Header und Upgrade-Prüfung
 
 ## Motion Task — Standard Sequence
 
