@@ -1,6 +1,11 @@
-# ctrlX OS Agent Skill
+# ctrlX OS Agent Skills
 
-Installable AI agent skill for everyone working with ctrlX OS and ctrlX CORE.
+Installable AI agent skills for everyone working with ctrlX OS and ctrlX CORE.
+
+| Skill | Focus |
+|---|---|
+| `ctrlx` | General ctrlX OS/CORE operation, development, diagnostics and customer answers |
+| [`ctrlx-ai`](skills/ctrlx-ai/SKILL.md) | ctrlX AI / Agent iXi configuration, models, MCP/security, custom prompts/skills and 0.3.0 → 0.5.0 migration |
 
 Use it with prompts such as:
 
@@ -19,6 +24,7 @@ This repository is structured for three equal goals:
 ## Structure
 
 - `SKILL.md`: root agent-skill manifest, routing table, and safety policy
+- `skills/ctrlx-ai/`: self-contained additional skill with curated manual references, a sanitized model-config example and test prompts
 - `workflows/`: workflow-oriented agent entry points
 - `reference/`: common ctrlX platform knowledge, references, and best practices
 - `reference/app-development/`: official-source-first guidance for ctrlX app builds, snap packaging, package assets, and Data Layer app integration
@@ -74,6 +80,17 @@ npx skills add gmantoha/ctrlx-os-agent-skills \
 ```
 
 Use `--copy` instead of a symlink so the agent can read bundled skill files without resolving paths outside the installed skill directory.
+
+Install the additional `ctrlx-ai` skill (the root manifest otherwise limits nested discovery):
+
+```bash
+npx skills add gmantoha/ctrlx-os-agent-skills \
+  --full-depth --skill ctrlx-ai --agent opencode --global --copy --yes
+```
+
+For a local-only install from this checkout, use
+`npx skills add ./skills/ctrlx-ai --agent opencode --global --copy --yes`.
+These commands install a workstation-agent skill, not an app or skill on a ctrlX device.
 
 For local development, work in this Git repository and install the current checkout:
 

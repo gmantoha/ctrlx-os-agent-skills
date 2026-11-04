@@ -1,0 +1,17 @@
+# Illustrative configuration, not a live provider/model catalog.
+# Replace URL, model ID and limits with confirmed provider values before use.
+# Have the user provision llm_api_key in the protected agent/secrets.yaml.
+version: 1
+default_model: proxy/my-chat-model
+roles:
+  fast: proxy/my-chat-model
+providers:
+  proxy:
+    type: openai
+    base_url: https://llm.example.com/v1
+    api_key: !secret llm_api_key
+    auto_discover: false
+    models:
+      my-chat-model:
+        context_window: 32768
+        max_tokens: 4096

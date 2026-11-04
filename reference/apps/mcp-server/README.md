@@ -5,6 +5,18 @@ The ctrlX MCP Server app exposes ctrlX OS device capabilities as
 (Copilot CLI, Claude Code, OpenCode, etc.) to interact with ctrlX Data Layer nodes, device
 management, logs, and app lifecycle through structured MCP tool calls instead of raw REST or SSH.
 
+## Current ctrlX AI / Agent iXi guidance (0.5.0)
+
+Use [`skills/ctrlx-ai/SKILL.md`](../../../skills/ctrlx-ai/SKILL.md) for the supplied
+0.5.0 manual's model/agent YAML configuration, additional MCP servers, approval
+rules, HTTP/process tools, custom skills and 0.3.0 migration. Current HTTP auth
+headers are `ctrlx-token`, `ctrlx-username`, `ctrlx-password` and, when needed,
+`ctrlx-host`; server environment-variable names remain unchanged.
+
+**The v0.2.3 / server 1.1.0 connection examples below are historical**, including
+uppercase HTTP headers, fixed protocol dates and client workarounds. Do not apply
+them to a newer deployment without checking its transport and tool schemas.
+
 ## Why MCP First
 
 - No manual HTTP construction: the agent calls typed MCP tools instead of building `curl` commands.

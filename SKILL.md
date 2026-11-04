@@ -34,6 +34,8 @@ Always check and report the virtual lab instance status at the start and end of 
 
 Use `workflows/use-mcp.md` **first** when a device is involved — check if `ctrlx-ai` (MCP Server) is installed. If yes, use MCP tools for all device operations. If no, fall back to the workflows below.
 
+Use `skills/ctrlx-ai/SKILL.md` for ctrlX AI / Agent iXi setup and diagnostics: model/provider YAML, discovery, secrets, additional MCP servers, approvals, custom prompts/skills, and migration from 0.3.0 to 0.5.0. This is also available as the separately installable `ctrlx-ai` skill.
+
 Use `workflows/debug-issue.md` for crashes, OOM, service failures, logs, token verifier floods, Data Layer disconnects, and performance investigations.
 
 Use `workflows/configure-device.md` for persistent ctrlX CORE configuration such as network, VPN, firewall, users, certificates, storage, routes, hostname, and system settings.
