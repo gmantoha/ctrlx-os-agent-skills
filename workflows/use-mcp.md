@@ -2,6 +2,12 @@
 
 Preferred interaction layer when ctrlX AI app is installed. Use MCP tools instead of REST/SSH/curl.
 
+For ctrlX AI / Agent iXi **0.5.0 configuration, authentication and migration**, read
+`skills/ctrlx-ai/SKILL.md` and its bundled references. Check the installed version;
+client-visible tool names and capabilities vary. Current HTTP authentication headers
+are hyphenated (`ctrlx-token` or `ctrlx-username` / `ctrlx-password`), not the legacy
+uppercase underscore names. Server environment-variable names remain unchanged.
+
 ## Step 1 — Are MCP Tools Available?
 
 **In Copilot CLI:** call `tool_search_tool_regex("datalayer|ctrlx")`.
@@ -44,11 +50,21 @@ Invoke-WebRequest -Uri "https://<IP>/package-manager/api/v1/packages/ctrlx-ai" `
 
 ## Step 3 — Missing skill_* Tools?
 
-Create them on the device with `ctrlx-write_file`:
+First discover the installed version's skill tools and allowed filesystem roots.
+In **0.5.0**, create custom skills relative to the active app-data configuration:
+
+```text
+.agents/skills/custom/<name>/SKILL.md
 ```
-/var/snap/rexroth-solutions/common/solutions/DefaultSolution/configurations/appdata/.agents/skills/<Name>.md
-```
-Use `ctrlx-skill_skillcreation` to get the file format, `ctrlx-list_allowed_directories` to confirm base path.
+
+The folder name must match the skill's frontmatter `name`. Copy any supporting
+resources too. Never edit `skills/builtin/`: it is replaced on each app start.
+Legacy flat Markdown files have lower priority and should not be used for new
+0.5.0 skills. See `skills/ctrlx-ai/references/prompts-and-usage.md`.
+
+Discover any skill-creation guidance tool rather than assuming an old `skill_*`
+name exists. Show the exact proposed file changes and obtain confirmation before
+writing to a real device. Do not assume an absolute `DefaultSolution` path.
 
 ## Safety
 

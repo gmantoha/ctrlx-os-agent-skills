@@ -1,6 +1,7 @@
 # Install
 
-This repository is an installable agent skill named `ctrlx`.
+This repository contains the root skill `ctrlx` and the self-contained additional
+skill `ctrlx-ai` under `skills/ctrlx-ai/`.
 
 ## Recommended: Skills CLI
 
@@ -20,8 +21,27 @@ The important flag is `--copy`. Do not install this skill as a symlink when the 
 List skills available in this repository:
 
 ```bash
-npx skills add gmantoha/ctrlx-os-agent-skills --list
+npx skills add gmantoha/ctrlx-os-agent-skills --full-depth --list
 ```
+
+`--full-depth` is needed to discover nested skills while a root `SKILL.md` exists.
+Install just the ctrlX AI / Agent iXi skill:
+
+```bash
+npx skills add gmantoha/ctrlx-os-agent-skills \
+  --full-depth --skill ctrlx-ai --agent opencode --global --copy --yes
+```
+
+From a local checkout, the equivalent is:
+
+```bash
+npx skills add ./skills/ctrlx-ai --agent opencode --global --copy --yes
+```
+
+`ctrlx-ai` bundles its own references/example and does not require the separate
+`ctrlx` installation. The root `ctrlx` skill also routes to the new material.
+`npm run skill:install` / `skill:update` continue to target `ctrlx` only.
+Neither installation method deploys anything to a ctrlX device.
 
 Update an installed skill:
 
@@ -69,6 +89,8 @@ After installation, prompts can be phrased naturally:
 - `use ctrlx skill to debug this issue`
 - `use ctrlx skill to configure my ctrlX CORE on <IP> so that the VPN routes through to the SPS`
 - `use ctrlx skill to create a customer answer about Data Layer vs REST`
+- `use ctrlx-ai to migrate Agent iXi from 0.3.0 to 0.5.0`
+- `use ctrlx-ai to configure LiteLLM model discovery and diagnose limited mode`
 
 ## Notes
 
