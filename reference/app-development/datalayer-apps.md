@@ -67,6 +67,21 @@ snap runtime: ipc://
 development: tcp://<user>:<password>@<host>?sslport=<port>
 ```
 
+Port-forwarded ctrlX COREvirtual (host connects to `127.0.0.1`): give the forwarded Data Layer port
+explicitly — guest port **2069 for clients**, **2070 for providers** — plus the forwarded HTTPS port:
+
+```text
+client:   tcp://<user>:<password>@127.0.0.1:<host port -> 2069>?sslport=<host port -> 443>
+provider: tcp://<user>:<password>@127.0.0.1:<host port -> 2070>?sslport=<host port -> 443>
+```
+
+- Without an explicit port the library uses its default ports on `127.0.0.1` (client: 2069). With several labs
+  running, these can belong to a different VM than the one `sslport` points to; the connection then fails
+  (`CLIENT_NOT_CONNECTED`).
+- A provider connected to the client port (2069) reports `start() == OK` and registers nodes, but the nodes are
+  not visible in the Data Layer. Use 2070.
+- Verified 2026-11-05: ctrlX OS 4.6 COREvirtual, `libcomm_datalayer` 3.5.2 (SDK 4.6.0), Python `ctrlx-datalayer` 3.5.0.
+
 Do not hard-code non-default credentials in tracked files. Public default credentials may appear in examples only when intentionally documenting a lab or default setup.
 
 ## Provider Semantics

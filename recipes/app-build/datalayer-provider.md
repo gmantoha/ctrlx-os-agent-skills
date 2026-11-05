@@ -25,6 +25,8 @@ Check these first:
 
 ## Local References
 
+- `recipes/app-build/python-datalayer-provider-core24.md` — erprobte Python-Variante (core24, Deb-Dump, Deploy per REST, arm64-Test per QEMU)
+- `reference/platform/hardware-architectures.md` — Zielarchitektur je Gerät
 - `reference/app-development/datalayer-apps.md`
 - `reference/app-development/snap-packaging.md`
 - `reference/app-development/troubleshooting.md`

@@ -14,6 +14,15 @@ Allowed documented defaults:
 - Web UI: `boschrexroth` / `boschrexroth`
 - SSH: document only if the lab setup intentionally uses a public default
 
+## Architektur und Data Layer vom Host aus
+
+- Die COREvirtual ist **amd64** (`rexroth-arch02-virtual-kernel`) – wie X5/X7/IPC. Ein hier getesteter
+  amd64-Snap passt architekturgleich auf diese Geräte; die X3 braucht arm64
+  (`reference/platform/hardware-architectures.md`).
+- Data-Layer-Verbindungen vom Host: weitergeleitete Ports explizit angeben (Client → Gast 2069,
+  Provider → Gast 2070), siehe `reference/app-development/datalayer-apps.md`. Laufen mehrere Labs mit
+  versetzten Ports, landet eine Verbindung ohne Port sonst bei der VM auf den Standardports.
+
 ## Edge auf Windows öffnen (Windows-Tipp)
 
 Zuverlässiger Befehl zum Öffnen der virtuellen Steuerung in Edge:

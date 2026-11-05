@@ -28,8 +28,8 @@ Das ist akzeptabel für Dev/Test, für produktive Workloads auf
 ctrlX mit hohen Anforderungen an Echtzeit-Determinismus aber ein
 **Performance-Risiko** — insbesondere weil ctrlX-M4-Systeme
 ohnehin einen RT-Kernel haben und Scheduling-Konflikte entstehen
-können. Für den hier betrachteten amd64-Fall (virtual/X3) ist das
-unkritischer.
+können. Für den hier betrachteten amd64-Fall (virtual; X5/X7/IPC – die X3 ist
+arm64, siehe Korrektur im README) ist das unkritischer.
 
 Kein Interface kann diese Capabilities unter strict wieder
 freischalten. Wer sie braucht, muss zu classic wechseln — was hier
