@@ -28,6 +28,7 @@ Use this repository's app-development notes as secondary guidance and offline fa
 - `reference/app-development/package-assets.md`
 - `reference/app-development/datalayer-apps.md`
 - `reference/app-development/troubleshooting.md`
+- `reference/platform/hardware-architectures.md` (X3 = arm64; X5/X7/IPC/COREvirtual = amd64)
 
 ## Standard Flow
 
@@ -44,3 +45,4 @@ Use this repository's app-development notes as secondary guidance and offline fa
 
 - `recipes/app-build/minimal-web-app.md`
 - `recipes/app-build/datalayer-provider.md`
+- `recipes/app-build/python-datalayer-provider-core24.md`
