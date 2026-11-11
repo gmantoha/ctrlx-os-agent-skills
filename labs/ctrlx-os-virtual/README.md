@@ -55,7 +55,8 @@ labs/ctrlx-os-virtual/run/stop-virtual-core.sh
 
 - Web UI: `https://127.0.0.1:8443`
 - SSH: `127.0.0.1:8022`
-- Data Layer: `127.0.0.1:8740`
+- Data Layer: `127.0.0.1:2069` (client) / `127.0.0.1:2070` (provider), see `reference/app-development/datalayer-apps.md`
+- PLC / ctrlX WORKS gateway: `127.0.0.1:8740` (guest port 11740)
 - OPC-UA: `127.0.0.1:4840`
 
 Default Web UI credentials for this lab are `boschrexroth` / `boschrexroth`.
