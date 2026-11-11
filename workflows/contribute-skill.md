@@ -122,10 +122,13 @@ manual git commands are needed.
      ```
 
    - `false` (everyone else) → push to your fork and open the PR against the original repository.
-     `gh` creates the fork if it does not exist yet (non-interactive, suitable for agents):
+      `gh` creates the fork if it does not exist yet (non-interactive, suitable for agents):
 
-     ```bash
-     gh repo fork gmantoha/ctrlx-os-agent-skills --remote --remote-name fork
+      Run this inside the source checkout. With GitHub CLI 2.96, `--remote` cannot be
+      combined with an explicit repository argument; infer the repository from the checkout.
+
+      ```bash
+      gh repo fork --remote --remote-name fork
      git push -u fork <branch>
      gh pr create --repo gmantoha/ctrlx-os-agent-skills --base main \
        --head <your-github-user>:<branch> --fill
