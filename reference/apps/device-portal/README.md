@@ -6,14 +6,27 @@ credentials, account IDs, device IDs, template IDs, gateway hostnames, IP
 addresses, and raw setup exports belong in a private project workspace, never
 in this skill.
 
-State of knowledge: 2026-09-09, verified against the QA environment with a
+Template state of knowledge: 2026-09-09, verified against the QA environment with a
 ctrlX CORE X3 on ctrlX OS 4.6.x (Ubuntu Core 24, Setup/Solutions/PLC 4.6.2,
 Device Portal Agent 3.6.x). Production availability of individual fixes must be
 confirmed separately. Official sources are the Docupedia exports "IoT Services
 Public API Features - How To" (v18, 2026-07) and "Mass rollout templates API"
 (v34, 2026-08).
 
-## Prerequisites
+## Device display names — QA verified 2026-11-11
+
+The public Licensing Bridge Service API v1.2 now supports
+`PATCH /licensing-service/v1.2/devices/{id}` with `{"name":"<machine-number>"}`.
+It changes the portal display name without changing the serial number. Eight QA
+cases plus restoration passed on 2026-11-11. PROD is published in the developer
+portal, but this test was blocked by a gateway 401 `invalid subscription key`;
+PROD behaviour and WebUI editing remain unverified.
+
+Use [the display-name recipe](../../../recipes/device-portal/update-device-name.md)
+for the contract, safety gate, readback and validation checks. This cloud-metadata
+operation is separate from the template prerequisites and task API below.
+
+## Template prerequisites
 
 - The **Device Portal Agent** app (`rexroth-deviceagent`) is installed on every
   device. Manual installation: Service mode, allow installation from unknown

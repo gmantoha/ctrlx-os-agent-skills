@@ -46,6 +46,8 @@ Use `workflows/build-app.md` for snap packaging, app development, SDK usage, Dat
 
 Use `workflows/use-rest-api.md` for external automation, browser/client integration, and documented REST endpoints.
 
+Use `recipes/device-portal/update-device-name.md` for Device Portal display-name changes through the public Licensing API, including storing a machine number in the device name. This is cloud metadata, not the CORE hostname; QA verification and PROD access must be distinguished.
+
 Use `workflows/device-portal-templates.md` for Device Portal API template creation/application, template stacking decisions (settings modules versus all-or-nothing app data), full-device restore demonstrations, and serial commissioning design.
 
 Use `workflows/use-datalayer.md` for on-device IPC, PLC-to-service communication, Data Layer reads/writes/calls, and node schema questions.
@@ -90,6 +92,7 @@ Use concrete playbooks under `recipes/` when available. For example:
 - `recipes/plc/create-pou-gvl.md` — POUs und GVLs per REST API anlegen und aktualisieren
 - `recipes/plc/engineering-scripting.md` — CODESYSScript (Verfügbarkeit prüfen!) vs. REST API
 - `recipes/device-portal/template-create-apply.md` — Device Portal Template per Public API erstellen/prüfen/anwenden (`type`-Envelope, `$path`-Injektion, Polling)
+- `recipes/device-portal/update-device-name.md` — Portal-Anzeigenamen per Licensing API ändern; QA-Nachweis, Validierung, Rücksetzung und PROD-Zugangsgrenze
 - `recipes/device-portal/target-snapshot-and-recovery.md` — Ziel-Fingerprint, Setup-Recovery-ZIP, OPERATING nach Template-Apply wiederherstellen
 - `recipes/app-update/os-update-from-local-files.md` — System-Apps aus lokalen .app-Dateien aktualisieren (Reihenfolge, Reboots, Session-Limit, IPC = arch02) + `update_os_from_apps.py`
 - `recipes/app-update/image-restore-usb-stick.md` — USB-Stick GPT/FAT32 für X5/X7/IPC; IPC bootet Stick nur bei Start über Web-UI; prüfen, ob wirklich geflasht wurde
