@@ -62,7 +62,7 @@ Use `reference/apps/node-red/README.md` and `recipes/node-red/` for Node-RED flo
 
 Use `workflows/work-with-plc.md` for PLC Engineering, ST examples, and PLC integration guidance.
 
-Use `workflows/use-virtual-core.md` for launching, stopping, monitoring, and testing against a local virtual ctrlX CORE lab.
+Use `workflows/use-virtual-core.md` for launching, stopping, monitoring, and testing against a local virtual ctrlX CORE lab, on Linux/KVM or natively on Windows.
 
 Use `workflows/answer-customer.md` when the primary output is a customer or colleague technical answer.
 
@@ -104,6 +104,7 @@ Use concrete playbooks under `recipes/` when available. For example:
 - `recipes/node-red/function-module-from-palette.md` — Bibliothek aus Palette-Paket (z. B. `@st-one-io/nodes7`) im Function-Node: Registrierung, Prüf-/Reparatur-Node, Notfall wenn keine Flows starten
 - `recipes/node-red/s7-to-rest-with-influx-buffer.md` — mehrere S7 → signierter REST-Upload je objectId, Pufferung in InfluxDB, Nachsenden; Konfig aus Dateien in appdata
 - `recipes/ctrlx-ai/migrate-0.3-to-0.5.md` — Agent iXi: ENV → YAML, geschützte Secrets, neue Prompt-/Skill-Pfade, MCP-Header und Upgrade-Prüfung
+- `recipes/virtual-core/windows-qemu-start.md` — Virtuelle ctrlX CORE nativ unter Windows (QEMU/TCG, IDE + `snapd_system_disk=/dev/sda`, e1000): Overlay wiederverwenden, Login-Bereitschaft prüfen, QMP-Shutdown
 
 ## Motion Task — Standard Sequence
 

@@ -22,6 +22,7 @@
 | Snap build / Data Layer app / SDK | `workflows/build-app.md` |
 | REST automation / external client | `workflows/use-rest-api.md` |
 | Device Portal templates / serial commissioning | `workflows/device-portal-templates.md` |
+| Device Portal display name / machine number | `recipes/device-portal/update-device-name.md` |
 | Data Layer reads / writes / PLC IPC | `workflows/use-datalayer.md` |
 | File transfer / app data | `workflows/use-webdav.md` |
 | Node-RED flows / Function nodes / S7-REST-InfluxDB | `reference/apps/node-red/README.md` + `recipes/node-red/` |
@@ -45,6 +46,7 @@
 - `workflows/`: agent entry points per task type
 - `reference/`: platform knowledge, best practices, app references
 - `recipes/`: concrete playbooks for recurring procedures
+- `templates/`: answer, investigation and demo templates; sanitized config examples
 - `labs/`: virtual ctrlX lab guides and scripts
 - `cases/`: reusable sanitized investigations
 - `customers/`: private workspaces, excluded from git
