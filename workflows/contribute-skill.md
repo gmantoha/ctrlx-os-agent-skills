@@ -45,6 +45,44 @@ that isn't yet covered by `recipes/`, `cases/`, or `reference/` — a fix, a wor
 gotcha, a correct API payload, etc. Ask the user whether it's worth saving before moving
 on. If yes, draft it as a short recipe/case file and hand off to **Push** below.
 
+### Remember a verified solution locally
+
+If the user explicitly asks to remember a solution or extend the skill, that is
+confirmation for **Teach**; do not ask for the same confirmation again.
+
+1. Save reusable, anonymized instructions under `recipes/`, `cases/`, or `reference/`.
+   Include the tested versions, exact settings, symptoms, verification and lifecycle handling.
+2. Link the new instructions from the workflow that future agents will actually use.
+3. Keep workstation-specific paths, PIDs, disk images, logs and runtime state out of the
+   shared instructions. Use variables/placeholders and the ignored lab `assets/` directory.
+4. Verify links and command syntax without restarting or changing a running device or VM
+   merely to test documentation. Preserve an explicit request to keep a VM running.
+5. Report whether the learning is installed locally or also published upstream. A request
+   to save locally does not authorize a commit, push, fork or Pull Request; obtain that
+   authorization before continuing with **Push**.
+
+Local changes to a copied installation can be overwritten by the next **Pull** or
+reinstallation. Preserve the changes in a development checkout before updating, and
+use **Push** when the user wants them shared with the team.
+
+### Captured example: virtual ctrlX CORE on Windows
+
+See [Start a virtual ctrlX CORE with QEMU on Windows](../recipes/virtual-core/windows-qemu-start.md),
+also routed from [Use Virtual Core](use-virtual-core.md).
+
+Verified with ctrlX OS 4.6.5 and the QEMU bundled with ctrlX WORKS 4.6.1:
+
+- Native Windows QEMU with `-accel tcg,thread=multi`, `-cpu max`, 4 vCPUs and 2048 MB RAM;
+  do not apply the Linux launcher's KVM options on Windows.
+- IDE disk, `snapd_system_disk=/dev/sda` and an `e1000` network adapter. With the tested
+  VirtIO setup the guest waited for `dev-disk-snapd-disk.device` and rebooted repeatedly;
+  adding a disk parameter alone did not resolve that setup.
+- A persistent QCOW2 overlay protects the base image; reuse the inspected overlay on restart.
+- Bind forwarding and QMP to loopback only. HTTPS reachability alone is not login readiness:
+  verify the Web UI returns HTTP 200 and unauthenticated identity access returns HTTP 401.
+- Shut down through QMP `system_powerdown` after temporary tests, but leave the VM running
+  when the user requests ongoing browser access.
+
 ## Push — contribute the learning back to the shared repo
 
 Say **"push this skill: <what you learned>"**. The agent runs the full sequence so no
@@ -84,10 +122,13 @@ manual git commands are needed.
      ```
 
    - `false` (everyone else) → push to your fork and open the PR against the original repository.
-     `gh` creates the fork if it does not exist yet (non-interactive, suitable for agents):
+      `gh` creates the fork if it does not exist yet (non-interactive, suitable for agents):
 
-     ```bash
-     gh repo fork gmantoha/ctrlx-os-agent-skills --remote --remote-name fork
+      Run this inside the source checkout. With GitHub CLI 2.96, `--remote` cannot be
+      combined with an explicit repository argument; infer the repository from the checkout.
+
+      ```bash
+      gh repo fork --remote --remote-name fork
      git push -u fork <branch>
      gh pr create --repo gmantoha/ctrlx-os-agent-skills --base main \
        --head <your-github-user>:<branch> --fill

@@ -4,6 +4,12 @@ This folder contains guidance and helper scripts for running a local virtual ctr
 
 The virtual image itself is intentionally not tracked. Copy VM image files into `assets/` before launching the lab.
 
+## Windows Hosts
+
+Use [Windows QEMU startup](../../recipes/virtual-core/windows-qemu-start.md) for the
+verified native Windows settings, overlay handling, login readiness and graceful shutdown.
+The Bash startup commands below target Linux/KVM, not native Windows QEMU.
+
 ## Getting Started
 
 1. Copy the environment template:
