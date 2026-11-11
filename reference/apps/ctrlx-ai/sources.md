@@ -9,18 +9,21 @@
 - **SHA-256 of the supplied HTML:** `395bc0ec30301b8b19ce9c14830727da5a11ca6f00572d6be7df9f83d2cd79ab`
 - **Attribution:** source footer, Copyright © 2026 Bosch Rexroth AG | ctrlX AUTOMATION.
 
-These are curated operational notes from the user-provided manual, not a verbatim copy or independently verified implementation specification. The source HTML is not required at runtime and was not copied into the skill. No device was contacted during extraction.
+These are curated operational notes from the user-provided manual, not a verbatim copy or independently verified implementation specification. The source HTML is not required at runtime and was not copied into the repository. No device was contacted during extraction.
 
-## Reference map
+## Repository map
 
-| Bundled file | Source sections |
+| Repository file | Source sections |
 |---|---|
-| `SKILL.md` | Overview; Installation; MCP Server; AI Agent; safety and migration notes |
+| `workflows/configure-ctrlx-ai.md`, `reference/apps/ctrlx-ai/README.md` | Overview; Installation; MCP Server; AI Agent; safety and migration notes |
 | `models-and-agent.md` | AI Agent Configuration → LLM Provider & Model Setup, Agent Settings; Selecting a Model; Bosch Employees Only → provider/caching concepts |
 | `mcp-and-security.md` | MCP Server → Tools, Configuration, Usage; Additional MCP Servers; Tool Approvals; Changelog 0.5.0 |
 | `prompts-and-usage.md` | AI Agent Usage; Header Widget; Context usage |
-| `migration-and-troubleshooting.md` | Migration Guide: 0.3.0 to 0.5.0; Changelog; model troubleshooting; Large text file generation fails |
-| `../assets/models.yaml.example` | LLM Provider & Model Setup; sanitized illustrative model/URL |
+| `troubleshooting.md` | Changelog; model troubleshooting; Large text file generation fails |
+| `recipes/ctrlx-ai/migrate-0.3-to-0.5.md` | Migration Guide: 0.3.0 to 0.5.0; Changelog |
+| `templates/ctrlx-ai/models.yaml.example` | LLM Provider & Model Setup; sanitized illustrative model/URL |
+
+Workflow, recipe and template paths above are relative to the repository root; reference filenames are relative to this directory. These files are all included in the existing `ctrlx` skill installation.
 
 ## Deliberate limits
 

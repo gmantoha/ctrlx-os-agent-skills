@@ -43,7 +43,7 @@ The folder name must match frontmatter `name`, otherwise the skill is rejected. 
 
 Distinguish installation destinations:
 
-- Installing this repository's `ctrlx-ai` skill into a workstation agent teaches that agent how to configure iXi; it does not deploy anything to a ctrlX device.
+- Installing this repository's `ctrlx` skill into a workstation agent includes the iXi configuration workflow and app references; it does not deploy anything to a ctrlX device.
 - Deploying a custom skill into iXi writes to the device's active configuration and needs confirmation on a real target. Verify allowed filesystem roots first; do not assume an absolute solution path or copy the entire repository into the device.
 
 After deploying a custom skill, verify its name/path and test that it is available through the installed version's skill tools. The manual does not specify a universal skill hot-reload mechanism; do not invent one. Prompt instructions and skill text do not grant additional tool permissions.
