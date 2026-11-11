@@ -24,6 +24,10 @@ Siehe `error-log.txt` für die vollständige Meldung.
 - **Zielhardware:** ctrlX CORE virtual / X3 (amd64).
   → ARM64 (M4) wird nicht betrachtet — MSSQL hat keinen offiziellen
   ARM64-Build; dort wäre das Vorhaben ohnehin blockiert.
+  > **Korrektur (2026-11-05):** Die X3 ist **arm64** (`rexroth-arch01-*`), nicht amd64.
+  > amd64 sind COREvirtual, X5, X7 und IPC (`rexroth-arch02-*`), siehe
+  > `reference/platform/hardware-architectures.md`. Auf einer X3 gilt damit dieselbe
+  > ARM64-Blockade wie auf der M4; die Analyse trifft für COREvirtual/X5/X7/IPC zu.
 - **Confinement:** strict (classic wird nicht verfolgt — für den
   ctrlX-App-Installer nicht praktikabel).
 - **Diese Iteration:** nur Analyse + Dokumentation, noch kein

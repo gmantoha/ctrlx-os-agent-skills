@@ -42,7 +42,7 @@ Use `workflows/configure-device.md` for persistent ctrlX CORE configuration such
 
 Use `workflows/manage-apps.md` for app installation, update, removal, service lifecycle, and app package handling.
 
-Use `workflows/build-app.md` for snap packaging, app development, SDK usage, Data Layer integration, deployment, and build-deploy-debug loops.
+Use `workflows/build-app.md` for snap packaging, app development, SDK usage, Data Layer integration, deployment, and build-deploy-debug loops. Target architecture per device: `reference/platform/hardware-architectures.md` (X3 = arm64; X5/X7/IPC/COREvirtual = amd64).
 
 Use `workflows/use-rest-api.md` for external automation, browser/client integration, and documented REST endpoints.
 
@@ -93,6 +93,7 @@ Use concrete playbooks under `recipes/` when available. For example:
 - `recipes/device-portal/target-snapshot-and-recovery.md` — Ziel-Fingerprint, Setup-Recovery-ZIP, OPERATING nach Template-Apply wiederherstellen
 - `recipes/app-update/os-update-from-local-files.md` — System-Apps aus lokalen .app-Dateien aktualisieren (Reihenfolge, Reboots, Session-Limit, IPC = arch02) + `update_os_from_apps.py`
 - `recipes/app-update/image-restore-usb-stick.md` — USB-Stick GPT/FAT32 für X5/X7/IPC; IPC bootet Stick nur bei Start über Web-UI; prüfen, ob wirklich geflasht wurde
+- `recipes/app-build/python-datalayer-provider-core24.md` — Python-Data-Layer-Provider als core24-Snap: Deb-Dump statt APT, Größe ~13 MB, Build ohne sudo, Deploy/Logs per REST, arm64-Test per QEMU-Emulation
 - `recipes/network/find-device-and-set-static-ip.md` — Core am Direktkabel per IPv6 link-local finden, REST über `fe80::…%25if`, statische IPv4 per network-manager + `PUT /changes`
 - `recipes/rest-api/connect-with-token.md` — Token holen; Token wiederverwenden (sonst „Too many sessions")
 - `recipes/device-portal/plc-bootproject-setup-zip.md` — PLC-Bootprojekt als direktes Setup-ZIP-Modul (`mode=merge`), wenn Templates zu grob sind

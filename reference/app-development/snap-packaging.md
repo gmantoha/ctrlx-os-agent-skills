@@ -12,7 +12,8 @@ Primary sources:
 ## Standard Flow
 
 1. Identify the app type: web UI, service, Data Layer client, Data Layer provider, or mixed app.
-2. Identify the target architecture: `amd64`, `arm64`, or both.
+2. Identify the target architecture: `amd64`, `arm64`, or both
+   (X3 = `arm64`; X5, X7, IPC and COREvirtual = `amd64`, see `reference/platform/hardware-architectures.md`).
 3. Check the current SDK docs and closest official sample for the language/runtime.
 4. Keep `snapcraft.yaml` minimal and add only interfaces that the app actually uses.
 5. Build in a ctrlX App Build Environment when available, or document why native/destructive builds are used.
